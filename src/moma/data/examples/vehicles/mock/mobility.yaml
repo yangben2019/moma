@@ -1,0 +1,694 @@
+
+- soil:
+    type: HT
+    friction_coefficient: 0.0
+  test:
+    type: slope
+    slope_angle: 0.0
+  value: 14.14
+- soil:
+    type: HT
+    friction_coefficient: 0.1
+  test:
+    type: slope
+    slope_angle: 0.0
+  value: 14.83
+- soil:
+    type: HT
+    friction_coefficient: 0.2
+  test:
+    type: slope
+    slope_angle: 0.0
+  value: 15.49
+- soil:
+    type: HT
+    friction_coefficient: 0.3
+  test:
+    type: slope
+    slope_angle: 0.0
+  value: 16.12
+- soil:
+    type: HT
+    friction_coefficient: 0.4
+  test:
+    type: slope
+    slope_angle: 0.0
+  value: 16.73
+- soil:
+    type: HT
+    friction_coefficient: 0.5
+  test:
+    type: slope
+    slope_angle: 0.0
+  value: 17.32
+- soil:
+    type: HT
+    friction_coefficient: 0.6
+  test:
+    type: slope
+    slope_angle: 0.0
+  value: 17.89
+- soil:
+    type: HT
+    friction_coefficient: 0.7
+  test:
+    type: slope
+    slope_angle: 0.0
+  value: 18.44
+- soil:
+    type: HT
+    friction_coefficient: 0.8
+  test:
+    type: slope
+    slope_angle: 0.0
+  value: 18.97
+- soil:
+    type: HT
+    friction_coefficient: 0.9
+  test:
+    type: slope
+    slope_angle: 0.0
+  value: 19.49
+- soil:
+    type: HT
+    friction_coefficient: 1.0
+  test:
+    type: slope
+    slope_angle: 0.0
+  value: 20.0
+- soil:
+    type: HT
+    friction_coefficient: 0.0
+  test:
+    type: slope
+    slope_angle: 2.5
+  value: 12.37
+- soil:
+    type: HT
+    friction_coefficient: 0.1
+  test:
+    type: slope
+    slope_angle: 2.5
+  value: 12.98
+- soil:
+    type: HT
+    friction_coefficient: 0.2
+  test:
+    type: slope
+    slope_angle: 2.5
+  value: 13.56
+- soil:
+    type: HT
+    friction_coefficient: 0.3
+  test:
+    type: slope
+    slope_angle: 2.5
+  value: 14.11
+- soil:
+    type: HT
+    friction_coefficient: 0.4
+  test:
+    type: slope
+    slope_angle: 2.5
+  value: 14.64
+- soil:
+    type: HT
+    friction_coefficient: 0.5
+  test:
+    type: slope
+    slope_angle: 2.5
+  value: 15.16
+- soil:
+    type: HT
+    friction_coefficient: 0.6
+  test:
+    type: slope
+    slope_angle: 2.5
+  value: 15.65
+- soil:
+    type: HT
+    friction_coefficient: 0.7
+  test:
+    type: slope
+    slope_angle: 2.5
+  value: 16.13
+- soil:
+    type: HT
+    friction_coefficient: 0.8
+  test:
+    type: slope
+    slope_angle: 2.5
+  value: 16.6
+- soil:
+    type: HT
+    friction_coefficient: 0.9
+  test:
+    type: slope
+    slope_angle: 2.5
+  value: 17.06
+- soil:
+    type: HT
+    friction_coefficient: 1.0
+  test:
+    type: slope
+    slope_angle: 2.5
+  value: 17.5
+- soil:
+    type: HT
+    friction_coefficient: 0.0
+  test:
+    type: slope
+    slope_angle: 5.0
+  value: 10.61
+- soil:
+    type: HT
+    friction_coefficient: 0.1
+  test:
+    type: slope
+    slope_angle: 5.0
+  value: 11.12
+- soil:
+    type: HT
+    friction_coefficient: 0.2
+  test:
+    type: slope
+    slope_angle: 5.0
+  value: 11.62
+- soil:
+    type: HT
+    friction_coefficient: 0.3
+  test:
+    type: slope
+    slope_angle: 5.0
+  value: 12.09
+- soil:
+    type: HT
+    friction_coefficient: 0.4
+  test:
+    type: slope
+    slope_angle: 5.0
+  value: 12.55
+- soil:
+    type: HT
+    friction_coefficient: 0.5
+  test:
+    type: slope
+    slope_angle: 5.0
+  value: 12.99
+- soil:
+    type: HT
+    friction_coefficient: 0.6
+  test:
+    type: slope
+    slope_angle: 5.0
+  value: 13.42
+- soil:
+    type: HT
+    friction_coefficient: 0.7
+  test:
+    type: slope
+    slope_angle: 5.0
+  value: 13.83
+- soil:
+    type: HT
+    friction_coefficient: 0.8
+  test:
+    type: slope
+    slope_angle: 5.0
+  value: 14.23
+- soil:
+    type: HT
+    friction_coefficient: 0.9
+  test:
+    type: slope
+    slope_angle: 5.0
+  value: 14.62
+- soil:
+    type: HT
+    friction_coefficient: 1.0
+  test:
+    type: slope
+    slope_angle: 5.0
+  value: 15.0
+- soil:
+    type: HT
+    friction_coefficient: 0.0
+  test:
+    type: slope
+    slope_angle: 7.5
+  value: 8.84
+- soil:
+    type: HT
+    friction_coefficient: 0.1
+  test:
+    type: slope
+    slope_angle: 7.5
+  value: 9.27
+- soil:
+    type: HT
+    friction_coefficient: 0.2
+  test:
+    type: slope
+    slope_angle: 7.5
+  value: 9.68
+- soil:
+    type: HT
+    friction_coefficient: 0.3
+  test:
+    type: slope
+    slope_angle: 7.5
+  value: 10.08
+- soil:
+    type: HT
+    friction_coefficient: 0.4
+  test:
+    type: slope
+    slope_angle: 7.5
+  value: 10.46
+- soil:
+    type: HT
+    friction_coefficient: 0.5
+  test:
+    type: slope
+    slope_angle: 7.5
+  value: 10.83
+- soil:
+    type: HT
+    friction_coefficient: 0.6
+  test:
+    type: slope
+    slope_angle: 7.5
+  value: 11.18
+- soil:
+    type: HT
+    friction_coefficient: 0.7
+  test:
+    type: slope
+    slope_angle: 7.5
+  value: 11.52
+- soil:
+    type: HT
+    friction_coefficient: 0.8
+  test:
+    type: slope
+    slope_angle: 7.5
+  value: 11.86
+- soil:
+    type: HT
+    friction_coefficient: 0.9
+  test:
+    type: slope
+    slope_angle: 7.5
+  value: 12.18
+- soil:
+    type: HT
+    friction_coefficient: 1.0
+  test:
+    type: slope
+    slope_angle: 7.5
+  value: 12.5
+- soil:
+    type: HT
+    friction_coefficient: 0.0
+  test:
+    type: slope
+    slope_angle: 10.0
+  value: 7.07
+- soil:
+    type: HT
+    friction_coefficient: 0.1
+  test:
+    type: slope
+    slope_angle: 10.0
+  value: 7.42
+- soil:
+    type: HT
+    friction_coefficient: 0.2
+  test:
+    type: slope
+    slope_angle: 10.0
+  value: 7.75
+- soil:
+    type: HT
+    friction_coefficient: 0.3
+  test:
+    type: slope
+    slope_angle: 10.0
+  value: 8.06
+- soil:
+    type: HT
+    friction_coefficient: 0.4
+  test:
+    type: slope
+    slope_angle: 10.0
+  value: 8.37
+- soil:
+    type: HT
+    friction_coefficient: 0.5
+  test:
+    type: slope
+    slope_angle: 10.0
+  value: 8.66
+- soil:
+    type: HT
+    friction_coefficient: 0.6
+  test:
+    type: slope
+    slope_angle: 10.0
+  value: 8.94
+- soil:
+    type: HT
+    friction_coefficient: 0.7
+  test:
+    type: slope
+    slope_angle: 10.0
+  value: 9.22
+- soil:
+    type: HT
+    friction_coefficient: 0.8
+  test:
+    type: slope
+    slope_angle: 10.0
+  value: 9.49
+- soil:
+    type: HT
+    friction_coefficient: 0.9
+  test:
+    type: slope
+    slope_angle: 10.0
+  value: 9.75
+- soil:
+    type: HT
+    friction_coefficient: 1.0
+  test:
+    type: slope
+    slope_angle: 10.0
+  value: 10.0
+- soil:
+    type: HT
+    friction_coefficient: 0.0
+  test:
+    type: slope
+    slope_angle: 12.5
+  value: 5.3
+- soil:
+    type: HT
+    friction_coefficient: 0.1
+  test:
+    type: slope
+    slope_angle: 12.5
+  value: 5.56
+- soil:
+    type: HT
+    friction_coefficient: 0.2
+  test:
+    type: slope
+    slope_angle: 12.5
+  value: 5.81
+- soil:
+    type: HT
+    friction_coefficient: 0.3
+  test:
+    type: slope
+    slope_angle: 12.5
+  value: 6.05
+- soil:
+    type: HT
+    friction_coefficient: 0.4
+  test:
+    type: slope
+    slope_angle: 12.5
+  value: 6.27
+- soil:
+    type: HT
+    friction_coefficient: 0.5
+  test:
+    type: slope
+    slope_angle: 12.5
+  value: 6.5
+- soil:
+    type: HT
+    friction_coefficient: 0.6
+  test:
+    type: slope
+    slope_angle: 12.5
+  value: 6.71
+- soil:
+    type: HT
+    friction_coefficient: 0.7
+  test:
+    type: slope
+    slope_angle: 12.5
+  value: 6.91
+- soil:
+    type: HT
+    friction_coefficient: 0.8
+  test:
+    type: slope
+    slope_angle: 12.5
+  value: 7.12
+- soil:
+    type: HT
+    friction_coefficient: 0.9
+  test:
+    type: slope
+    slope_angle: 12.5
+  value: 7.31
+- soil:
+    type: HT
+    friction_coefficient: 1.0
+  test:
+    type: slope
+    slope_angle: 12.5
+  value: 7.5
+- soil:
+    type: HT
+    friction_coefficient: 0.0
+  test:
+    type: slope
+    slope_angle: 15.0
+  value: 3.54
+- soil:
+    type: HT
+    friction_coefficient: 0.1
+  test:
+    type: slope
+    slope_angle: 15.0
+  value: 3.71
+- soil:
+    type: HT
+    friction_coefficient: 0.2
+  test:
+    type: slope
+    slope_angle: 15.0
+  value: 3.87
+- soil:
+    type: HT
+    friction_coefficient: 0.3
+  test:
+    type: slope
+    slope_angle: 15.0
+  value: 4.03
+- soil:
+    type: HT
+    friction_coefficient: 0.4
+  test:
+    type: slope
+    slope_angle: 15.0
+  value: 4.18
+- soil:
+    type: HT
+    friction_coefficient: 0.5
+  test:
+    type: slope
+    slope_angle: 15.0
+  value: 4.33
+- soil:
+    type: HT
+    friction_coefficient: 0.6
+  test:
+    type: slope
+    slope_angle: 15.0
+  value: 4.47
+- soil:
+    type: HT
+    friction_coefficient: 0.7
+  test:
+    type: slope
+    slope_angle: 15.0
+  value: 4.61
+- soil:
+    type: HT
+    friction_coefficient: 0.8
+  test:
+    type: slope
+    slope_angle: 15.0
+  value: 4.74
+- soil:
+    type: HT
+    friction_coefficient: 0.9
+  test:
+    type: slope
+    slope_angle: 15.0
+  value: 4.87
+- soil:
+    type: HT
+    friction_coefficient: 1.0
+  test:
+    type: slope
+    slope_angle: 15.0
+  value: 5.0
+- soil:
+    type: HT
+    friction_coefficient: 0.0
+  test:
+    type: slope
+    slope_angle: 17.5
+  value: 1.77
+- soil:
+    type: HT
+    friction_coefficient: 0.1
+  test:
+    type: slope
+    slope_angle: 17.5
+  value: 1.85
+- soil:
+    type: HT
+    friction_coefficient: 0.2
+  test:
+    type: slope
+    slope_angle: 17.5
+  value: 1.94
+- soil:
+    type: HT
+    friction_coefficient: 0.3
+  test:
+    type: slope
+    slope_angle: 17.5
+  value: 2.02
+- soil:
+    type: HT
+    friction_coefficient: 0.4
+  test:
+    type: slope
+    slope_angle: 17.5
+  value: 2.09
+- soil:
+    type: HT
+    friction_coefficient: 0.5
+  test:
+    type: slope
+    slope_angle: 17.5
+  value: 2.17
+- soil:
+    type: HT
+    friction_coefficient: 0.6
+  test:
+    type: slope
+    slope_angle: 17.5
+  value: 2.24
+- soil:
+    type: HT
+    friction_coefficient: 0.7
+  test:
+    type: slope
+    slope_angle: 17.5
+  value: 2.3
+- soil:
+    type: HT
+    friction_coefficient: 0.8
+  test:
+    type: slope
+    slope_angle: 17.5
+  value: 2.37
+- soil:
+    type: HT
+    friction_coefficient: 0.9
+  test:
+    type: slope
+    slope_angle: 17.5
+  value: 2.44
+- soil:
+    type: HT
+    friction_coefficient: 1.0
+  test:
+    type: slope
+    slope_angle: 17.5
+  value: 2.5
+- soil:
+    type: HT
+    friction_coefficient: 0.0
+  test:
+    type: slope
+    slope_angle: 20.0
+  value: 0.0
+- soil:
+    type: HT
+    friction_coefficient: 0.1
+  test:
+    type: slope
+    slope_angle: 20.0
+  value: 0.0
+- soil:
+    type: HT
+    friction_coefficient: 0.2
+  test:
+    type: slope
+    slope_angle: 20.0
+  value: 0.0
+- soil:
+    type: HT
+    friction_coefficient: 0.3
+  test:
+    type: slope
+    slope_angle: 20.0
+  value: 0.0
+- soil:
+    type: HT
+    friction_coefficient: 0.4
+  test:
+    type: slope
+    slope_angle: 20.0
+  value: 0.0
+- soil:
+    type: HT
+    friction_coefficient: 0.5
+  test:
+    type: slope
+    slope_angle: 20.0
+  value: 0.0
+- soil:
+    type: HT
+    friction_coefficient: 0.6
+  test:
+    type: slope
+    slope_angle: 20.0
+  value: 0.0
+- soil:
+    type: HT
+    friction_coefficient: 0.7
+  test:
+    type: slope
+    slope_angle: 20.0
+  value: 0.0
+- soil:
+    type: HT
+    friction_coefficient: 0.8
+  test:
+    type: slope
+    slope_angle: 20.0
+  value: 0.0
+- soil:
+    type: HT
+    friction_coefficient: 0.9
+  test:
+    type: slope
+    slope_angle: 20.0
+  value: 0.0
+- soil:
+    type: HT
+    friction_coefficient: 1.0
+  test:
+    type: slope
+    slope_angle: 20.0
+  value: 0.0

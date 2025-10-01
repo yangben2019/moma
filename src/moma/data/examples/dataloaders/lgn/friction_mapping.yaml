@@ -1,0 +1,62 @@
+# Descriptions from LGN Legend: https://mapserver.lgn.nl/?map=%2Fetc%2Fmapserver%2FLGN2023.map&SERVICE=WMS&serverType=mapserver&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&FORMAT=image%2Fpng&layer=LGN2023&sld_version=1.1.0,/ https://lgn.nl/basiskaart
+# Be aware of double entries in the legend, e.g. "#FFFF00" is used for both "Cereals" and "Open stuifzand en/of rivierzand"
+LGN_color_to_soil_friction:
+  "#73DF1F": 0.7                # Agrarisch gras                               Grassland
+  "#E89919": 0.75               # Maïs                                         Corn 
+  "#B26600": 0.75               # Aardappelen                                  Potatoes
+  "#E51F7F": 0.75               # Bieten                                       Beets
+  "#FFFF00": 0.75               # Granen                                       Cereals
+  "#FF00C5": 0.75               # Overige landbouwgewassen                     Other crops
+  "#46FFCF": 0.95               # Glastuinbouw                                 Greenhouse horticulture
+  "#3CEF45": 0.75               # Boomgaarden                                  Orchards
+  "#AC81A8": 0.75               # Bloembollen                                  Flower bulbs
+  
+  "#33C800": 0.65               # Loofbos                                      Deciduous forest
+  "#009900": 0.65               # Naaldbos                                     Coniferous forest
+  
+  "#2473FF": 0.0                # Zoet water                                   Fresh water
+  "#000099": 0.0                # Zout water                                   Salt water
+
+  "#FF0000": 0.95               # Bebouwing in primair bebouwd gebied          Building in primarily built-up areas
+  "#730000": 0.95               # Bebouwing in secundair bebouwd gebied        Building in secondary built-up areas
+  "#93D600": 0.65               # Bos in primair bebouwd gebied                Forest in primarily built-up areas
+  "#93AA00": 0.65               # Bos in secundair bebouwd gebied              Forest in secondary built-up areas
+  "#93FF00": 0.7                # Gras in primair bebouwd gebied               Grass in primarily built-up areas
+  "#FFFF66": 0.6                # Kale grond in primair bebouwd gebied         Bare ground in primarily built-up areas
+  "#761818": 0.95               # Bebouwing in buitengebied                    Building in rural areas
+  "#FF645A": 0.7                # Overig grondgebruik in buitengebied          Other land use in rural areas
+  "#A8EF44": 0.7                # Gras in secundair bebouwd gebied             Grass in secondary built-up areas
+  "#000000": 0.95               # Zonneparken                                  Solar parks
+  
+  "#B03060": 0.45               # Kwelders                                     Salt marshes
+  "#E6FB00": 0.5                # Open zand in Kustgebied                      Open sand in coastal areas
+  "#89D42B": 0.55               # Duinen met lage vegetatie                    Dunes with low vegetation
+  "#5ABA40": 0.55               # Duinen met hoge vegetatie                    Dunes with high vegetation
+  "#750075": 0.55               # Duinheide                                    Heathland in dunes
+  "#FFFF00": 0.5                # Open stuifzand en/of rivierzand              Open drifting sand and/or river sand
+  "#750075": 0.55               # Heide                                        Heathland
+  "#A42353": 0.6                # Matig vergraste heide                        Moderately overgrown heathland
+  "#AD8B06": 0.7                # Sterk vergraste heide                        Strongly overgrown heathland
+  "#249996": 0.45               # Hoogveen                                     Raised bog
+  "#065A4C": 0.45               # Bos in hoogveengebied                        Forest in raised bog areas
+  "#FFC0CB": 0.45               # Overige moeras vegetatie                     Other marsh vegetation
+  "#FFA500": 0.45               # Rietvegetatie                                Reed vegetation
+  "#006400": 0.45               # Bos in moerasgebied                          Forest in marsh areas
+  "#B6B639": 0.7                # Natuurlijk beheerde agrarische graslanden    Naturally managed grasslands
+  "#F5E10F": 0.7                # Gras in het kustgebied                       Grass in coastal areas
+  "#969639": 0.7                # Overig gras                                  Other grassland
+
+  "#FFB3A8": 0.7                # Boomkwekerijen                               Tree nurseries                                
+  "#E3FF70": 0.7                # Fruitkwekerijen                              Fruit nurseries
+
+  "#871B00": 1.0                # Hoofdinfrastructuur en spoorbaanlichamen     Main infrastructure and railway embankments
+  "#B02300": 0.95               # Halfverharde wegen, infrastructuur langzaam verkeer en overige infrastructuur  
+                                #                                              Semi-paved roads, infrastructure for slow traffic and other infrastructure
+  "#A80000": 0.9                # Smalle wegen                                 Narrow roads
+
+  "#89D42B": 0.45               # Struikvegetatie in hoogveengebied (laag)     Shrub vegetation in raised bog areas (low)
+  "#89D42B": 0.45               # Struikvegetatie in moerasgebied (laag)       Shrub vegetation in marsh areas (low)
+  "#89D42B": 0.7                # Overige struikvegetatie (laag)               Other shrub vegetation (low)
+  "#5ABA40": 0.45               # Struikvegetatie in hoogveengebied (hoog)     Shrub vegetation in raised bog areas (high)
+  "#5ABA40": 0.45               # Struikvegetatie in moerasgebied (hoog)       Shrub vegetation in marsh areas (high)
+  "#5ABA40": 0.7                # Overige struikvegetatie (hoog)               Other shrub vegetation (high)

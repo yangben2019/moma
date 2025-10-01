@@ -1,0 +1,14 @@
+axes.facecolor: f7f7f4
+axes.linewidth: 1.0
+axes.grid: True
+axes.grid.axis: both
+axes.grid.which: both
+axes.formatter.use_mathtext: True
+axes.prop_cycle: cycler("color", ["003d73", "e2001a", "8bad3f", "00aba4", "ee7f00", "37a0cb", "e2007a", "fabb00", "655a9f", "878787", "4b4b4a", "003e5c", "002546", "425821", "634b03", "281c41", "004543", "5f3408", "5b0c0c", "5f0030"])
+figure.autolayout: True
+figure.figsize: 15, 6
+grid.color: 7f7f7f
+grid.linestyle: :
+grid.linewidth: 0.5
+grid.alpha: 0.5
+text.usetex: True

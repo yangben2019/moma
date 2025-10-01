@@ -1,0 +1,23 @@
+networks:
+  local:
+    name: moma_devcontainer
+
+services:
+  moma:
+    container_name: moma_devcontainer
+    environment:
+      - JAX_PLATFORMS=cpu
+      - DISPLAY=${DISPLAY}
+    image: ghcr.io/aarhus-robotics/moma:devel
+    privileged: true
+    stdin_open: true
+    tty: true
+    volumes:
+      - ../../:/home/robot/workspace
+      #- venv:/home/robot/.cache/pypoetry/virtualenvs
+      - /tmp/.X11-unix:/tmp/.X11-unix
+
+volumes:
+  venv:
+    name:
+      moma_devcontainer_virtualenv

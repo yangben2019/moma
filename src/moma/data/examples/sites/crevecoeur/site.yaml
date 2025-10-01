@@ -1,0 +1,6 @@
+DataSource: Crevecoeur
+Coordinates: [655609, 5733665, 657216, 5734545] # [W, S, E, N]
+NoGoZones:
+#   - [x1, x2, y1, y2, (Description)]: Box
+#   - [x, y, r, (Description)]: Circle
+    - [656130, 5734120, 30, "User defined NoGoZone"]

@@ -1,0 +1,24 @@
+{
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dnut.rewrap-revived",
+                "IBM.output-colorizer",
+                "ms-python.python"
+            ],
+            "settings": {
+                "editor.rulers": [
+                    80,
+                    120
+                ],
+                "rewrap.wholeComments": false,
+                "rewrap.wrappingColumn": 80
+            }
+        }
+    },
+    "dockerComposeFile": [
+        "docker-compose.yml"
+    ],
+    "service": "moma",
+    "workspaceFolder": "/home/robot/workspace"
+}

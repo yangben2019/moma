@@ -1,0 +1,75 @@
+label_to_color:
+  Building:       [255,   0,   0]
+  Built-up area:  [127,   0,   0]
+  Road:           [  0,   0,   0]
+  Farming:        [227, 230,  70]
+  Forest:         [  0, 127,  20]
+  Nature:         [127, 255, 127]
+  Grass:          [ 80, 220,   0]
+  Wetland:        [ 90, 130,   0]
+  Fresh water:    [  0, 120, 255]
+  Sea:            [  0,  40, 255]
+  Non classified: [255, 105, 180]
+
+# Descriptions from LGN Legend: https://mapserver.lgn.nl/?map=%2Fetc%2Fmapserver%2FLGN2023.map&SERVICE=WMS&serverType=mapserver&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&FORMAT=image%2Fpng&layer=LGN2023&sld_version=1.1.0,/ https://lgn.nl/basiskaart
+# Be aware of double entries in the legend, e.g. "#FFFF00" is used for both "Cereals" and "Open stuifzand en/of rivierzand"
+LGN_color_to_landuse_label:
+  "#73DF1F": Grass              # Agrarisch gras                               Grassland
+  "#E89919": Farming            # Maïs                                         Corn 
+  "#B26600": Farming            # Aardappelen                                  Potatoes
+  "#E51F7F": Farming            # Bieten                                       Beets
+  "#FFFF00": Farming            # Granen                                       Cereals
+  "#FF00C5": Farming            # Overige landbouwgewassen                     Other crops
+  "#46FFCF": Building           # Glastuinbouw                                 Greenhouse horticulture
+  "#3CEF45": Farming            # Boomgaarden                                  Orchards
+  "#AC81A8": Farming            # Bloembollen                                  Flower bulbs
+  
+  "#33C800": Forest             # Loofbos                                      Deciduous forest
+  "#009900": Forest             # Naaldbos                                     Coniferous forest
+  
+  "#2473FF": Fresh water        # Zoet water                                   Fresh water
+  "#000099": Sea                # Zout water                                   Salt water
+
+  "#FF0000": Building           # Bebouwing in primair bebouwd gebied          Building in primarily built-up areas
+  "#730000": Building           # Bebouwing in secundair bebouwd gebied        Building in secondary built-up areas
+  "#93D600": Built-up area      # Bos in primair bebouwd gebied                Forest in primarily built-up areas
+  "#93AA00": Built-up area      # Bos in secundair bebouwd gebied              Forest in secondary built-up areas
+  "#93FF00": Built-up area      # Gras in primair bebouwd gebied               Grass in primarily built-up areas
+  "#FFFF66": Built-up area      # Kale grond in primair bebouwd gebied         Bare ground in primarily built-up areas
+  "#761818": Building           # Bebouwing in buitengebied                    Building in rural areas
+  "#FF645A": Built-up area      # Overig grondgebruik in buitengebied          Other land use in rural areas
+  "#A8EF44": Built-up area      # Gras in secundair bebouwd gebied             Grass in secondary built-up areas
+  "#000000": Building           # Zonneparken                                  Solar parks
+  
+  "#B03060": Wetland            # Kwelders                                     Salt marshes
+  "#E6FB00": Nature             # Open zand in Kustgebied                      Open sand in coastal areas
+  "#89D42B": Nature             # Duinen met lage vegetatie                    Dunes with low vegetation
+  "#5ABA40": Nature             # Duinen met hoge vegetatie                    Dunes with high vegetation
+  "#750075": Nature             # Duinheide                                    Heathland in dunes
+  "#FFFF00": Nature             # Open stuifzand en/of rivierzand              Open drifting sand and/or river sand
+  "#750075": Nature             # Heide                                        Heathland
+  "#A42353": Nature             # Matig vergraste heide                        Moderately overgrown heathland
+  "#AD8B06": Nature             # Sterk vergraste heide                        Strongly overgrown heathland
+  "#249996": Wetland            # Hoogveen                                     Raised bog
+  "#065A4C": Wetland            # Bos in hoogveengebied                        Forest in raised bog areas
+  "#FFC0CB": Wetland            # Overige moeras vegetatie                     Other marsh vegetation
+  "#FFA500": Nature             # Rietvegetatie                                Reed vegetation
+  "#006400": Wetland            # Bos in moerasgebied                          Forest in marsh areas
+  "#B6B639": Grass              # Natuurlijk beheerde agrarische graslanden    Naturally managed grasslands
+  "#F5E10F": Grass              # Gras in het kustgebied                       Grass in coastal areas
+  "#969639": Grass              # Overig gras                                  Other grassland
+
+  "#FFB3A8": Forest             # Boomkwekerijen                               Tree nurseries                                
+  "#E3FF70": Forest             # Fruitkwekerijen                              Fruit nurseries
+
+  "#871B00": Road               # Hoofdinfrastructuur en spoorbaanlichamen     Main infrastructure and railway embankments
+  "#B02300": Road               # Halfverharde wegen, infrastructuur langzaam verkeer en overige infrastructuur  
+                                #                                              Semi-paved roads, infrastructure for slow traffic and other infrastructure
+  "#A80000": Road               # Smalle wegen                                 Narrow roads
+
+  "#89D42B": Wetland            # Struikvegetatie in hoogveengebied (laag)     Shrub vegetation in raised bog areas (low)
+  "#89D42B": Wetland            # Struikvegetatie in moerasgebied (laag)       Shrub vegetation in marsh areas (low)
+  "#89D42B": Nature             # Overige struikvegetatie (laag)               Other shrub vegetation (low)
+  "#5ABA40": Wetland            # Struikvegetatie in hoogveengebied (hoog)     Shrub vegetation in raised bog areas (high)
+  "#5ABA40": Wetland            # Struikvegetatie in moerasgebied (hoog)       Shrub vegetation in marsh areas (high)
+  "#5ABA40": Nature             # Overige struikvegetatie (hoog)               Other shrub vegetation (high)

@@ -1,0 +1,156 @@
+# Transforms soil into type handles by the program
+# TODO: handle more soil types
+label_to_program_label:
+  limestone      : "GW"
+  gravel         : "GW"
+  silt           : "SC"
+  clay           : "CL"
+  sand           : "SC"
+  chalk          : "GW"
+  gyttja         : "CL"
+  peat           : "CL"
+  brown coal     : "SC"
+  marsh          : "SC"
+  mixed layer    : "SC"
+  diatomite      : "SC"
+  volcanic ash   : "SC"
+  ore            : "GW"
+  town           : "GW"
+  hard_terrain   : "HT"
+  other          : "GW"
+  non classified : "GW"
+
+# For test soils at oksbol
+  hard clay      : "HT"
+  hard gravel    : "HT"
+  soft sand      : "SC"
+  soft clay      : "CL"
+
+number_to_label:
+  1: limestone
+  2: gravel
+  3: silt
+  4: clay
+  5: sand
+  6: chalk
+  7: gyttja
+  8: peat
+  9: brown coal
+  10: marsh
+  11: mixed layer
+  12: diatomite
+  13: volcanic ash
+  14: ore
+  15: town
+  16: other
+  17: non classified
+
+label_to_color:
+  limestone      : [210, 200, 170]  # Beige
+  gravel         : [160, 160, 160]  # Light medium gray
+  silt           : [130, 150, 110]  # Light brown-gray
+  clay           : [190, 100,  10]  # Reddish brown
+  sand           : [245, 210, 170]  # Warm, saturated tan
+  chalk          : [250, 240, 230]  # Whiter beige
+  gyttja         : [120, 100,  40]  # Distinct brownish olive
+  peat           : [ 70,  50,  30]  # Dark brown
+  brown coal     : [160, 100,  60]  # Rich warm brown
+  marsh          : [  0, 100,   0]  # Dark green
+  mixed layer    : [255,   0, 255]  # Vibrant magenta
+  diatomite      : [245, 245, 220]  # Off-white / beige
+  volcanic ash   : [100, 100, 100]  # Cooler medium gray
+  ore            : [100,  90,  80]  # Metallic dark gray with warm tint
+  town           : [ 50,  50,  50]  # Very dark gray
+  hard_terrain   : [  0,   0,   0]  # Black
+  other          : [186,  85, 211]  # Vivid purple
+  non classified : [255, 105, 180]  # Hot pink
+
+# For test soils at oksbol
+  hard clay      : [ 50,  50,  50]  # Dark gray
+  hard gravel    : [  0,   0,   0]  # Black
+  soft sand      : [245, 210, 170]  # Warm, saturated tan
+  soft clay      : [190, 100,  10]  # Reddish brown
+
+
+jordart_to_soil_number:
+  'BK - Danian bryozoan og corallian limestone'       : 1  # limestone
+  'BY - Town'                                         : 15 # town
+  'DG - Meltwater gravel'                             : 2  # gravel
+  'DI - Meltwater silt'                               : 3  # silt
+  'DL - Meltwater clay'                               : 4  # clay
+  'DS - Meltwater sand'                               : 5  # sand
+  'DV - Alternating thin meltwater beds'              : 11 # mixed layer
+  'ED - Eocene diatomite'                             : 12 # diatomite
+  'EE - Eocene volcanic ash'                          : 13 # volcanic ash
+  'EK - Aeolian dune sand'                            : 5  # sand
+  'ES - Aeolian sand'                                 : 5  # sand
+  'FG - Freshwater gravel'                            : 2  # gravel
+  'FHG - Delta gravel'                                : 2  # gravel
+  'FHL - Delta clay'                                  : 4  # clay
+  'FHS - Delta sand'                                  : 5  # sand
+  'FI - Freshwater silt'                              : 3  # silt
+  'FJ - Ocher and bog iron'                           : 14 # ore
+  'FK - Tufa, bog-and lake marl'                      : 6  # chalk
+  'FL - Freshwater clay'                              : 4  # clay
+  'FP - Freshwater gyttja'                            : 7  # gyttja
+  'FS - Freshwater sand'                              : 5  # sand
+  'FT - Freshwater peat'                              : 8  # peat
+  'FV - Alternating thin freshwater beds'             : 11 # mixed layer
+  'G - Gravel / sand and gravel'                      : 2  # gravel
+  'GC - Oligocene/Miocene/Pliocene brown coal'        : 9  # brown coal
+  'GL - Oligocene/Miocene/Pliocene mica clay'         : 4  # clay
+  'GS - Oligocene/Miocene/Pliocene mica sand'         : 5  # sand
+  'GV - Oligocene/Miocene/Pliocene alternating layers': 11 # mixed layer
+  'HG - Saltwater gravel'                             : 2  # gravel
+  'HI - Saltwater silt'                               : 3  # silt
+  'HL - Saltwater clay'                               : 4  # clay
+  'HP - Saltwater gyttja'                             : 7  # gyttja
+  'HS - Saltwater sand'                               : 5  # sand
+  'HSG - Saltwater shell gravel'                      : 2  # gravel
+  'HT - Saltwater peat'                               : 8  # peat
+  'HV - Alternating thin saltwater beds, marsh'       : 10 # marsh
+  'IA - No access'                                    : 17 # non classified
+  'IT - Freshwater peat'                              : 8  # peat
+  'K - Chalk and limestone'                           : 1  # limestone
+  'KMG - Limey till, gravelly'                        : 2  # gravel
+  'KML - Limey till, clayey'                          : 4  # clay
+  'KMS - Limey till, sandy'                           : 5  # sand
+  'KS - Miocene quartz sand'                          : 5  # sand
+  'LL - Eocene clay, plastic clay'                    : 4  # clay
+  'LRÅ - Abandoned pit'                               : 16 # other
+  'LSL - Landslide'                                   : 16 # other
+  'MG - Gravelly till'                                : 2  # gravel
+  'MI - Silty till'                                   : 3  # silt
+  'ML - Clayey till'                                  : 4  # clay
+  'MS - Sandy till'                                   : 5  # sand
+  'MV - Alternating thin till beds'                   : 11 # mixed layer
+  'O - Land fill'                                     : 16 # other
+  'OL - Oligocene clay'                               : 4  # clay
+  'PKV - Pre-Quaternary layers'                       : 11 # mixed layer
+  'PL - Selandian clay, Paleocene clay'               : 4  # clay
+  'PS - Selandian sand, Paleocene greensand'          : 5  # sand
+  'QG - Saltwater gravel'                             : 2  # gravel
+  'QL - Saltwater clay'                               : 4  # clay
+  'QS - Saltwater sand'                               : 5  # sand
+  'RL - Eocene Røsnæs clay'                           : 4  # clay
+  'RÅ - Pit'                                          : 16 # other
+  'S - Sand'                                          : 5  # sand
+  'SK - Campanian-Maastrichtian chalk'                : 6  # chalk
+  'SL - Eocene Svind marl'                            : 6  # chalk
+  'SØ - Freshwater'                                   : 16 # other
+  'TA - Technical and artificial construction'        : 16 # other
+  'TG - Meltwater gravel'                             : 2  # gravel
+  'TI - Meltwater silt'                               : 3  # silt
+  'TL - Meltwater clay'                               : 4  # clay
+  'TS - Meltwater sand'                               : 5  # sand
+  'TV - Alternating thin meltwater beds'              : 11 # mixed layer
+  'X - Bed unknown, no information'                   : 16 # other
+  'YG - Saltwater gravel'                             : 2  # gravel
+  'YL - Saltwater clay'                               : 4  # clay
+  'YP - Saltwater gyttja'                             : 7  # gyttja
+  'YS - Saltwater sand'                               : 5  # sand
+  'ZG - Glaciolacustrine gravel'                      : 2  # gravel
+  'ZK - Danian chalk / chalk and flint'               : 6  # chalk
+  'ZL - Glaciolacustrine clay'                        : 4  # clay
+  'ZS - Glaciolacustrine sand'                        : 5  # sand
+  'ZV - Alternating thin glaciolacustrine beds'       : 11 # mixed layer
