@@ -75,7 +75,7 @@ The repository contains the following:
 
 # License
 
-DYNO is licensed using the permissive [MIT software license](LICENSE). You can
+MOMA is licensed using the permissive [MIT software license](LICENSE). You can
 do whatever you want as long as you include the original copyright and license
 notice in any copy of the software/source. Please refer to the license full text
 for more information the license terms.
