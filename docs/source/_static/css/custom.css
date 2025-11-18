@@ -15,15 +15,13 @@
 }
 
 .navbar {
-    background-color: #1c3052 !important; 
+    background-color: #1c3052 !important;
 }
 
-html[data-theme="light"] {
-    /* --pst-color-background: rgb(51, 51, 51); */
-    /* --pst-color-on-background: rgb(28, 48, 82); */
+html[data-theme="dark"] img {
+    filter: none;
 }
 
-html[data-theme="dark"] {
-    /* --pst-color-background: rgb(51, 51, 51); */
-    /* --pst-color-on-background: rgb(28, 48, 82); */
+html[data-theme="dark"] .bd-content img:not(.only-dark):not(.dark-light) {
+    background: unset;
 }

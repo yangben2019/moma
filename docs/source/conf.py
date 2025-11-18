@@ -58,10 +58,9 @@ pdf_documents = [("index", "moma", "title", latex_authors)]
 
 # Autodoc extension configuration
 autodoc_default_options = {
-    'special-members': '__init__',
+    "special-members": "__init__",
     'members': True,
     'private-members': True,
-    'undoc-members': True,
     'exclude-members': '__weakref__'
 }
 
