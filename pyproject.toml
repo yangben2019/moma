@@ -1,21 +1,25 @@
- #############################################################################
- #                            _     _     _     _                            #
- #                           / \   / \   / \   / \                           #
- #                          ( M ) ( O ) ( M ) ( A )                          #
- #                           \_/   \_/   \_/   \_/                           #
- #                                                                           #
- #               MOMA: Ground vehicles mobility mapping toolkit              #
- #############################################################################
+#############################################################################
+#                            _     _     _     _                            #
+#                           / \   / \   / \   / \                           #
+#                          ( M ) ( O ) ( M ) ( A )                          #
+#                           \_/   \_/   \_/   \_/                           #
+#                                                                           #
+#               MOMA: Ground vehicles mobility mapping toolkit              #
+#############################################################################
 
 [project]
 name = "moma"
 version = "1.0.0"
 description = "Ground vehicles mobility mapping toolkit."
-authors = [{name = "Dario Sirangelo", email = "dsi@aarhusrobotics.com"}]
+authors = [
+    { name = "Dario Sirangelo", email = "dsi@aarhusrobotics.com" },
+    { name = "Nikolaj Jes Petersen", email = "njp@aarhusrobotics.com" },
+]
 readme = "README.md"
 packages = [
-    {include = "moma", from= "src"},
-    {include = "examples", from="."}]
+    { include = "moma", from = "src" },
+    { include = "examples", from = "." },
+]
 
 [tool.poetry.dependencies]
 argparse = "^1.4.0"
@@ -23,7 +27,7 @@ colorama = "=0.4.6"
 coloredlogs = "=15.0.1"
 fiona = "~1.9.6"
 geopandas = "=0.13.0"
-jax = [{extras = ["cuda"], version = "0.5.0", platform="linux"}]
+jax = [{ extras = ["cuda"], version = "0.5.0", platform = "linux" }]
 matplotlib = "=3.7.1"
 networkx = "=3.1"
 numpy = ">=1.19.5,<1.27.0"
@@ -36,15 +40,18 @@ shapely = "2.0.6"
 tables = ">=3.9"
 terracotta = "0.9.1"
 python = ">=3.10,<3.11"
-pyvista = [{extras = ["colormaps"], version = "^0.46.3"}]
+pyvista = [{ extras = ["colormaps"], version = "^0.46.3" }]
 requests = "^2.32.3"
 rioxarray = "^0.19.0"
+
+[tool.poetry.group.documentation]
+optional = true
 
 [tool.poetry.group.documentation.dependencies]
 breathe = "^4.36.0"
 myst-parser = "^4.0.1"
 pydata-sphinx-theme = "^0.16.1"
-sphinx = "^7.2.6"
+sphinx = "^8.1.3"
 
 [build-system]
 requires = ["poetry-core"]
