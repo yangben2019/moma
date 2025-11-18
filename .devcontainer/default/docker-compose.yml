@@ -1,7 +1,3 @@
-networks:
-  local:
-    name: moma_devcontainer
-
 services:
   moma:
     container_name: moma_devcontainer

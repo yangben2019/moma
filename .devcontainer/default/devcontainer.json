@@ -3,8 +3,11 @@
         "vscode": {
             "extensions": [
                 "dnut.rewrap-revived",
+                "Gruntfuggly.todo-tree",
                 "IBM.output-colorizer",
-                "ms-python.python"
+                "ms-python.black-formatter",
+                "ms-python.python",
+                "yzhang.markdown-all-in-one"
             ],
             "settings": {
                 "editor.rulers": [
