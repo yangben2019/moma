@@ -1,8 +1,8 @@
-'''
+"""
 Raster module
-'''
+"""
 
-'''
+"""
  #############################################################################
  #                            _     _     _     _                            #
  #                           / \   / \   / \   / \                           #
@@ -14,7 +14,7 @@ Raster module
 
 MIT License
 
-Copyright (c) 2024 Dario Sirangelo
+Copyright (c) 2024 Dario Sirangelo, Nikolaj Jes Petersen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,7 +32,7 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-'''
+"""
 
 
 import logging
@@ -53,9 +53,9 @@ import numpy as np
 
 log = logging.getLogger("MOMA")
 
+
 class Raster(ABC):
-    """Raster
-    """
+    """Raster"""
 
     COLORMAPS = ["RdYlBu"]
 
@@ -64,7 +64,7 @@ class Raster(ABC):
     RESAMPLING_METHODS = {
         "average": Resampling.average,
         "bilinear": Resampling.bilinear,
-        "nearest": Resampling.nearest
+        "nearest": Resampling.nearest,
     }
 
     def set_colormap(self, key):
@@ -74,12 +74,14 @@ class Raster(ABC):
             key (string): Colormap name. Possible values are "RdYlBu". Defaults to "RdYlBu".
         """
 
-        self.colormap = getattr(mpl.cm, self.COLORMAPS.index(
-            key)) if key in self.COLORMAPS else self.COLORMAP_DEFAULT
-        
+        self.colormap = (
+            getattr(mpl.cm, self.COLORMAPS.index(key))
+            if key in self.COLORMAPS
+            else self.COLORMAP_DEFAULT
+        )
+
     def return_empty_copy(self):
-        """Return empty copy of raster
-        """
+        """Return empty copy of raster"""
         new_raster = self.__class__(self.path)
         new_raster.data = np.zeros_like(self.data)
         new_raster.dtype = self.dtype
@@ -94,19 +96,28 @@ class Raster(ABC):
         new_raster.x_max = self.x_max
         new_raster.y_min = self.y_min
         new_raster.y_max = self.y_max
-        
+
         new_raster.crs = self.crs
         new_raster.transform = self.transform
 
         return new_raster
 
-    def plot(self, 
-             data=None, rgb=None,
-             colorbar=None, clim=None, discrete_colormap=None, reverse_colormap=True,
-             title=None,
-             export_path=None, show=True, export=False, save_maps=False, hide_utm=False):
-        """Show raster
-        """
+    def plot(
+        self,
+        data=None,
+        rgb=None,
+        colorbar=None,
+        clim=None,
+        discrete_colormap=None,
+        reverse_colormap=True,
+        title=None,
+        export_path=None,
+        show=True,
+        export=False,
+        save_maps=False,
+        hide_utm=False,
+    ):
+        """Show raster"""
 
         # Use stored data in raster if no data is provided
         if data is not None:
@@ -124,7 +135,8 @@ class Raster(ABC):
         def norm(data):
             return mpl.colors.Normalize(
                 vmin=np.mean(data) - 1.25 * np.std(data),
-                vmax=np.mean(data) + 1.25 * np.std(data))
+                vmax=np.mean(data) + 1.25 * np.std(data),
+            )
 
         # Draw raster data
         extent = [self.x_min, self.x_max, self.y_min, self.y_max]
@@ -134,11 +146,7 @@ class Raster(ABC):
             else:
                 means = plot_data
 
-            image = axes.imshow(
-                    means,
-                    extent=extent,
-                    cmap=cmap,
-                    norm=norm(means))
+            image = axes.imshow(means, extent=extent, cmap=cmap, norm=norm(means))
         else:
             if discrete_colormap is None:
                 image = axes.imshow(rgb, extent=extent)
@@ -151,23 +159,27 @@ class Raster(ABC):
 
                 # Generate normalization bins
                 normalization_bins = np.sort([*col_dict.keys()]) + 0.5
-                normalization_bins = np.insert(normalization_bins, 0,
-                                            np.min(normalization_bins) - 1.0)
-                
+                normalization_bins = np.insert(
+                    normalization_bins, 0, np.min(normalization_bins) - 1.0
+                )
+
                 # Set up normaliser and formatter
-                normalization = mpl.colors.BoundaryNorm(normalization_bins,
-                                                        len(labels),
-                                                        clip=True)
+                normalization = mpl.colors.BoundaryNorm(
+                    normalization_bins, len(labels), clip=True
+                )
                 colorbar_formatter = mpl.ticker.FuncFormatter(
-                    lambda x, pos: labels[normalization(x)])
-                
-                image = axes.imshow(rgb, extent=extent, cmap=discrete_colormap, norm=normalization)
+                    lambda x, pos: labels[normalization(x)]
+                )
+
+                image = axes.imshow(
+                    rgb, extent=extent, cmap=discrete_colormap, norm=normalization
+                )
 
         # Add minor grid showing the cells for small sites
-        if self.width + self.height < 200: 
+        if self.width + self.height < 200:
             axes.xaxis.set_minor_locator(MultipleLocator(5))
             axes.yaxis.set_minor_locator(MultipleLocator(5))
-            axes.grid(which='major', linestyle='--')
+            axes.grid(which="major", linestyle="--")
         if hide_utm:
             axes.set_xticks([])
             axes.set_yticks([])
@@ -175,13 +187,19 @@ class Raster(ABC):
             axes.set_ylabel("")
         else:
             # Add UTM ticks
-            axes.grid(True, which='both')
+            axes.grid(True, which="both")
             axes.set_xlabel("UTM Longitude [m]")
             axes.set_ylabel("UTM Latitude [m] ")
-        
+
         # Add map ticks
-        axes.secondary_xaxis('bottom' if hide_utm else 'top',   functions=(lambda x: x - self.x_min, lambda x: x + self.x_min)).set_xlabel("Length [m]")
-        axes.secondary_yaxis('left' if hide_utm else 'right', functions=(lambda y: y - self.y_min, lambda y: y + self.y_min)).set_ylabel("Length [m]")
+        axes.secondary_xaxis(
+            "bottom" if hide_utm else "top",
+            functions=(lambda x: x - self.x_min, lambda x: x + self.x_min),
+        ).set_xlabel("Length [m]")
+        axes.secondary_yaxis(
+            "left" if hide_utm else "right",
+            functions=(lambda y: y - self.y_min, lambda y: y + self.y_min),
+        ).set_ylabel("Length [m]")
 
         # Disable scientific notation for ticks
         axes.ticklabel_format(style="plain", useOffset=False)
@@ -190,12 +208,12 @@ class Raster(ABC):
             divider = make_axes_locatable(axes)
             pad_val = 0.5 if hide_utm else 1
             pad_val = pad_val if discrete_colormap is None else pad_val - 0.3
-            cax = divider.new_vertical(size = '5%', pad = pad_val)
+            cax = divider.new_vertical(size="5%", pad=pad_val)
             figure.add_axes(cax)
         # Add color_bar
         if colorbar is not None:
 
-            color_bar = figure.colorbar(image, cax=cax, orientation='horizontal')
+            color_bar = figure.colorbar(image, cax=cax, orientation="horizontal")
             color_bar.set_label(colorbar, labelpad=-55)
             color_bar.minorticks_on()
             # Adjust clim
@@ -206,16 +224,22 @@ class Raster(ABC):
             spacing = normalization_bins[1:] - normalization_bins[:-1]
             ticks = normalization_bins[:-1] + spacing / 2
 
-            color_bar = figure.colorbar(image, cax=cax, orientation='horizontal', format=colorbar_formatter, ticks=ticks)
+            color_bar = figure.colorbar(
+                image,
+                cax=cax,
+                orientation="horizontal",
+                format=colorbar_formatter,
+                ticks=ticks,
+            )
 
-            color_bar.ax.xaxis.set_ticks_position('top')
-            color_bar.ax.xaxis.set_label_position('top')
+            color_bar.ax.xaxis.set_ticks_position("top")
+            color_bar.ax.xaxis.set_label_position("top")
             tick_spacing = ticks[1] - ticks[0]
             for label in color_bar.ax.get_xticklabels():
                 label.set_rotation(45)
-                label.set_ha('left')
+                label.set_ha("left")
                 x, y = label.get_position()
-                label.set_position((x - 0.5*tick_spacing, y))
+                label.set_position((x - 0.5 * tick_spacing, y))
         else:
             color_bar = None
 
@@ -239,13 +263,13 @@ class Raster(ABC):
             log.info(f"Exporting raster plot to {export_path}.")
             if rgb is not None:
                 # Convert RGB data to HSV hue
-                hsv_img = mcolors.rgb_to_hsv(rgb[:, :, :3])  
+                hsv_img = mcolors.rgb_to_hsv(rgb[:, :, :3])
                 hue_map = hsv_img[:, :, 0]
 
                 if discrete_colormap is not None:
-                    hue_map = np.round(hue_map*255)
+                    hue_map = np.round(hue_map * 255)
 
-                    # Converts label rgb to hue 
+                    # Converts label rgb to hue
                     label_to_hue = {}
                     for rgb_int, label in col_dict.items():
                         r = (rgb_int >> 16) & 0xFF
@@ -254,7 +278,7 @@ class Raster(ABC):
 
                         rgb = np.array([r, g, b]) / 255.0
                         hsv = mcolors.rgb_to_hsv(rgb)
-                        hue = np.round(hsv[0]*255)
+                        hue = np.round(hsv[0] * 255)
 
                         label_to_hue[label] = hue
 
@@ -281,21 +305,23 @@ class Raster(ABC):
 
         if data is None:
             data = self.data
-        
+
         # Expand data dimensions if it is a single band raster
         if data.ndim == 2:
             data = np.expand_dims(data, axis=0)
 
         # Open new raster handle
-        raster = rasterio.open(path,
-                               "w",
-                               driver="GTiff",
-                               width=self.width,
-                               height=self.height,
-                               count=data.shape[0],
-                               dtype=data.dtype,
-                               crs=self.crs,
-                               transform=self.transform)
+        raster = rasterio.open(
+            path,
+            "w",
+            driver="GTiff",
+            width=self.width,
+            height=self.height,
+            count=data.shape[0],
+            dtype=data.dtype,
+            crs=self.crs,
+            transform=self.transform,
+        )
 
         # Export raster and close handle
         raster.write(data)
@@ -303,8 +329,7 @@ class Raster(ABC):
 
 
 class RasterMono(Raster):
-    """Single-band raster
-    """
+    """Single-band raster"""
 
     def __init__(self, path):
 
@@ -351,29 +376,31 @@ class RasterMono(Raster):
         height = int(self.height * factor)
         width = int(self.width * factor)
         shape = (height, width)
-        
+
         # Open RasterIO raster handle
         with rasterio.open(self.path, "r") as raster:
 
             # Resample original raster data
             self.data = raster.read(
-                out_shape=shape,
-                resampling=self.RESAMPLING_METHODS.get(resampling))
+                out_shape=shape, resampling=self.RESAMPLING_METHODS.get(resampling)
+            )
 
             # Update transform
             self.transform = self.transform * raster.transform.scale(
-                (self.width / shape[-1]), (self.height / shape[-2]))
+                (self.width / shape[-1]), (self.height / shape[-2])
+            )
 
         # Update raster information
         self.height = height
         self.width = width
-        
+
         # Get new raster resolution
         self.resolution_x = self.transform[0]
-        self.resolution_y = -self.transform[4] 
+        self.resolution_y = -self.transform[4]
 
-    def add_cylinder(self, coordinate_x: float, coordinate_y: float,
-                     radius: float, height: float):
+    def add_cylinder(
+        self, coordinate_x: float, coordinate_y: float, radius: float, height: float
+    ):
         """Add cylindrical feature
 
         Args:
@@ -407,8 +434,7 @@ class RasterMono(Raster):
 
 
 class RasterRGBA(Raster):
-    """4-band raster
-    """
+    """4-band raster"""
 
     def __init__(self, path):
 
@@ -421,7 +447,7 @@ class RasterRGBA(Raster):
         raster = rasterio.open(path, "r")
 
         # Get raster data and data type
-        self.data = raster.read()       
+        self.data = raster.read()
         self.dtype = raster.dtypes
 
         # Get raster dimensions
@@ -464,16 +490,19 @@ class RasterRGBA(Raster):
         with rasterio.open(self.path, "r") as raster:
 
             # Resample RGBA data for all 4 channels
-            self.data = raster.read(out_shape=shape, resampling=self.RESAMPLING_METHODS.get(resampling))
+            self.data = raster.read(
+                out_shape=shape, resampling=self.RESAMPLING_METHODS.get(resampling)
+            )
 
             # Update transform
             self.transform = self.transform * raster.transform.scale(
-                (self.width / shape[-1]), (self.height / shape[-2]))
+                (self.width / shape[-1]), (self.height / shape[-2])
+            )
 
         # Update raster information
         self.height = height
         self.width = width
-        
+
         # Get new raster resolution
         self.resolution_x = self.transform[0]
         self.resolution_y = -self.transform[4]
@@ -483,5 +512,5 @@ class RasterRGBA(Raster):
         # Create RasterIO raster handle
         with rasterio.open(self.path, "r") as raster:
             (py, px) = raster.index(lon, lat)
-        
+
         return (py, -px)

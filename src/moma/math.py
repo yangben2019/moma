@@ -1,8 +1,8 @@
-'''
+"""
 Math module
-'''
+"""
 
-'''
+"""
  #############################################################################
  #                            _     _     _     _                            #
  #                           / \   / \   / \   / \                           #
@@ -14,7 +14,7 @@ Math module
 
 MIT License
 
-Copyright (c) 2024 Dario Sirangelo
+Copyright (c) 2024 Dario Sirangelo, Nikolaj Jes Petersen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,53 +32,54 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-'''
+"""
 
 
 import matplotlib.pyplot as plt
 import numpy as np
- 
+
 from scipy.interpolate import splprep, splev
- 
+
+
 def main():
 
-    path = np.array([
-        [0, 0],
-        [0, 1],
-        [0, 2],
-        [1, 3],
-        [2, 3],
-        [3, 2],
-        [4, 2],
-        [5, 1],
-        [6, 1],
-        [7, 0],
-        [8, 0],
-        [9, 0],
-        [-4.5, -7],
-        [-9, -15],
-    ])
-    
+    path = np.array(
+        [
+            [0, 0],
+            [0, 1],
+            [0, 2],
+            [1, 3],
+            [2, 3],
+            [3, 2],
+            [4, 2],
+            [5, 1],
+            [6, 1],
+            [7, 0],
+            [8, 0],
+            [9, 0],
+            [-4.5, -7],
+            [-9, -15],
+        ]
+    )
+
     path_mdf = path.copy()
     path_mdf[5, 1] = 3
     path_mdf[8, 1] = 0
-    
-    
+
     tck, u = splprep([path[:, 0], path[:, 1]], k=3, s=0.0)
     u_fine = np.linspace(0, 1, 100)
     x_smooth, y_smooth = splev(u_fine, tck)
-    
+
     fig, ax = plt.subplots(1, 1, figsize=(8, 4))
-    
-    
+
     ax.plot(path[:, 0] + 0.5, path[:, 1] + 0.5, "r", linewidth=2, label="Path")
     ax.plot(x_smooth + 0.5, y_smooth + 0.5, "b", linewidth=2, label="Smoothened path")
 
     plt.show()
 
-if __name__ == '__main__':
-    main()
 
+if __name__ == "__main__":
+    main()
 
 
 import math
@@ -109,8 +110,9 @@ class CubicSpline1D:
         # calc spline coefficient b and d
         for i in range(self.nx - 1):
             d = (self.c[i + 1] - self.c[i]) / (3.0 * h[i])
-            b = 1.0 / h[i] * (self.a[i + 1] - self.a[i]) \
-                - h[i] / 3.0 * (2.0 * self.c[i] + self.c[i + 1])
+            b = 1.0 / h[i] * (self.a[i + 1] - self.a[i]) - h[i] / 3.0 * (
+                2.0 * self.c[i] + self.c[i + 1]
+            )
             self.d.append(d)
             self.b.append(b)
 
@@ -122,8 +124,9 @@ class CubicSpline1D:
 
         i = self.__search_index(x)
         dx = x - self.x[i]
-        position = self.a[i] + self.b[i] * dx + \
-            self.c[i] * dx ** 2.0 + self.d[i] * dx ** 3.0
+        position = (
+            self.a[i] + self.b[i] * dx + self.c[i] * dx**2.0 + self.d[i] * dx**3.0
+        )
 
         return position
 
@@ -135,7 +138,7 @@ class CubicSpline1D:
 
         i = self.__search_index(x)
         dx = x - self.x[i]
-        dy = self.b[i] + 2.0 * self.c[i] * dx + 3.0 * self.d[i] * dx ** 2.0
+        dy = self.b[i] + 2.0 * self.c[i] * dx + 3.0 * self.d[i] * dx**2.0
         return dy
 
     def calc_second_derivative(self, x):
@@ -179,8 +182,9 @@ class CubicSpline1D:
     def __calc_B(self, h, a):
         B = np.zeros(self.nx)
         for i in range(self.nx - 2):
-            B[i + 1] = 3.0 * (a[i + 2] - a[i + 1]) / h[i + 1]\
-                - 3.0 * (a[i + 1] - a[i]) / h[i]
+            B[i + 1] = (
+                3.0 * (a[i + 2] - a[i + 1]) / h[i + 1] - 3.0 * (a[i + 1] - a[i]) / h[i]
+            )
         return B
 
 
@@ -210,7 +214,7 @@ class CubicSpline2D:
         ddx = self.sx.calc_second_derivative(s)
         dy = self.sy.calc_first_derivative(s)
         ddy = self.sy.calc_second_derivative(s)
-        k = (ddy * dx - ddx * dy) / ((dx ** 2 + dy ** 2)**(3 / 2))
+        k = (ddy * dx - ddx * dy) / ((dx**2 + dy**2) ** (3 / 2))
         return k
 
     def calc_curvature_rate(self, s):
@@ -250,14 +254,16 @@ def calc_spline_course(x, y, ds=0.1):
 
 def main_1d():
     import matplotlib.pyplot as plt
+
     x = np.arange(5)
     y = [1.7, -6, 5, 6.5, 0.0]
     sp = CubicSpline1D(x, y)
     xi = np.linspace(0.0, 5.0)
 
     plt.plot(x, y, "xb", label="Data points")
-    plt.plot(xi, [sp.calc_position(x) for x in xi], "r",
-             label="Cubic spline interpolation")
+    plt.plot(
+        xi, [sp.calc_position(x) for x in xi], "r", label="Cubic spline interpolation"
+    )
     plt.grid(True)
     plt.legend()
     plt.show()
@@ -265,6 +271,7 @@ def main_1d():
 
 def main_2d():  # pragma: no cover
     import matplotlib.pyplot as plt
+
     x = [-2.5, 0.0, 2.5, 5.0, 7.5, 3.0, -1.0]
     y = [0.7, -6, 5, 6.5, 0.0, 5.0, -2.0]
     ds = 0.1  # [m] distance of each interpolated points
@@ -281,7 +288,7 @@ def main_2d():  # pragma: no cover
         rk.append(sp.calc_curvature(i_s))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # main_1d()
-    #main_2d()
+    # main_2d()
     pass

@@ -1,8 +1,8 @@
-'''
+"""
 Generators module
-'''
+"""
 
-'''
+"""
  #############################################################################
  #                            _     _     _     _                            #
  #                           / \   / \   / \   / \                           #
@@ -14,7 +14,7 @@ Generators module
 
 MIT License
 
-Copyright (c) 2024 Dario Sirangelo
+Copyright (c) 2024 Dario Sirangelo, Nikolaj Jes Petersen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,7 +32,7 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-'''
+"""
 
 
 import importlib
@@ -55,9 +55,10 @@ from PIL import Image
 from moma.dataloader import save_new_raster
 from moma.mapping import LatinHyperCube
 
-plt.style.use(importlib.resources.path(
-        "moma", "data") / pathlib.Path(
-        "matplotlib/moma.mplstyle"))
+plt.style.use(
+    importlib.resources.path("moma", "data") / pathlib.Path("matplotlib/moma.mplstyle")
+)
+
 
 class TestMapGenerator:
 
@@ -80,36 +81,68 @@ class TestMapGenerator:
 
     def fill_pad(Z, start_pad, transition_pad, sections_start_and_end):
         # Left
-        values = Z[np.round((sections_start_and_end[1][:-1] + sections_start_and_end[1][1:])/2).astype(int), start_pad + transition_pad]
+        values = Z[
+            np.round(
+                (sections_start_and_end[1][:-1] + sections_start_and_end[1][1:]) / 2
+            ).astype(int),
+            start_pad + transition_pad,
+        ]
 
-        Z[:sections_start_and_end[1][1], :start_pad] = values[0]
+        Z[: sections_start_and_end[1][1], :start_pad] = values[0]
         for idx in range(1, len(values) - 1):
-            Z[sections_start_and_end[1][idx]:sections_start_and_end[1][idx + 1], :start_pad] = values[idx]
-        Z[sections_start_and_end[1][-2]:, :start_pad] = values[-1]
+            Z[
+                sections_start_and_end[1][idx] : sections_start_and_end[1][idx + 1],
+                :start_pad,
+            ] = values[idx]
+        Z[sections_start_and_end[1][-2] :, :start_pad] = values[-1]
 
         # Right
-        values = Z[np.round((sections_start_and_end[1][:-1] + sections_start_and_end[1][1:])/2).astype(int), - (start_pad + transition_pad + 1)]
+        values = Z[
+            np.round(
+                (sections_start_and_end[1][:-1] + sections_start_and_end[1][1:]) / 2
+            ).astype(int),
+            -(start_pad + transition_pad + 1),
+        ]
 
-        Z[:sections_start_and_end[1][1], -start_pad:] = values[0]
+        Z[: sections_start_and_end[1][1], -start_pad:] = values[0]
         for idx in range(1, len(values) - 1):
-            Z[sections_start_and_end[1][idx]:sections_start_and_end[1][idx + 1], -start_pad:] = values[idx]
-        Z[sections_start_and_end[1][-2]:, -start_pad:] = values[-1]
+            Z[
+                sections_start_and_end[1][idx] : sections_start_and_end[1][idx + 1],
+                -start_pad:,
+            ] = values[idx]
+        Z[sections_start_and_end[1][-2] :, -start_pad:] = values[-1]
 
         # Bottom
-        values = Z[start_pad + transition_pad, np.round((sections_start_and_end[0][:-1] + sections_start_and_end[0][1:])/2).astype(int)]
+        values = Z[
+            start_pad + transition_pad,
+            np.round(
+                (sections_start_and_end[0][:-1] + sections_start_and_end[0][1:]) / 2
+            ).astype(int),
+        ]
 
-        Z[:start_pad, :sections_start_and_end[0][1]] = values[0]
+        Z[:start_pad, : sections_start_and_end[0][1]] = values[0]
         for idx in range(1, len(values) - 1):
-            Z[:start_pad, sections_start_and_end[0][idx]:sections_start_and_end[0][idx + 1]] = values[idx]
-        Z[:start_pad, sections_start_and_end[0][-2]:] = values[-1]
+            Z[
+                :start_pad,
+                sections_start_and_end[0][idx] : sections_start_and_end[0][idx + 1],
+            ] = values[idx]
+        Z[:start_pad, sections_start_and_end[0][-2] :] = values[-1]
 
         # Top
-        values = Z[-(start_pad + transition_pad + 1), np.round((sections_start_and_end[0][:-1] + sections_start_and_end[0][1:])/2).astype(int)]
+        values = Z[
+            -(start_pad + transition_pad + 1),
+            np.round(
+                (sections_start_and_end[0][:-1] + sections_start_and_end[0][1:]) / 2
+            ).astype(int),
+        ]
 
-        Z[-start_pad:, :sections_start_and_end[0][1]] = values[0]
+        Z[-start_pad:, : sections_start_and_end[0][1]] = values[0]
         for idx in range(1, len(values) - 1):
-            Z[-start_pad:, sections_start_and_end[0][idx]:sections_start_and_end[0][idx + 1]] = values[idx]
-        Z[-start_pad:, sections_start_and_end[0][-2]:] = values[-1]
+            Z[
+                -start_pad:,
+                sections_start_and_end[0][idx] : sections_start_and_end[0][idx + 1],
+            ] = values[idx]
+        Z[-start_pad:, sections_start_and_end[0][-2] :] = values[-1]
 
         # Fill transition
         # Left
@@ -148,8 +181,14 @@ class TestMapGenerator:
 
         # Gives test map like the following:
 
-        Slope_length = [[50 for _ in range(9)], [50 for _ in range(9)]]   # Length of the slope sections in x and y direction
-        Flat_length  = [[50 for _ in range(10)], [50 for _ in range(10)]] # Length of the flat  sections in x and y direction
+        Slope_length = [
+            [50 for _ in range(9)],
+            [50 for _ in range(9)],
+        ]  # Length of the slope sections in x and y direction
+        Flat_length = [
+            [50 for _ in range(10)],
+            [50 for _ in range(10)],
+        ]  # Length of the flat  sections in x and y direction
 
         Flat_sections = [len(Flat_length[0]), len(Flat_length[1])]
 
@@ -158,31 +197,49 @@ class TestMapGenerator:
         # Initialize a PRNG key.
         key = jrand.PRNGKey(seed)
         # Create a key for each cell in the 2D grid.
-        cell_keys = jrand.split(key, Flat_sections[0] * Flat_sections[1]).reshape(Flat_sections[0], Flat_sections[1], -1)
+        cell_keys = jrand.split(key, Flat_sections[0] * Flat_sections[1]).reshape(
+            Flat_sections[0], Flat_sections[1], -1
+        )
 
         for i in range(Flat_sections[0]):
             for j in range(Flat_sections[1]):
                 if i == 0 and j == 0:
                     pass
                 elif i == 0:
-                    max_diff = Slope_length[1][j-1] * max_slope_percent/ 100
-                    max = elevation_grid[i, j-1] + max_diff
-                    min = elevation_grid[i, j-1] - max_diff
+                    max_diff = Slope_length[1][j - 1] * max_slope_percent / 100
+                    max = elevation_grid[i, j - 1] + max_diff
+                    min = elevation_grid[i, j - 1] - max_diff
 
-                    elevation_grid[i, j] = jrand.uniform(cell_keys[i, j, :], shape=(1,), minval=min, maxval=max)[0]
+                    elevation_grid[i, j] = jrand.uniform(
+                        cell_keys[i, j, :], shape=(1,), minval=min, maxval=max
+                    )[0]
                 elif j == 0:
-                    max_diff = Slope_length[0][i-1] * max_slope_percent/ 100
-                    max = elevation_grid[i-1, j] + max_diff
-                    min = elevation_grid[i-1, j] - max_diff
+                    max_diff = Slope_length[0][i - 1] * max_slope_percent / 100
+                    max = elevation_grid[i - 1, j] + max_diff
+                    min = elevation_grid[i - 1, j] - max_diff
 
-                    elevation_grid[i, j] = jrand.uniform(cell_keys[i, j, :], shape=(1,), minval=min, maxval=max)[0]
+                    elevation_grid[i, j] = jrand.uniform(
+                        cell_keys[i, j, :], shape=(1,), minval=min, maxval=max
+                    )[0]
                 else:
-                    diff_i = Slope_length[0][i-1] * max_slope_percent/ 100
-                    diff_j = Slope_length[1][j-1] * max_slope_percent/ 100
-                    max = np.min([elevation_grid[i-1, j] + diff_i, elevation_grid[i, j-1] + diff_j])
-                    min = np.max([elevation_grid[i-1, j] - diff_i, elevation_grid[i, j-1] - diff_j])
+                    diff_i = Slope_length[0][i - 1] * max_slope_percent / 100
+                    diff_j = Slope_length[1][j - 1] * max_slope_percent / 100
+                    max = np.min(
+                        [
+                            elevation_grid[i - 1, j] + diff_i,
+                            elevation_grid[i, j - 1] + diff_j,
+                        ]
+                    )
+                    min = np.max(
+                        [
+                            elevation_grid[i - 1, j] - diff_i,
+                            elevation_grid[i, j - 1] - diff_j,
+                        ]
+                    )
 
-                    elevation_grid[i, j] = jrand.uniform(cell_keys[i, j, :], shape=(1,), minval=min, maxval=max)[0]
+                    elevation_grid[i, j] = jrand.uniform(
+                        cell_keys[i, j, :], shape=(1,), minval=min, maxval=max
+                    )[0]
 
         # Make min value equal to 0
         elevation_grid -= np.min(elevation_grid)
@@ -190,9 +247,12 @@ class TestMapGenerator:
         # Scale the map
         elevation_grid *= scale_map
 
-        resolution = 4           # Pixel/meter
+        resolution = 4  # Pixel/meter
 
-        map_size = (sum(Flat_length[0]) + sum(Slope_length[0]), sum(Flat_length[1]) + sum(Slope_length[1]))
+        map_size = (
+            sum(Flat_length[0]) + sum(Slope_length[0]),
+            sum(Flat_length[1]) + sum(Slope_length[1]),
+        )
 
         sections = [
             [0, Flat_length[0][0]],
@@ -200,22 +260,29 @@ class TestMapGenerator:
         ]
 
         for i in range(1, Flat_sections[0]):
-            sections[0].append(sections[0][-1] + Slope_length[0][i-1])
+            sections[0].append(sections[0][-1] + Slope_length[0][i - 1])
             sections[0].append(sections[0][-1] + Flat_length[0][i])
 
         for j in range(1, Flat_sections[1]):
-            sections[1].append(sections[1][-1] + Slope_length[1][j-1])
+            sections[1].append(sections[1][-1] + Slope_length[1][j - 1])
             sections[1].append(sections[1][-1] + Flat_length[1][j])
 
         sections[0] = np.array(sections[0])
         sections[1] = np.array(sections[1])
-        sections_start_and_end = [sections[0]*resolution, sections[1]*resolution]
+        sections_start_and_end = [sections[0] * resolution, sections[1] * resolution]
 
-        Z = np.zeros((map_size[1]*resolution, map_size[0]*resolution))
+        Z = np.zeros((map_size[1] * resolution, map_size[0] * resolution))
 
         for i in range(Flat_sections[0]):
             for j in range(Flat_sections[1]):
-                Z[sections_start_and_end[1][j*2]:sections_start_and_end[1][j*2+1], sections_start_and_end[0][i*2]:sections_start_and_end[0][i*2+1]] = elevation_grid[i, j]
+                Z[
+                    sections_start_and_end[1][j * 2] : sections_start_and_end[1][
+                        j * 2 + 1
+                    ],
+                    sections_start_and_end[0][i * 2] : sections_start_and_end[0][
+                        i * 2 + 1
+                    ],
+                ] = elevation_grid[i, j]
 
         Z = TestMapGenerator.fill_slopes(Z, sections_start_and_end)
 
@@ -223,7 +290,10 @@ class TestMapGenerator:
         transition_pad = 15
         start_pad = 10
 
-        map_size = (map_size[0] + 2*(transition_pad + start_pad), map_size[1] + 2*(transition_pad + start_pad))
+        map_size = (
+            map_size[0] + 2 * (transition_pad + start_pad),
+            map_size[1] + 2 * (transition_pad + start_pad),
+        )
 
         sections[0] += transition_pad + start_pad
         sections[1] += transition_pad + start_pad
@@ -234,36 +304,56 @@ class TestMapGenerator:
         sections_start_and_end[0] += transition_pad + start_pad
         sections_start_and_end[1] += transition_pad + start_pad
 
-        new_Z = np.zeros((map_size[1]*resolution, map_size[0]*resolution))
+        new_Z = np.zeros((map_size[1] * resolution, map_size[0] * resolution))
 
         new_Z[
-            (transition_pad + start_pad):-(transition_pad + start_pad),
-            (transition_pad + start_pad):-(transition_pad + start_pad)
+            (transition_pad + start_pad) : -(transition_pad + start_pad),
+            (transition_pad + start_pad) : -(transition_pad + start_pad),
         ] = Z
         Z = new_Z
 
-        Z = TestMapGenerator.fill_pad(Z, start_pad, transition_pad, sections_start_and_end)
+        Z = TestMapGenerator.fill_pad(
+            Z, start_pad, transition_pad, sections_start_and_end
+        )
 
         return Z, map_size, resolution, sections
 
     def generate_test_map_uncertainty(map_size, resolution, uncertainty=0.02):
-        Z = np.ones((map_size[1]*resolution, map_size[0]*resolution))*uncertainty
+        Z = np.ones((map_size[1] * resolution, map_size[0] * resolution)) * uncertainty
 
         return Z
 
     def smooth(Z, sigma, truncate):
         return gaussian_filter(Z, sigma=sigma, truncate=truncate)
 
-    def plot_surface(output_dir, elevation, sections, map_size, show_plot=False, subname=""):
+    def plot_surface(
+        output_dir, elevation, sections, map_size, show_plot=False, subname=""
+    ):
         fig = plt.figure(figsize=(10, 8))
         gs = gridspec.GridSpec(1, 2, width_ratios=[8, 10], wspace=0.4)
 
         # 2D plot
         ax1 = fig.add_subplot(gs[0])
-        img = ax1.imshow(elevation, cmap="RdYlBu_r", extent=[0, map_size[0], 0, map_size[1]])
+        img = ax1.imshow(
+            elevation, cmap="RdYlBu_r", extent=[0, map_size[0], 0, map_size[1]]
+        )
 
-        ax1.vlines(sections[0], ymin=sections[1][0], ymax=sections[1][-1], color="grey", linestyle="--", linewidth=0.5)
-        ax1.hlines(sections[1], xmin=sections[0][0], xmax=sections[0][-1], color="grey", linestyle="--", linewidth=0.5)
+        ax1.vlines(
+            sections[0],
+            ymin=sections[1][0],
+            ymax=sections[1][-1],
+            color="grey",
+            linestyle="--",
+            linewidth=0.5,
+        )
+        ax1.hlines(
+            sections[1],
+            xmin=sections[0][0],
+            xmax=sections[0][-1],
+            color="grey",
+            linestyle="--",
+            linewidth=0.5,
+        )
 
         ax1.set_title("Elevation Map (2D)")
         ax1.set_xlabel("[m]")
@@ -284,7 +374,9 @@ class TestMapGenerator:
         x = np.linspace(0, map_size[0], elevation.shape[1])
         y = np.linspace(0, map_size[1], elevation.shape[0])
         X, Y = np.meshgrid(x, y)
-        surf = ax2.plot_surface(X, Y, np.flip(elevation, axis=0), cmap="RdYlBu_r")#, edgecolor="k")
+        surf = ax2.plot_surface(
+            X, Y, np.flip(elevation, axis=0), cmap="RdYlBu_r"
+        )  # , edgecolor="k")
         ax2.set_title("Elevation Map (3D Surface)")
         ax2.set_xlabel("[m]")
         ax2.set_ylabel("[m]")
@@ -292,18 +384,29 @@ class TestMapGenerator:
 
         ax2.view_init(30, 225)
 
-        ax2.set_box_aspect((1,1,1), zoom=0.9)
+        ax2.set_box_aspect((1, 1, 1), zoom=0.9)
 
-        fig.savefig(output_dir / f"test_map{subname}.pdf", format="pdf", bbox_inches="tight")#, pad_inches=0.5)
+        fig.savefig(
+            output_dir / f"test_map{subname}.pdf", format="pdf", bbox_inches="tight"
+        )  # , pad_inches=0.5)
 
         if show_plot:
             plt.show()
         plt.close(fig)
 
-    def save_data_for_moma(raster_dir, elevation, uncertainty_map, map_size, resolution, friction_coefficient, friction_coefficient_std, diffuse_map, coordinates_lower_left=(542616, 6217995)):
+    def save_data_for_moma(
+        raster_dir,
+        elevation,
+        uncertainty_map,
+        map_size,
+        resolution,
+        friction_coefficient,
+        friction_coefficient_std,
+        diffuse_map,
+        coordinates_lower_left=(542616, 6217995),
+    ):
         # Save elevation raster
         print(f"Save rasters in folder: {raster_dir}...")
-
 
         # Coordinates of lower left corner
         # Default coordinates is Himmelbjerget
@@ -312,19 +415,25 @@ class TestMapGenerator:
 
         # Site.yaml file
         with open(raster_dir / ".." / "site.yaml", "w") as site:
-            site.write(f"""
+            site.write(
+                f"""
     DataSource: DataforsyningenFriction
     Coordinates: [{lat}, {long}, {lat + map_size[0]}, {lat + map_size[0]}] # [W, S, E, N]
     NoGoZones:
     #   - [x1, x2, y1, y2, (Description)]: Box
     #   - [x, y, r, (Description)]: Circle
-    """)
+    """
+            )
 
         coor_string = f"{lat}_{long}_{lat + map_size[0]}_{lat + map_size[0]}"
 
         # Reduce elevation to 1x1m grid and add extra dimension
-        elevation   = elevation[resolution//2::resolution, resolution//2::resolution][np.newaxis, :]
-        uncertainty_map = uncertainty_map[resolution//2::resolution, resolution//2::resolution][np.newaxis, :]
+        elevation = elevation[
+            resolution // 2 :: resolution, resolution // 2 :: resolution
+        ][np.newaxis, :]
+        uncertainty_map = uncertainty_map[
+            resolution // 2 :: resolution, resolution // 2 :: resolution
+        ][np.newaxis, :]
 
         elevation_combined = np.concatenate((elevation, uncertainty_map))
 
@@ -333,76 +442,82 @@ class TestMapGenerator:
         save_new_raster(elevation_combined, path, transform)
 
         # Save diffuse map as areal view
-        diffuse_map = np.stack((
-            diffuse_map[::resolution, ::resolution, 0],
-            diffuse_map[::resolution, ::resolution, 1],
-            diffuse_map[::resolution, ::resolution, 2],
-            np.zeros_like(diffuse_map[::resolution, ::resolution, 0])
-            ), axis=0).astype(np.uint8)
+        diffuse_map = np.stack(
+            (
+                diffuse_map[::resolution, ::resolution, 0],
+                diffuse_map[::resolution, ::resolution, 1],
+                diffuse_map[::resolution, ::resolution, 2],
+                np.zeros_like(diffuse_map[::resolution, ::resolution, 0]),
+            ),
+            axis=0,
+        ).astype(np.uint8)
         path = raster_dir / f"aerial_1m_clipped_{coor_string}.tif"
         save_new_raster(diffuse_map, path, transform)
 
         # Create land use raster
-        land_use = np.concatenate((np.ones_like(elevation) * 0,
-                                np.ones_like(elevation) * 127,
-                                np.ones_like(elevation) * 20,
-                                np.zeros_like(elevation)))
+        land_use = np.concatenate(
+            (
+                np.ones_like(elevation) * 0,
+                np.ones_like(elevation) * 127,
+                np.ones_like(elevation) * 20,
+                np.zeros_like(elevation),
+            )
+        )
 
         path = raster_dir / f"landuse_1m_clipped_{coor_string}.tif"
         save_new_raster(land_use, path, transform)
 
         # Create soil type raster with hard terrain
-        soil_type = np.concatenate((np.ones_like(elevation) * 0,
-                                    np.ones_like(elevation) * 0,
-                                    np.ones_like(elevation) * 0,
-                                    np.zeros_like(elevation)))
+        soil_type = np.concatenate(
+            (
+                np.ones_like(elevation) * 0,
+                np.ones_like(elevation) * 0,
+                np.ones_like(elevation) * 0,
+                np.zeros_like(elevation),
+            )
+        )
 
         soils = {
-            0: {
-                "label": "hard clay",
-                "color": [0, 0, 0]
-            },
-            1: {
-                "label": "hard gravel",
-                "color": [50, 50, 50]
-            }
+            0: {"label": "hard clay", "color": [0, 0, 0]},
+            1: {"label": "hard gravel", "color": [50, 50, 50]},
         }
 
         shape = soil_type.shape[1:]
         for i in range(3):
-            soil_type[i, :int(shape[0]/2), :] = soils[0]["color"][i]
-            soil_type[i, int(shape[0]/2):, :] = soils[1]["color"][i]
+            soil_type[i, : int(shape[0] / 2), :] = soils[0]["color"][i]
+            soil_type[i, int(shape[0] / 2) :, :] = soils[1]["color"][i]
 
         path = raster_dir / f"soiltype_1m_clipped_{coor_string}.tif"
         save_new_raster(soil_type, path, transform)
 
         # Saves soil to use in Chrono
-        soil_export = {
-            "shape": shape,
-            "resolution": 1,
-            "labels": soils,
-            "major": "row"
-        }
+        soil_export = {"shape": shape, "resolution": 1, "labels": soils, "major": "row"}
         soil_data_export = np.zeros(shape)
         for i, soil in soils.items():
 
             soil_data_export[
-                (soil_type[0, :, :] == soil["color"][0])  &
-                (soil_type[1, :, :] == soil["color"][1])  &
-                (soil_type[2, :, :] == soil["color"][2])
+                (soil_type[0, :, :] == soil["color"][0])
+                & (soil_type[1, :, :] == soil["color"][1])
+                & (soil_type[2, :, :] == soil["color"][2])
             ] = i
 
         soil_export["data"] = list(soil_data_export.flatten())
 
-        with open(raster_dir / f"soiltype_1m_clipped_{coor_string}.json", "w") as json_file:
+        with open(
+            raster_dir / f"soiltype_1m_clipped_{coor_string}.json", "w"
+        ) as json_file:
             json.dump(soil_export, json_file)
 
         # Create moisture content raster
-        moisture_content = np.concatenate((np.ones_like(elevation) * 150,
-                                        np.ones_like(elevation) * 150,
-                                        np.ones_like(elevation) * 255,
-                                        np.zeros_like(elevation),
-                                        np.zeros_like(elevation)))
+        moisture_content = np.concatenate(
+            (
+                np.ones_like(elevation) * 150,
+                np.ones_like(elevation) * 150,
+                np.ones_like(elevation) * 255,
+                np.zeros_like(elevation),
+                np.zeros_like(elevation),
+            )
+        )
 
         path = raster_dir / f"moisturecontent_1m_clipped_{coor_string}.tif"
         save_new_raster(moisture_content, path, transform)
@@ -411,9 +526,21 @@ class TestMapGenerator:
         friction_low = 0.4
         friction_high = 0.6
         friction = np.ones_like(elevation)
-        friction[0, (soil_type[0, :, :] == 0)  & (soil_type[1, :, :] == 0)  & (soil_type[2, :, :] == 0)]  = friction_low
-        friction[0, (soil_type[0, :, :] == 50) & (soil_type[1, :, :] == 50) & (soil_type[2, :, :] == 50)] = friction_high
-        friction_coefficient_map = np.concatenate((friction, np.ones_like(elevation) * friction_coefficient_std))
+        friction[
+            0,
+            (soil_type[0, :, :] == 0)
+            & (soil_type[1, :, :] == 0)
+            & (soil_type[2, :, :] == 0),
+        ] = friction_low
+        friction[
+            0,
+            (soil_type[0, :, :] == 50)
+            & (soil_type[1, :, :] == 50)
+            & (soil_type[2, :, :] == 50),
+        ] = friction_high
+        friction_coefficient_map = np.concatenate(
+            (friction, np.ones_like(elevation) * friction_coefficient_std)
+        )
 
         path = raster_dir / f"friction_coefficient_1m_clipped_{coor_string}.tif"
         save_new_raster(friction_coefficient_map, path, transform)
@@ -424,13 +551,8 @@ class TestMapGenerator:
         """
         meta = {
             "description": "slope test map",
-            "elevation": {
-                "max": float(elev_max),
-                "min": float(elev_min)
-            },
-            "map_size": {
-                "width": float(map_size[0]),
-                "height": float(map_size[1])},
+            "elevation": {"max": float(elev_max), "min": float(elev_min)},
+            "map_size": {"width": float(map_size[0]), "height": float(map_size[1])},
             "friction_coefficient": float(friction_coefficient),
         }
         return meta
@@ -462,7 +584,14 @@ class TestMapGenerator:
 
         diffuse_map_img.save(output_dir / f"map-diffuse{subname}.png")
 
-    def save_bitmap(output_dir, elevation, map_size, friction_coefficient, subname="", output_resolution=6):
+    def save_bitmap(
+        output_dir,
+        elevation,
+        map_size,
+        friction_coefficient,
+        subname="",
+        output_resolution=6,
+    ):
         # Save the elevation data as .bmp file for use in Chrono
 
         # Downsample the elevation data to (0.25*output_resolution)x(0.25*output_resolution)m grid
@@ -480,9 +609,23 @@ class TestMapGenerator:
         img.save(output_dir / f"map-elevation{subname}.bmp")
 
         with open(output_dir / f"map-meta{subname}.json", "w") as f:
-            json.dump(TestMapGenerator.metadata(elev_min, elev_max, map_size, friction_coefficient), f, indent=4)
+            json.dump(
+                TestMapGenerator.metadata(
+                    elev_min, elev_max, map_size, friction_coefficient
+                ),
+                f,
+                indent=4,
+            )
 
-    def save_obj(output_dir, elevation, map_size, resolution, friction_coefficient, subname="", output_resolution=6):
+    def save_obj(
+        output_dir,
+        elevation,
+        map_size,
+        resolution,
+        friction_coefficient,
+        subname="",
+        output_resolution=6,
+    ):
         # Downsample the elevation data to (0.25*output_resolution)x(0.25*output_resolution)m grid
         elevation_out = elevation[::output_resolution, ::output_resolution]
 
@@ -498,7 +641,9 @@ class TestMapGenerator:
         for i in range(rows):
             for j in range(cols):
                 # x=j, y=i, and z is the elevation value
-                vertices.append(f"v {j/resolution} {i/resolution} {elevation_out[i, j]}")
+                vertices.append(
+                    f"v {j/resolution} {i/resolution} {elevation_out[i, j]}"
+                )
 
         # Generate faces.
         # Each cell of the grid (except the last row/col) is divided into two triangles.
@@ -521,16 +666,22 @@ class TestMapGenerator:
             f.write("\n".join(faces) + "\n")
 
         with open(output_dir / f"map-meta{subname}.json", "w") as f:
-            json.dump(TestMapGenerator.metadata(elev_min, elev_max, map_size, friction_coefficient), f, indent=4)
+            json.dump(
+                TestMapGenerator.metadata(
+                    elev_min, elev_max, map_size, friction_coefficient
+                ),
+                f,
+                indent=4,
+            )
 
     def slope_hist(output_dir, elevation, resolution, show_plot=False):
         # Calculate the slope of the elevation map
         gradient_x, gradient_y = np.gradient(elevation)
-        slope = np.sqrt(gradient_x**2 + gradient_y**2).flatten()*resolution*100
+        slope = np.sqrt(gradient_x**2 + gradient_y**2).flatten() * resolution * 100
 
         # Plot the histogram of slopes
         plt.figure(figsize=(10, 6))
-        plt.hist(slope, bins=100, density=True, alpha=0.6, color='g')
+        plt.hist(slope, bins=100, density=True, alpha=0.6, color="g")
         plt.title("Slope in steepest direction")
         plt.xlabel("Slope $\%$")
         plt.ylabel("Density")
@@ -544,24 +695,24 @@ class TestMapGenerator:
         plt.close()
 
     def main_generate(
-            create_rasters=False,
-            base_output_dir=None,
-            plot_additional_files=False,
-            scale_map=1,
-            N_test_maps=1,
-            std_elevation=0.00,
-            friction_coefficient=0.5,
-            friction_coefficient_std=0.00,
-            map_type="bmp",
-            output_resolution=6,
-            return_map=False):
+        create_rasters=False,
+        base_output_dir=None,
+        plot_additional_files=False,
+        scale_map=1,
+        N_test_maps=1,
+        std_elevation=0.00,
+        friction_coefficient=0.5,
+        friction_coefficient_std=0.00,
+        map_type="bmp",
+        output_resolution=6,
+        return_map=False,
+    ):
 
         # If map is not returned as an array, create the output directory
         if base_output_dir is None:
             base_output_dir = pathlib.Path(".") / "examples" / "sites" / "testmap"
         else:
             base_output_dir = pathlib.Path(base_output_dir)
-
 
         raster_dir = base_output_dir / "rasters"
         output_dir = base_output_dir
@@ -572,20 +723,35 @@ class TestMapGenerator:
         if not return_map:
             output_dir.mkdir(parents=True, exist_ok=True)
 
-            print(f"Output directory: \n\tBitmaps: {output_dir}\n\tRasters: {raster_dir}")
+            print(
+                f"Output directory: \n\tBitmaps: {output_dir}\n\tRasters: {raster_dir}"
+            )
 
         print("Generating test map...")
-        elevation, map_size, resolution, sections = TestMapGenerator.generate_test_map(scale_map)
+        elevation, map_size, resolution, sections = TestMapGenerator.generate_test_map(
+            scale_map
+        )
         smoothed_elevation = TestMapGenerator.smooth(elevation, sigma=15, truncate=60)
         if return_map and not create_rasters:
             return smoothed_elevation, resolution
 
-        uncertainty_map = TestMapGenerator.generate_test_map_uncertainty(map_size, resolution, uncertainty=std_elevation)
+        uncertainty_map = TestMapGenerator.generate_test_map_uncertainty(
+            map_size, resolution, uncertainty=std_elevation
+        )
 
         if plot_additional_files:
             print("Plotting test map...")
-            TestMapGenerator.plot_surface(output_dir, elevation, sections, map_size, show_plot=False)
-            TestMapGenerator.plot_surface(output_dir, smoothed_elevation, sections, map_size, show_plot=False, subname="_smoothed")
+            TestMapGenerator.plot_surface(
+                output_dir, elevation, sections, map_size, show_plot=False
+            )
+            TestMapGenerator.plot_surface(
+                output_dir,
+                smoothed_elevation,
+                sections,
+                map_size,
+                show_plot=False,
+                subname="_smoothed",
+            )
 
             print("Plotting slope histogram...")
             TestMapGenerator.slope_hist(output_dir, smoothed_elevation, resolution)
@@ -595,44 +761,109 @@ class TestMapGenerator:
         if create_rasters:
             print("Saving test map for MOMA...")
             diffuse = TestMapGenerator.generate_diffuse_map(smoothed_elevation)
-            TestMapGenerator.save_data_for_moma(raster_dir, smoothed_elevation, uncertainty_map, map_size, resolution, friction_coefficient, friction_coefficient_std, diffuse)
+            TestMapGenerator.save_data_for_moma(
+                raster_dir,
+                smoothed_elevation,
+                uncertainty_map,
+                map_size,
+                resolution,
+                friction_coefficient,
+                friction_coefficient_std,
+                diffuse,
+            )
 
             if return_map:
                 return smoothed_elevation, resolution
 
         print("Generation samples for Chrono...")
-        smoothed_sampled_elevation = np.array(LatinHyperCube(smoothed_elevation, uncertainty_map, N_test_maps, seed=21))
-        friction_coefficient_sampled = np.array(LatinHyperCube(np.array([[friction_coefficient]]), np.array([[friction_coefficient_std]]),
-                                                            N_test_maps, seed=23)).reshape(N_test_maps)
+        smoothed_sampled_elevation = np.array(
+            LatinHyperCube(smoothed_elevation, uncertainty_map, N_test_maps, seed=21)
+        )
+        friction_coefficient_sampled = np.array(
+            LatinHyperCube(
+                np.array([[friction_coefficient]]),
+                np.array([[friction_coefficient_std]]),
+                N_test_maps,
+                seed=23,
+            )
+        ).reshape(N_test_maps)
 
         if plot_additional_files:
             print("Plotting one test map with uncertainty...")
-            TestMapGenerator.plot_surface(output_dir, smoothed_sampled_elevation[0, :, :], sections, map_size, show_plot=False, subname="_smoothed_sampled")
+            TestMapGenerator.plot_surface(
+                output_dir,
+                smoothed_sampled_elevation[0, :, :],
+                sections,
+                map_size,
+                show_plot=False,
+                subname="_smoothed_sampled",
+            )
 
         # Save a single map without
         if map_type == "bmp":
-            TestMapGenerator.save_bitmap(output_dir, smoothed_elevation, map_size, friction_coefficient=friction_coefficient, subname="-without", output_resolution=output_resolution)
+            TestMapGenerator.save_bitmap(
+                output_dir,
+                smoothed_elevation,
+                map_size,
+                friction_coefficient=friction_coefficient,
+                subname="-without",
+                output_resolution=output_resolution,
+            )
         elif map_type == "obj":
-            TestMapGenerator.save_obj(output_dir, smoothed_elevation, map_size, resolution, friction_coefficient=friction_coefficient, subname="-without", output_resolution=output_resolution)
+            TestMapGenerator.save_obj(
+                output_dir,
+                smoothed_elevation,
+                map_size,
+                resolution,
+                friction_coefficient=friction_coefficient,
+                subname="-without",
+                output_resolution=output_resolution,
+            )
         else:
-            raise ValueError("Map type {map_type} not supported, must be either 'bmp' or 'obj'.")
+            raise ValueError(
+                "Map type {map_type} not supported, must be either 'bmp' or 'obj'."
+            )
 
         # Save the diffuse map as a .png file for terrain texture
-        TestMapGenerator.save_diffuse_map(output_dir, smoothed_elevation, subname="-without")
+        TestMapGenerator.save_diffuse_map(
+            output_dir, smoothed_elevation, subname="-without"
+        )
 
         for i in range(smoothed_sampled_elevation.shape[0]):
             print(f"Saving test map {i} of {smoothed_sampled_elevation.shape[0]}...")
             if map_type == "bmp":
-                TestMapGenerator.save_bitmap(output_dir, smoothed_sampled_elevation[i, :, :], map_size, friction_coefficient=friction_coefficient_sampled[i], subname=f"-{i}", output_resolution=output_resolution)
+                TestMapGenerator.save_bitmap(
+                    output_dir,
+                    smoothed_sampled_elevation[i, :, :],
+                    map_size,
+                    friction_coefficient=friction_coefficient_sampled[i],
+                    subname=f"-{i}",
+                    output_resolution=output_resolution,
+                )
             elif map_type == "obj":
-                TestMapGenerator.save_obj(output_dir, smoothed_sampled_elevation[i, :, :], map_size, resolution, friction_coefficient=friction_coefficient_sampled[i], subname=f"-{i}", output_resolution=output_resolution)
+                TestMapGenerator.save_obj(
+                    output_dir,
+                    smoothed_sampled_elevation[i, :, :],
+                    map_size,
+                    resolution,
+                    friction_coefficient=friction_coefficient_sampled[i],
+                    subname=f"-{i}",
+                    output_resolution=output_resolution,
+                )
 
             # Save the diffuse map as a .png file for terrain texture
-            TestMapGenerator.save_diffuse_map(output_dir, smoothed_sampled_elevation[i, :, :], subname=f"-{i}")
-
+            TestMapGenerator.save_diffuse_map(
+                output_dir, smoothed_sampled_elevation[i, :, :], subname=f"-{i}"
+            )
 
     if __name__ == "__main__":
-        main_generate(create_rasters=True, N_test_maps=2, plot_additional_files=True, return_map=False)
+        main_generate(
+            create_rasters=True,
+            N_test_maps=2,
+            plot_additional_files=True,
+            return_map=False,
+        )
+
 
 class TestPathsGenerator:
 
@@ -642,113 +873,170 @@ class TestPathsGenerator:
         distance_to_edge = 7.5
         cell_offset = 2.5
         block_size = 50
-        middle_block = ((max_x - block_size) / block_size) / 2 - 1 # Zero indexed
+        middle_block = ((max_x - block_size) / block_size) / 2 - 1  # Zero indexed
 
         # Zero indexed block numbers
-        non_diagonal_blocks = [2, 3, 5, 6, 12, 13, 15, 16] # Block number x and y direction
-        diagonal_blocks = [1, 2, 3, 4] # Number of block away from the true diagonal
+        non_diagonal_blocks = [
+            2,
+            3,
+            5,
+            6,
+            12,
+            13,
+            15,
+            16,
+        ]  # Block number x and y direction
+        diagonal_blocks = [1, 2, 3, 4]  # Number of block away from the true diagonal
 
         # [x1, y1, x2, y2]
         paths = {
             "N": [
                 [
-                    (x_block + 1)*block_size + np.sign(middle_block - x_block)*cell_offset,
+                    (x_block + 1) * block_size
+                    + np.sign(middle_block - x_block) * cell_offset,
                     distance_to_edge,
-                    (x_block + 1)*block_size + np.sign(middle_block - x_block)*cell_offset,
+                    (x_block + 1) * block_size
+                    + np.sign(middle_block - x_block) * cell_offset,
                     max_y - distance_to_edge,
-                ] for x_block in non_diagonal_blocks
+                ]
+                for x_block in non_diagonal_blocks
             ],
             "S": [
                 [
-                    (x_block + 1)*block_size + np.sign(middle_block - x_block)*cell_offset,
+                    (x_block + 1) * block_size
+                    + np.sign(middle_block - x_block) * cell_offset,
                     max_y - distance_to_edge,
-                    (x_block + 1)*block_size + np.sign(middle_block - x_block)*cell_offset,
+                    (x_block + 1) * block_size
+                    + np.sign(middle_block - x_block) * cell_offset,
                     distance_to_edge,
-                ] for x_block in non_diagonal_blocks
+                ]
+                for x_block in non_diagonal_blocks
             ],
             "E": [
                 [
                     distance_to_edge,
-                    (y_block + 1)*block_size + np.sign(middle_block - y_block)*cell_offset,
+                    (y_block + 1) * block_size
+                    + np.sign(middle_block - y_block) * cell_offset,
                     max_x - distance_to_edge,
-                    (y_block + 1)*block_size + np.sign(middle_block - y_block)*cell_offset,
-                ] for y_block in non_diagonal_blocks
+                    (y_block + 1) * block_size
+                    + np.sign(middle_block - y_block) * cell_offset,
+                ]
+                for y_block in non_diagonal_blocks
             ],
             "W": [
                 [
                     max_x - distance_to_edge,
-                    (y_block + 1)*block_size + np.sign(middle_block - y_block)*cell_offset,
+                    (y_block + 1) * block_size
+                    + np.sign(middle_block - y_block) * cell_offset,
                     distance_to_edge,
-                    (y_block + 1)*block_size + np.sign(middle_block - y_block)*cell_offset,
-                ] for y_block in non_diagonal_blocks
+                    (y_block + 1) * block_size
+                    + np.sign(middle_block - y_block) * cell_offset,
+                ]
+                for y_block in non_diagonal_blocks
             ],
             "NE": [
-                [distance_to_edge, distance_to_edge, max_x - distance_to_edge, max_y - distance_to_edge]
-            ] + [
                 [
                     distance_to_edge,
-                    blocks*block_size + distance_to_edge,
-                    max_x - (blocks*block_size + distance_to_edge),
-                    max_y - distance_to_edge,
-                ] for blocks in diagonal_blocks
-            ] + [
-                [
-                    blocks*block_size + distance_to_edge,
                     distance_to_edge,
                     max_x - distance_to_edge,
-                    max_y - (blocks*block_size + distance_to_edge),
-                ] for blocks in diagonal_blocks
+                    max_y - distance_to_edge,
+                ]
+            ]
+            + [
+                [
+                    distance_to_edge,
+                    blocks * block_size + distance_to_edge,
+                    max_x - (blocks * block_size + distance_to_edge),
+                    max_y - distance_to_edge,
+                ]
+                for blocks in diagonal_blocks
+            ]
+            + [
+                [
+                    blocks * block_size + distance_to_edge,
+                    distance_to_edge,
+                    max_x - distance_to_edge,
+                    max_y - (blocks * block_size + distance_to_edge),
+                ]
+                for blocks in diagonal_blocks
             ],
             "SW": [
-                [max_x - distance_to_edge, max_y - distance_to_edge, distance_to_edge, distance_to_edge]
-            ] + [
-                [
-                    max_x - (blocks*block_size + distance_to_edge),
-                    max_y - distance_to_edge,
-                    distance_to_edge,
-                    blocks*block_size + distance_to_edge,
-                ] for blocks in diagonal_blocks
-            ] + [
                 [
                     max_x - distance_to_edge,
-                    max_y - (blocks*block_size + distance_to_edge),
-                    blocks*block_size + distance_to_edge,
+                    max_y - distance_to_edge,
                     distance_to_edge,
-                ] for blocks in diagonal_blocks
+                    distance_to_edge,
+                ]
+            ]
+            + [
+                [
+                    max_x - (blocks * block_size + distance_to_edge),
+                    max_y - distance_to_edge,
+                    distance_to_edge,
+                    blocks * block_size + distance_to_edge,
+                ]
+                for blocks in diagonal_blocks
+            ]
+            + [
+                [
+                    max_x - distance_to_edge,
+                    max_y - (blocks * block_size + distance_to_edge),
+                    blocks * block_size + distance_to_edge,
+                    distance_to_edge,
+                ]
+                for blocks in diagonal_blocks
             ],
             "SE": [
-                [distance_to_edge, max_y - distance_to_edge, max_x - distance_to_edge, distance_to_edge]
-            ] + [
                 [
                     distance_to_edge,
-                    max_y - (blocks*block_size + distance_to_edge),
-                    max_x - (blocks*block_size + distance_to_edge),
-                    distance_to_edge,
-                ] for blocks in diagonal_blocks
-            ] + [
-                [
-                    blocks*block_size + distance_to_edge,
                     max_y - distance_to_edge,
                     max_x - distance_to_edge,
-                    blocks*block_size + distance_to_edge,
-                ] for blocks in diagonal_blocks
+                    distance_to_edge,
+                ]
+            ]
+            + [
+                [
+                    distance_to_edge,
+                    max_y - (blocks * block_size + distance_to_edge),
+                    max_x - (blocks * block_size + distance_to_edge),
+                    distance_to_edge,
+                ]
+                for blocks in diagonal_blocks
+            ]
+            + [
+                [
+                    blocks * block_size + distance_to_edge,
+                    max_y - distance_to_edge,
+                    max_x - distance_to_edge,
+                    blocks * block_size + distance_to_edge,
+                ]
+                for blocks in diagonal_blocks
             ],
             "NW": [
-                [max_x - distance_to_edge, distance_to_edge, distance_to_edge, max_y - distance_to_edge]
-            ] + [
-                [
-                    max_x - (blocks*block_size + distance_to_edge),
-                    distance_to_edge,
-                    distance_to_edge,
-                    max_y - (blocks*block_size + distance_to_edge),
-                ] for blocks in diagonal_blocks
-            ] + [
                 [
                     max_x - distance_to_edge,
-                    blocks*block_size + distance_to_edge,
-                    blocks*block_size + distance_to_edge,
+                    distance_to_edge,
+                    distance_to_edge,
                     max_y - distance_to_edge,
-                ] for blocks in diagonal_blocks
+                ]
+            ]
+            + [
+                [
+                    max_x - (blocks * block_size + distance_to_edge),
+                    distance_to_edge,
+                    distance_to_edge,
+                    max_y - (blocks * block_size + distance_to_edge),
+                ]
+                for blocks in diagonal_blocks
+            ]
+            + [
+                [
+                    max_x - distance_to_edge,
+                    blocks * block_size + distance_to_edge,
+                    blocks * block_size + distance_to_edge,
+                    max_y - distance_to_edge,
+                ]
+                for blocks in diagonal_blocks
             ],
         }
         return paths
@@ -757,14 +1045,11 @@ class TestPathsGenerator:
         elevation = map[map.shape[0] - 1 - int(np.floor(y)), int(np.floor(x))]
         path["waypoints"].append(
             {
-                "map": {
-                    "x": x,
-                    "y": y
-                },
+                "map": {"x": x, "y": y},
                 "elevation": elevation,
                 "path": {
                     "move_direction": direction,
-                }
+                },
             }
         )
 
@@ -798,8 +1083,7 @@ class TestPathsGenerator:
     def load_map(fill_metrics=False):
         if fill_metrics:
             map, resolution = TestMapGenerator.main_generate(
-                create_rasters=True,
-                return_map=True
+                create_rasters=True, return_map=True
             )
         else:
             map, resolution = TestMapGenerator.main_generate(return_map=True)
@@ -811,7 +1095,7 @@ class TestPathsGenerator:
         fig, ax = plt.subplots()
 
         extent = [0, map.shape[1], 0, map.shape[0]]
-        img = ax.imshow(map[::grid_size, ::grid_size], cmap='RdYlBu_r', extent=extent)
+        img = ax.imshow(map[::grid_size, ::grid_size], cmap="RdYlBu_r", extent=extent)
 
         color_bar = fig.colorbar(img, ax=ax, pad=0.025)
         color_bar.ax.set_ylabel("Elevation (m)", rotation=270, labelpad=25)
@@ -821,14 +1105,18 @@ class TestPathsGenerator:
 
         ax.xaxis.set_minor_locator(MultipleLocator(25))
         ax.yaxis.set_minor_locator(MultipleLocator(25))
-        ax.grid(True, which='both')
+        ax.grid(True, which="both")
 
         for path in paths:
             if path["direction"] in ["S", "W", "NW", "NE"]:
                 waypoints = path["waypoints"]
                 x = [wp["map"]["x"] for wp in waypoints]
                 y = [wp["map"]["y"] for wp in waypoints]
-                ax.plot(x, y, color='black', )
+                ax.plot(
+                    x,
+                    y,
+                    color="black",
+                )
 
         out_path = output_dir / "test_paths.pdf"
         print(f"Saving plotted paths to: {out_path}")
@@ -843,7 +1131,15 @@ class TestPathsGenerator:
             with open(out_path / "path.json", "w") as json_file:
                 json.dump(path, json_file, indent=4)
 
-    def main_generate(output_dir, plot_paths=False, fill_metrics=False, n_samples=None, sample_reduction=None, minimum_speed=0.5, target_speed=5.0):
+    def main_generate(
+        output_dir,
+        plot_paths=False,
+        fill_metrics=False,
+        n_samples=None,
+        sample_reduction=None,
+        minimum_speed=0.5,
+        target_speed=5.0,
+    ):
 
         # Create the output directory if it doesn't exist
         output_dir = pathlib.Path(output_dir)
@@ -881,7 +1177,8 @@ class TestPathsGenerator:
                 n_samples=n_samples,
                 dont_export=True,
                 show_plots=False,
-                path=importlib.resources.path("moma", "data") / pathlib.Path("examples"),
+                path=importlib.resources.path("moma", "data")
+                / pathlib.Path("examples"),
                 path_coordinate_system="None",
                 path_folder=str(output_dir),
                 sample_reduction=sample_reduction,
@@ -893,5 +1190,3 @@ class TestPathsGenerator:
                 hide_utm=True,
             )
             calculate_mobility(args)
-
-

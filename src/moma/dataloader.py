@@ -1,8 +1,8 @@
-'''
+"""
 Dataloader module
-'''
+"""
 
-'''
+"""
  #############################################################################
  #                            _     _     _     _                            #
  #                           / \   / \   / \   / \                           #
@@ -14,7 +14,7 @@ Dataloader module
 
 MIT License
 
-Copyright (c) 2024 Dario Sirangelo
+Copyright (c) 2024 Dario Sirangelo, Nikolaj Jes Petersen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,7 +32,7 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-'''
+"""
 
 import io
 import logging
@@ -60,6 +60,7 @@ from moma.raster import RasterRGBA, RasterMono
 
 log = logging.getLogger("MOMA")
 
+
 # Factory generator that initializes the correct dataloader based on the data source
 def get_dataloader(site_path, data_source, coordinates):
     if data_source == "Trier_raster":
@@ -76,15 +77,16 @@ def get_dataloader(site_path, data_source, coordinates):
 
     raise ValueError(f"Unknown data source: {data_source}")
 
+
 # Functions to save a raster with the number of layer corresponding to the number of bands in the array
 def save_new_raster(array, path, transform, epsg=25832):
     """
-        EPSG = 25832 is the coordinate system used in Denmark, which is UTM zone 32N.
+    EPSG = 25832 is the coordinate system used in Denmark, which is UTM zone 32N.
     """
     new_dataset = rasterio.open(
         path,
-        'w',
-        driver='GTiff',
+        "w",
+        driver="GTiff",
         height=array.shape[1],
         width=array.shape[2],
         count=array.shape[0],
@@ -94,6 +96,7 @@ def save_new_raster(array, path, transform, epsg=25832):
     )
     new_dataset.write(array)
     new_dataset.close()
+
 
 def generate_synthetic_data(h, w, grid_size, bias, scale):
     # Generate a coarse grid of random values
@@ -108,19 +111,21 @@ def generate_synthetic_data(h, w, grid_size, bias, scale):
     # Bilinear interpolation using NumPy
     x0, y0 = X.astype(int), Y.astype(int)
     x1, y1 = np.clip(x0 + 1, 0, gw - 1), np.clip(y0 + 1, 0, gh - 1)
-    
+
     fx, fy = X - x0, Y - y0  # Fractional part
     v00 = coarse_grid[y0, x0]  # Bottom-left
     v10 = coarse_grid[y0, x1]  # Bottom-right
     v01 = coarse_grid[y1, x0]  # Top-left
     v11 = coarse_grid[y1, x1]  # Top-right
-    
+
     # Bilinear interpolation formula
-    synthetic = (v00 * (1 - fx) * (1 - fy) + 
-                v10 * fx * (1 - fy) +
-                v01 * (1 - fx) * fy + 
-                v11 * fx * fy)
-    
+    synthetic = (
+        v00 * (1 - fx) * (1 - fy)
+        + v10 * fx * (1 - fy)
+        + v01 * (1 - fx) * fy
+        + v11 * fx * fy
+    )
+
     return bias + synthetic * scale
 
 
@@ -133,20 +138,21 @@ Data loader should return the following rasters in a consistent grid along with 
 - Moisturecontent
 """
 
+
 # Create a url with parameters for a get request
 def create_url_with_parameters(netloc, query_params):
     Components = namedtuple(
-        typename='Components', 
-        field_names=['scheme', 'netloc', 'url', 'path', 'query', 'fragment']
+        typename="Components",
+        field_names=["scheme", "netloc", "url", "path", "query", "fragment"],
     )
     url = urlunparse(
         Components(
-            scheme='https',
+            scheme="https",
             netloc=netloc,
             query=urlencode(query_params),
-            path='',
-            url='',
-            fragment=''
+            path="",
+            url="",
+            fragment="",
         )
     )
     return url
@@ -158,17 +164,28 @@ class DataloaderTrier:
         self.source = "Dataloader for pregenerated Trier"
 
         # Raster locations
-        self.AERIAL_PATH          = site_path / "rasters" / "aerial_1m_clipped.tif"
-        self.ELEVATION_PATH       = site_path / "rasters" / "elevationmono_1m_clipped.tif"
-        self.LANDUSE_PATH         = site_path / "rasters" / "landuse_1m_clipped.tif"
-        self.SOILTYPE_PATH        = site_path / "rasters" / "soiltype30_1m_clipped.tif"
-        self.MOISTURECONTENT_PATH = site_path / "rasters" / "moisturecontent15_1m_clipped.tif"
+        self.AERIAL_PATH = site_path / "rasters" / "aerial_1m_clipped.tif"
+        self.ELEVATION_PATH = site_path / "rasters" / "elevationmono_1m_clipped.tif"
+        self.LANDUSE_PATH = site_path / "rasters" / "landuse_1m_clipped.tif"
+        self.SOILTYPE_PATH = site_path / "rasters" / "soiltype30_1m_clipped.tif"
+        self.MOISTURECONTENT_PATH = (
+            site_path / "rasters" / "moisturecontent15_1m_clipped.tif"
+        )
 
         # Additional mapping information
-        self.LANDUSE_MAPPING         = site_path.parents[1] / "dataloaders" / "geohornet" / "landuse_mapping.yaml"
-        self.SOILTYPE_MAPPING        = site_path.parents[1] / "dataloaders" / "geohornet" / "soiltype_mapping.yaml"
-        self.MOISTURECONTENT_MAPPING = site_path.parents[1] / "dataloaders" / "geohornet" / "moisturecontent_mapping.yaml"
-        
+        self.LANDUSE_MAPPING = (
+            site_path.parents[1] / "dataloaders" / "geohornet" / "landuse_mapping.yaml"
+        )
+        self.SOILTYPE_MAPPING = (
+            site_path.parents[1] / "dataloaders" / "geohornet" / "soiltype_mapping.yaml"
+        )
+        self.MOISTURECONTENT_MAPPING = (
+            site_path.parents[1]
+            / "dataloaders"
+            / "geohornet"
+            / "moisturecontent_mapping.yaml"
+        )
+
     def get_aerial_raster(self):
         processed_path = str(self.AERIAL_PATH)[0:-4] + "_processed.tif"
 
@@ -181,30 +198,34 @@ class DataloaderTrier:
             h, w = data[0].shape
             aerial = np.zeros((4, h + 1, w), dtype=np.uint8)
             aerial[:, :-1, :] = np.stack(data)
-            
+
             save_new_raster(aerial, processed_path, transform)
-        
+
         return RasterRGBA(processed_path)
 
-    def get_elevation_raster(self):        
+    def get_elevation_raster(self):
         return RasterMono(self.ELEVATION_PATH)
-    
+
     def get_landuse_raster(self):
-        #TODO Get rid of the hard-coded land use value mappings
+        # TODO Get rid of the hard-coded land use value mappings
         with open(self.LANDUSE_MAPPING, encoding="utf8") as landuse_valuemap_file:
             landuse_valuemap = yaml.load(landuse_valuemap_file, Loader=yaml.SafeLoader)
 
         return RasterRGBA(self.LANDUSE_PATH), landuse_valuemap
-    
+
     def get_soiltype_raster(self):
         with open(self.SOILTYPE_MAPPING, encoding="utf8") as soiltype_mapping_file:
             soiltype_valuemap = yaml.load(soiltype_mapping_file, Loader=yaml.SafeLoader)
-    
+
         return RasterRGBA(self.SOILTYPE_PATH), soiltype_valuemap
-    
+
     def get_moisturecontent_raster(self):
-        with open(self.MOISTURECONTENT_MAPPING, encoding="utf8") as moisturecontent_valuemap_file:
-            moisturecontent_valuemap = yaml.load(moisturecontent_valuemap_file, Loader=yaml.SafeLoader)
+        with open(
+            self.MOISTURECONTENT_MAPPING, encoding="utf8"
+        ) as moisturecontent_valuemap_file:
+            moisturecontent_valuemap = yaml.load(
+                moisturecontent_valuemap_file, Loader=yaml.SafeLoader
+            )
 
         return RasterRGBA(self.MOISTURECONTENT_PATH), moisturecontent_valuemap
 
@@ -214,7 +235,9 @@ class DataloaderDataforsyningen:
         self.site_path = site_path
         self.coordinates = coordinates
         self.source = "Dataforsyningen, Datafordeleren, GEUS and BaseMap04"
-        self.file_subname = f"_{coordinates[0]}_{coordinates[1]}_{coordinates[2]}_{coordinates[3]}"
+        self.file_subname = (
+            f"_{coordinates[0]}_{coordinates[1]}_{coordinates[2]}_{coordinates[3]}"
+        )
 
         self.transform = Affine(1, 0, coordinates[0], 0, -1, coordinates[3])
 
@@ -222,36 +245,62 @@ class DataloaderDataforsyningen:
 
         # Location for maps stored locally
         # TODO: Set the basemap location toa path in the data folder
-        self.basemap_location      = pathlib.Path.cwd()
+        self.basemap_location = pathlib.Path.cwd()
         self.jordartskort_location = pathlib.Path.cwd()
 
         # Query parameters for datafordeleren
         # TODO: Write an interface to provide user/password
         self.query_params = {
-                "username": "",
-                "password": "",
-                "BBOX":   f"{self.coordinates[0]},{self.coordinates[1]},{self.coordinates[2]},{self.coordinates[3]}",
-                "WIDTH":  f"{self.coordinates[2] - self.coordinates[0]}",
-                "HEIGHT": f"{self.coordinates[3] - self.coordinates[1]}"
+            "username": "",
+            "password": "",
+            "BBOX": f"{self.coordinates[0]},{self.coordinates[1]},{self.coordinates[2]},{self.coordinates[3]}",
+            "WIDTH": f"{self.coordinates[2] - self.coordinates[0]}",
+            "HEIGHT": f"{self.coordinates[3] - self.coordinates[1]}",
         }
 
         # Raster locations
-        self.AERIAL_PATH              = site_path / "rasters" / f"aerial_1m_clipped{self.file_subname}.tif"
-        self.ELEVATION_PATH           = site_path / "rasters" / f"elevationmono_1m_clipped{self.file_subname}.tif"
-        self.LANDUSE_PATH             = site_path / "rasters" / f"landuse_1m_clipped{self.file_subname}.tif"
-        self.SOILTYPE_PATH            = site_path / "rasters" / f"soiltype_1m_clipped{self.file_subname}.tif"
-        self.MOISTURECONTENT_PATH     = site_path / "rasters" / f"moisturecontent_1m_clipped{self.file_subname}.tif"
+        self.AERIAL_PATH = (
+            site_path / "rasters" / f"aerial_1m_clipped{self.file_subname}.tif"
+        )
+        self.ELEVATION_PATH = (
+            site_path / "rasters" / f"elevationmono_1m_clipped{self.file_subname}.tif"
+        )
+        self.LANDUSE_PATH = (
+            site_path / "rasters" / f"landuse_1m_clipped{self.file_subname}.tif"
+        )
+        self.SOILTYPE_PATH = (
+            site_path / "rasters" / f"soiltype_1m_clipped{self.file_subname}.tif"
+        )
+        self.MOISTURECONTENT_PATH = (
+            site_path / "rasters" / f"moisturecontent_1m_clipped{self.file_subname}.tif"
+        )
 
         # Additional mapping information
-        self.LANDUSE_MAPPING         = site_path.parents[1] / "dataloaders" / "dataforsyningen" / "landuse_mapping.yaml"
-        self.SOILTYPE_MAPPING        = site_path.parents[1] / "dataloaders" / "dataforsyningen" / "soiltype_mapping.yaml"
-        self.MOISTURECONTENT_MAPPING = site_path.parents[1] / "dataloaders" / "dataforsyningen" / "moisturecontent_mapping.yaml"
+        self.LANDUSE_MAPPING = (
+            site_path.parents[1]
+            / "dataloaders"
+            / "dataforsyningen"
+            / "landuse_mapping.yaml"
+        )
+        self.SOILTYPE_MAPPING = (
+            site_path.parents[1]
+            / "dataloaders"
+            / "dataforsyningen"
+            / "soiltype_mapping.yaml"
+        )
+        self.MOISTURECONTENT_MAPPING = (
+            site_path.parents[1]
+            / "dataloaders"
+            / "dataforsyningen"
+            / "moisturecontent_mapping.yaml"
+        )
 
     def get_aerial_raster(self):
-        """ Source: https://datafordeler.dk/dataoversigt/geodanmark-ortofoto/ortofoto-foraar-wms/
-        """
+        """Source: https://datafordeler.dk/dataoversigt/geodanmark-ortofoto/ortofoto-foraar-wms/"""
         if pathlib.Path.exists(self.AERIAL_PATH):
-            log.info("Aerial raster is already stored locally and will not be downloaded again")
+            log.info(
+                "Aerial raster is already stored locally and will not be downloaded again"
+            )
         else:
             local_query_params = dict(self.query_params)
             # Specific parameters for the aerial raster
@@ -266,10 +315,13 @@ class DataloaderDataforsyningen:
                     "DPI": "96",
                     "MAP_RESOLUTION": "96",
                     "FORMAT_OPTIONS": "dpi:96",
-                    "Layers": "orto_foraar"
+                    "Layers": "orto_foraar",
                 }
             )
-            url = create_url_with_parameters("services.datafordeler.dk/GeoDanmarkOrto/orto_foraar/1.0.0/WMS", local_query_params)
+            url = create_url_with_parameters(
+                "services.datafordeler.dk/GeoDanmarkOrto/orto_foraar/1.0.0/WMS",
+                local_query_params,
+            )
 
             log.info(f"Downloading aerial raster from datafordeler, url: \n{url}")
             res = requests.get(url)
@@ -281,7 +333,9 @@ class DataloaderDataforsyningen:
                 # Move bands to be the first dimension
                 arr = np.moveaxis(arr, 2, 0)
                 # Adding alpha layer
-                arr = np.concatenate((arr, 255*np.ones((1, arr.shape[1], arr.shape[2]), dtype=int)))
+                arr = np.concatenate(
+                    (arr, 255 * np.ones((1, arr.shape[1], arr.shape[2]), dtype=int))
+                )
 
                 save_new_raster(arr, self.AERIAL_PATH, self.transform)
 
@@ -291,10 +345,11 @@ class DataloaderDataforsyningen:
         return RasterRGBA(self.AERIAL_PATH)
 
     def get_elevation_raster(self):
-        """ Source: https://datafordeler.dk/dataoversigt/danmarks-hoejdemodel-historisk-dhm/dhm-2007-historik-wcs/
-        """
+        """Source: https://datafordeler.dk/dataoversigt/danmarks-hoejdemodel-historisk-dhm/dhm-2007-historik-wcs/"""
         if pathlib.Path.exists(self.ELEVATION_PATH):
-            log.info("Elevation raster is already stored locally and will not be downloaded again")
+            log.info(
+                "Elevation raster is already stored locally and will not be downloaded again"
+            )
         else:
             local_query_params = dict(self.query_params)
             # Specific parameters for the elevation raster
@@ -310,42 +365,54 @@ class DataloaderDataforsyningen:
                     "RESPONSE_CRS": "EPSG:25832",
                 }
             )
-            url = create_url_with_parameters("services.datafordeler.dk/DHMterraenBro2007/dhm_historik/1.0.0/WCS", local_query_params)
+            url = create_url_with_parameters(
+                "services.datafordeler.dk/DHMterraenBro2007/dhm_historik/1.0.0/WCS",
+                local_query_params,
+            )
 
-            #TODO fix problem with downloading data that occurs sometimes, quickfix delete created raster and try again            
+            # TODO fix problem with downloading data that occurs sometimes, quickfix delete created raster and try again
             log.info(f"Downloading elevation raster from datafordeler, url: \n{url}")
-            urllib.request.urlretrieve(url, self.ELEVATION_PATH) # Save the raster to the specified location
+            urllib.request.urlretrieve(
+                url, self.ELEVATION_PATH
+            )  # Save the raster to the specified location
 
-            # Loads raster and adds synthetic data to illustrate feature 
+            # Loads raster and adds synthetic data to illustrate feature
             with rasterio.open(self.ELEVATION_PATH) as raster:
                 data = raster.read(1)
                 transform = raster.transform
 
             h, w = int(self.query_params["HEIGHT"]), int(self.query_params["WIDTH"])
-            elevation_std = generate_synthetic_data(h, w, grid_size=200, bias=0.05, scale=0.10).reshape(1, h, w)
+            elevation_std = generate_synthetic_data(
+                h, w, grid_size=200, bias=0.05, scale=0.10
+            ).reshape(1, h, w)
             elevation = np.concatenate((data.reshape(1, h, w), elevation_std))
             save_new_raster(elevation, self.ELEVATION_PATH, transform)
-            
+
         return RasterMono(self.ELEVATION_PATH)
-    
+
     def get_landuse_raster(self):
-        """ Source: https://envs.au.dk/om-instituttet-1/faglige-omraader/samfund-miljoe-og-ressourcer/arealanvendelse-og-gis/basemap/basemap03-til-download-1
-        """
-        
+        """Source: https://envs.au.dk/om-instituttet-1/faglige-omraader/samfund-miljoe-og-ressourcer/arealanvendelse-og-gis/basemap/basemap03-til-download-1"""
+
         with open(self.LANDUSE_MAPPING, encoding="utf8") as landuse_valuemap_file:
-            loaded_data = yaml.load(landuse_valuemap_file, Loader=yaml.SafeLoader) 
+            loaded_data = yaml.load(landuse_valuemap_file, Loader=yaml.SafeLoader)
             basemap_to_landuse_label = loaded_data["basemap_to_landuse_label"]
-            landuse_label_to_color   = loaded_data["label_to_color"]
-        
+            landuse_label_to_color = loaded_data["label_to_color"]
+
         if pathlib.Path.exists(self.LANDUSE_PATH):
-            log.info("Landuse raster is already stored locally and will not be downloaded again")
+            log.info(
+                "Landuse raster is already stored locally and will not be downloaded again"
+            )
         else:
             log.info("Creating landuse raster from BaseMap04")
 
             with rasterio.open(self.basemap_location) as raster:
                 # Find area of interest in basemap
-                y1, x1 = rowcol(raster.transform, self.coordinates[0], self.coordinates[3])
-                y2, x2 = rowcol(raster.transform, self.coordinates[2], self.coordinates[1])
+                y1, x1 = rowcol(
+                    raster.transform, self.coordinates[0], self.coordinates[3]
+                )
+                y2, x2 = rowcol(
+                    raster.transform, self.coordinates[2], self.coordinates[1]
+                )
 
                 # Widen area to ensure that need area is not cut off in rounding
                 x1 -= 1
@@ -375,13 +442,15 @@ class DataloaderDataforsyningen:
             # Get correct location on the upscaled grid
             y1, x1 = rowcol(transform, self.coordinates[0], self.coordinates[3])
             y2, x2 = rowcol(transform, self.coordinates[2], self.coordinates[1])
-            arr = arr[y1:y2, x1+1:x2+1, :]
+            arr = arr[y1:y2, x1 + 1 : x2 + 1, :]
             transform = Affine(1, 0, self.coordinates[0], 0, -1, self.coordinates[3])
 
             # Move bands to be the first dimension
             arr = np.moveaxis(arr, 2, 0)
             # Adding alpha layer
-            arr = np.concatenate((arr, 255*np.ones((1, arr.shape[1], arr.shape[2]), dtype=int)))
+            arr = np.concatenate(
+                (arr, 255 * np.ones((1, arr.shape[1], arr.shape[2]), dtype=int))
+            )
 
             save_new_raster(arr, self.LANDUSE_PATH, transform)
 
@@ -391,35 +460,45 @@ class DataloaderDataforsyningen:
             landuse_valuemap[f"#{color[0]:02X}{color[1]:02X}{color[2]:02X}"] = label
 
         return RasterRGBA(self.LANDUSE_PATH), landuse_valuemap
-    
+
     def get_soiltype_raster(self):
-        """ Source: https://www.geus.dk/produkter-ydelser-og-faciliteter/data-og-kort/danske-kort/download-jordartskort
-        """
-        
+        """Source: https://www.geus.dk/produkter-ydelser-og-faciliteter/data-og-kort/danske-kort/download-jordartskort"""
+
         with open(self.SOILTYPE_MAPPING, encoding="utf8") as soiltype_valuemap_file:
-            loaded_data = yaml.load(soiltype_valuemap_file, Loader=yaml.SafeLoader) 
+            loaded_data = yaml.load(soiltype_valuemap_file, Loader=yaml.SafeLoader)
             # Mappings between different representations of soil type
             jordart_to_soil_number = loaded_data["jordart_to_soil_number"]
-            soil_number_to_label   = loaded_data["number_to_label"]
-            soil_label_to_color    = loaded_data["label_to_color"]
+            soil_number_to_label = loaded_data["number_to_label"]
+            soil_label_to_color = loaded_data["label_to_color"]
             label_to_program_label = loaded_data["label_to_program_label"]
-        
+
         if pathlib.Path.exists(self.SOILTYPE_PATH):
-            log.info("Soil type raster is already stored locally and will not be downloaded again")
+            log.info(
+                "Soil type raster is already stored locally and will not be downloaded again"
+            )
         else:
             log.info("Creating soil type raster from Jordartskort")
             log.info("Importing data from local version of GEUS Jordartskort")
-            
+
             gdf = gpd.read_file(self.jordartskort_location)
-            
+
             for jordart, number in jordart_to_soil_number.items():
                 gdf.loc[gdf.sediment == jordart, "sediment"] = number
 
             # Fix problem with values being: 'X - Bed unkown, no infomation', was not present in earlier versions of MOMA
             shapes = ((geom, value) for geom, value in zip(gdf.geometry, gdf.sediment))
-            
+
             log.info("Rasterize data")
-            rasterized = rasterize(shapes, out_shape=(int(self.query_params["HEIGHT"]), int(self.query_params["WIDTH"])), transform=self.transform, fill=0, dtype=np.int32)
+            rasterized = rasterize(
+                shapes,
+                out_shape=(
+                    int(self.query_params["HEIGHT"]),
+                    int(self.query_params["WIDTH"]),
+                ),
+                transform=self.transform,
+                fill=0,
+                dtype=np.int32,
+            )
 
             # Initiates map with color corresponding to non classified
             arr = np.zeros((rasterized.shape[0], rasterized.shape[1], 3), dtype=int)
@@ -434,45 +513,65 @@ class DataloaderDataforsyningen:
             # Move bands to be the first dimension
             arr = np.moveaxis(arr, 2, 0)
             # Adding alpha layer
-            arr = np.concatenate((arr, 255*np.ones((1, arr.shape[1], arr.shape[2]), dtype=int)))
+            arr = np.concatenate(
+                (arr, 255 * np.ones((1, arr.shape[1], arr.shape[2]), dtype=int))
+            )
 
             save_new_raster(arr, self.SOILTYPE_PATH, self.transform)
 
         soiltype_valuemap = {}
 
         for label, color in soil_label_to_color.items():
-            soiltype_valuemap[f"#{color[0]:02X}{color[1]:02X}{color[2]:02X}"] = label_to_program_label[label]
+            soiltype_valuemap[f"#{color[0]:02X}{color[1]:02X}{color[2]:02X}"] = (
+                label_to_program_label[label]
+            )
 
         return RasterRGBA(self.SOILTYPE_PATH), soiltype_valuemap
-    
+
     def get_moisturecontent_raster(self):
-        #TODO find moisture content data source
-        with open(self.MOISTURECONTENT_MAPPING, encoding="utf8") as moisturecontent_valuemap_file:
-            moisturecontent_valuemap = yaml.load(moisturecontent_valuemap_file, Loader=yaml.SafeLoader)
+        # TODO find moisture content data source
+        with open(
+            self.MOISTURECONTENT_MAPPING, encoding="utf8"
+        ) as moisturecontent_valuemap_file:
+            moisturecontent_valuemap = yaml.load(
+                moisturecontent_valuemap_file, Loader=yaml.SafeLoader
+            )
 
         """ Source: synthetic data to illustrate feature
         """
         if pathlib.Path.exists(self.MOISTURECONTENT_PATH):
-            log.info("Moisture raster is already stored locally and will not be downloaded again")
+            log.info(
+                "Moisture raster is already stored locally and will not be downloaded again"
+            )
         else:
             log.info(f"Creating synthetic moisture content raster")
-            
+
             h, w = int(self.query_params["HEIGHT"]), int(self.query_params["WIDTH"])
             moisture = generate_synthetic_data(h, w, grid_size=200, bias=28, scale=9)
 
             # Fill in color data
             arr = np.zeros((h, w, 3), dtype=int)
             for color, value in moisturecontent_valuemap.items():
-                arr[moisture >= value] = [int(255 * x) for x in mpl.colors.hex2color(color)]
-            
+                arr[moisture >= value] = [
+                    int(255 * x) for x in mpl.colors.hex2color(color)
+                ]
+
             # Move bands to be the first dimension
             arr = np.moveaxis(arr, 2, 0)
             # Adding alpha layer
-            arr = np.concatenate((arr, 255*np.ones((1, arr.shape[1], arr.shape[2]), dtype=int)))
+            arr = np.concatenate(
+                (arr, 255 * np.ones((1, arr.shape[1], arr.shape[2]), dtype=int))
+            )
 
-            moisture_std = generate_synthetic_data(h, w, grid_size=200, bias=0.5, scale=1).reshape(1, h, w)
+            moisture_std = generate_synthetic_data(
+                h, w, grid_size=200, bias=0.5, scale=1
+            ).reshape(1, h, w)
 
-            save_new_raster(np.concatenate((arr, moisture_std)), self.MOISTURECONTENT_PATH, self.transform)
+            save_new_raster(
+                np.concatenate((arr, moisture_std)),
+                self.MOISTURECONTENT_PATH,
+                self.transform,
+            )
 
         return RasterRGBA(self.MOISTURECONTENT_PATH), moisturecontent_valuemap
 
@@ -480,20 +579,26 @@ class DataloaderDataforsyningen:
 class DataloaderDataforsyningenFriction(DataloaderDataforsyningen):
     def __init__(self, site_path, coordinates):
         super().__init__(site_path, coordinates)
-        self.FRICTION_PATH = site_path / "rasters" / f"friction_coefficient_1m_clipped{self.file_subname}.tif"
-    
+        self.FRICTION_PATH = (
+            site_path
+            / "rasters"
+            / f"friction_coefficient_1m_clipped{self.file_subname}.tif"
+        )
+
     def get_friction_raster(self):
         if pathlib.Path.exists(self.FRICTION_PATH):
-            log.info("Friction raster is already stored locally and will not be downloaded again")
+            log.info(
+                "Friction raster is already stored locally and will not be downloaded again"
+            )
         else:
             log.info("Creating synthetic friction coefficient raster")
-            
+
             h, w = int(self.query_params["HEIGHT"]), int(self.query_params["WIDTH"])
             friction = generate_synthetic_data(h, w, grid_size=200, bias=0.5, scale=0)
 
             # Fill in values
             friction = friction.reshape((h, w, 1))
-            
+
             # Move bands to be the first dimension
             friction = np.moveaxis(friction, 2, 0)
 
@@ -506,31 +611,47 @@ class DataLoaderOksbolPaper(DataloaderDataforsyningenFriction):
     def __init__(self, site_path, coordinates):
         super().__init__(site_path, coordinates)
 
-        self.LANDUSE_JSON_PATH    = site_path / "rasters" / f"landuse_1m_clipped{self.file_subname}.json"
-        self.LANDUSE_SINGLE_BAND  = site_path / "rasters" / f"landuse_1m_clipped{self.file_subname}_single_band.tif"
-        self.SOILTYPE_JSON_PATH   = site_path / "rasters" / f"soiltype_1m_clipped{self.file_subname}.json"
-        self.SOILTYPE_SINGLE_BAND = site_path / "rasters" / f"soiltype_1m_clipped{self.file_subname}_single_band.tif"
-
+        self.LANDUSE_JSON_PATH = (
+            site_path / "rasters" / f"landuse_1m_clipped{self.file_subname}.json"
+        )
+        self.LANDUSE_SINGLE_BAND = (
+            site_path
+            / "rasters"
+            / f"landuse_1m_clipped{self.file_subname}_single_band.tif"
+        )
+        self.SOILTYPE_JSON_PATH = (
+            site_path / "rasters" / f"soiltype_1m_clipped{self.file_subname}.json"
+        )
+        self.SOILTYPE_SINGLE_BAND = (
+            site_path
+            / "rasters"
+            / f"soiltype_1m_clipped{self.file_subname}_single_band.tif"
+        )
 
     def get_landuse_raster(self):
-        """ Source: https://envs.au.dk/om-instituttet-1/faglige-omraader/samfund-miljoe-og-ressourcer/arealanvendelse-og-gis/basemap/basemap03-til-download-1
-        """
-        
+        """Source: https://envs.au.dk/om-instituttet-1/faglige-omraader/samfund-miljoe-og-ressourcer/arealanvendelse-og-gis/basemap/basemap03-til-download-1"""
+
         with open(self.LANDUSE_MAPPING, encoding="utf8") as landuse_valuemap_file:
-            loaded_data = yaml.load(landuse_valuemap_file, Loader=yaml.SafeLoader) 
+            loaded_data = yaml.load(landuse_valuemap_file, Loader=yaml.SafeLoader)
             basemap_to_landuse_label = loaded_data["basemap_to_landuse_label"]
-            landuse_label_to_color   = loaded_data["label_to_color"]
-            label_to_soil_type       = loaded_data["label_to_soil_type"]
-        
+            landuse_label_to_color = loaded_data["label_to_color"]
+            label_to_soil_type = loaded_data["label_to_soil_type"]
+
         if pathlib.Path.exists(self.LANDUSE_PATH):
-            log.info("Landuse raster is already stored locally and will not be downloaded again")
+            log.info(
+                "Landuse raster is already stored locally and will not be downloaded again"
+            )
         else:
             log.info("Creating landuse raster from BaseMap04")
 
             with rasterio.open(self.basemap_location) as raster:
                 # Find area of interest in basemap
-                y1, x1 = rowcol(raster.transform, self.coordinates[0], self.coordinates[3])
-                y2, x2 = rowcol(raster.transform, self.coordinates[2], self.coordinates[1])
+                y1, x1 = rowcol(
+                    raster.transform, self.coordinates[0], self.coordinates[3]
+                )
+                y2, x2 = rowcol(
+                    raster.transform, self.coordinates[2], self.coordinates[1]
+                )
 
                 # Widen area to ensure that need area is not cut off in rounding
                 x1 -= 1
@@ -560,13 +681,15 @@ class DataLoaderOksbolPaper(DataloaderDataforsyningenFriction):
             # Get correct location on the upscaled grid
             y1, x1 = rowcol(transform, self.coordinates[0], self.coordinates[3])
             y2, x2 = rowcol(transform, self.coordinates[2], self.coordinates[1])
-            arr = arr[y1:y2, x1+1:x2+1, :]
+            arr = arr[y1:y2, x1 + 1 : x2 + 1, :]
             transform = Affine(1, 0, self.coordinates[0], 0, -1, self.coordinates[3])
 
             # Move bands to be the first dimension
             arr = np.moveaxis(arr, 2, 0)
             # Adding alpha layer
-            arr = np.concatenate((arr, 255*np.ones((1, arr.shape[1], arr.shape[2]), dtype=int)))
+            arr = np.concatenate(
+                (arr, 255 * np.ones((1, arr.shape[1], arr.shape[2]), dtype=int))
+            )
 
             save_new_raster(arr, self.LANDUSE_PATH, transform)
 
@@ -574,14 +697,13 @@ class DataLoaderOksbolPaper(DataloaderDataforsyningenFriction):
             single_band = np.zeros((1, arr.shape[1], arr.shape[2]), dtype=int)
             landuse_export = {}
             for i, (label, color) in enumerate(landuse_label_to_color.items()):
-                single_band[0, 
-                            (arr[0, :, :] == color[0]) &
-                            (arr[1, :, :] == color[1]) &
-                            (arr[2, :, :] == color[2])] = i
-                landuse_export[i] = {
-                    "label": label,
-                    "color": color
-                },
+                single_band[
+                    0,
+                    (arr[0, :, :] == color[0])
+                    & (arr[1, :, :] == color[1])
+                    & (arr[2, :, :] == color[2]),
+                ] = i
+                landuse_export[i] = ({"label": label, "color": color},)
 
             save_new_raster(single_band, self.LANDUSE_SINGLE_BAND, transform)
             with open(self.LANDUSE_JSON_PATH, "w") as json_file:
@@ -589,11 +711,11 @@ class DataLoaderOksbolPaper(DataloaderDataforsyningenFriction):
 
             # Generate the soil type raster
             with open(self.SOILTYPE_MAPPING, encoding="utf8") as soiltype_valuemap_file:
-                loaded_data = yaml.load(soiltype_valuemap_file, Loader=yaml.SafeLoader) 
+                loaded_data = yaml.load(soiltype_valuemap_file, Loader=yaml.SafeLoader)
                 # Mappings between different representations of soil type
                 jordart_to_soil_number = loaded_data["jordart_to_soil_number"]
-                soil_number_to_label   = loaded_data["number_to_label"]
-                soil_label_to_color    = loaded_data["label_to_color"]
+                soil_number_to_label = loaded_data["number_to_label"]
+                soil_label_to_color = loaded_data["label_to_color"]
                 label_to_program_label = loaded_data["label_to_program_label"]
 
             # Initiates map with color corresponding to non classified
@@ -616,56 +738,56 @@ class DataLoaderOksbolPaper(DataloaderDataforsyningenFriction):
                         break
 
             # Adding alpha layer
-            arr_soil = np.concatenate((arr_soil, 255*np.ones((1, arr_soil.shape[1], arr_soil.shape[2]), dtype=int)))
+            arr_soil = np.concatenate(
+                (
+                    arr_soil,
+                    255 * np.ones((1, arr_soil.shape[1], arr_soil.shape[2]), dtype=int),
+                )
+            )
 
             save_new_raster(arr_soil, self.SOILTYPE_PATH, self.transform)
 
             with open(self.SOILTYPE_MAPPING, encoding="utf8") as soiltype_valuemap_file:
-                loaded_data = yaml.load(soiltype_valuemap_file, Loader=yaml.SafeLoader) 
+                loaded_data = yaml.load(soiltype_valuemap_file, Loader=yaml.SafeLoader)
                 # Mappings between different representations of soil type
-                soil_label_to_color    = loaded_data["label_to_color"]
+                soil_label_to_color = loaded_data["label_to_color"]
 
             soils = {
-                0: {
-                    "label": "hard clay",
-                    "color": soil_label_to_color["hard clay"]
-                },
+                0: {"label": "hard clay", "color": soil_label_to_color["hard clay"]},
                 1: {
                     "label": "hard gravel",
-                    "color": soil_label_to_color["hard gravel"]
+                    "color": soil_label_to_color["hard gravel"],
                 },
-                2: {
-                    "label": "soft clay",
-                    "color": soil_label_to_color["soft clay"]
-                },
-                3: {
-                    "label": "soft sand",
-                    "color": soil_label_to_color["soft sand"]
-                },
+                2: {"label": "soft clay", "color": soil_label_to_color["soft clay"]},
+                3: {"label": "soft sand", "color": soil_label_to_color["soft sand"]},
             }
 
             soil_export = {
                 "shape": [arr_soil.shape[1], arr_soil.shape[2]],
                 "resolution": 1,
                 "labels": soils,
-                "major": "row"
+                "major": "row",
             }
             soil_data_export = np.zeros(soil_export["shape"])
             for i, soil in soils.items():
 
                 soil_data_export[
-                    (arr_soil[0, :, :] == soil["color"][0]) & 
-                    (arr_soil[1, :, :] == soil["color"][1]) & 
-                    (arr_soil[2, :, :] == soil["color"][2])
+                    (arr_soil[0, :, :] == soil["color"][0])
+                    & (arr_soil[1, :, :] == soil["color"][1])
+                    & (arr_soil[2, :, :] == soil["color"][2])
                 ] = i
 
             soil_export["data"] = list(soil_data_export.flatten())
 
-            save_new_raster(np.expand_dims(soil_data_export, axis=0), self.SOILTYPE_SINGLE_BAND, self.transform)
+            save_new_raster(
+                np.expand_dims(soil_data_export, axis=0),
+                self.SOILTYPE_SINGLE_BAND,
+                self.transform,
+            )
             with open(self.SOILTYPE_JSON_PATH, "w") as json_file:
                 json.dump(soil_export, json_file)
 
-    # Saves soil to use in Chrono
+        # Saves soil to use in Chrono
         landuse_valuemap = {}
 
         for label, color in landuse_label_to_color.items():
@@ -673,32 +795,34 @@ class DataLoaderOksbolPaper(DataloaderDataforsyningenFriction):
 
         if not pathlib.Path.exists(self.LANDUSE_JSON_PATH):
             log.info("Saving landuse raster as json")
-            
 
         return RasterRGBA(self.LANDUSE_PATH), landuse_valuemap
-    
+
     def get_soiltype_raster(self):
-        """ Source: https://www.geus.dk/produkter-ydelser-og-faciliteter/data-og-kort/danske-kort/download-jordartskort
-        """
-        
+        """Source: https://www.geus.dk/produkter-ydelser-og-faciliteter/data-og-kort/danske-kort/download-jordartskort"""
+
         with open(self.SOILTYPE_MAPPING, encoding="utf8") as soiltype_valuemap_file:
-            loaded_data = yaml.load(soiltype_valuemap_file, Loader=yaml.SafeLoader) 
+            loaded_data = yaml.load(soiltype_valuemap_file, Loader=yaml.SafeLoader)
             # Mappings between different representations of soil type
             jordart_to_soil_number = loaded_data["jordart_to_soil_number"]
-            soil_number_to_label   = loaded_data["number_to_label"]
-            soil_label_to_color    = loaded_data["label_to_color"]
+            soil_number_to_label = loaded_data["number_to_label"]
+            soil_label_to_color = loaded_data["label_to_color"]
             label_to_program_label = loaded_data["label_to_program_label"]
-        
+
         if pathlib.Path.exists(self.SOILTYPE_PATH):
-            log.info("Soil type raster is already stored locally and will not be downloaded again")
+            log.info(
+                "Soil type raster is already stored locally and will not be downloaded again"
+            )
         else:
-            raise FileNotFoundError("Soil type raster should be generated under landuse raster generation, but was not found.")
+            raise FileNotFoundError(
+                "Soil type raster should be generated under landuse raster generation, but was not found."
+            )
 
         soiltype_valuemap = {}
 
         for label, color in soil_label_to_color.items():
-            soiltype_valuemap[f"#{color[0]:02X}{color[1]:02X}{color[2]:02X}"] = label_to_program_label[label]
+            soiltype_valuemap[f"#{color[0]:02X}{color[1]:02X}{color[2]:02X}"] = (
+                label_to_program_label[label]
+            )
 
         return RasterRGBA(self.SOILTYPE_PATH), soiltype_valuemap
-    
-    

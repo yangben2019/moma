@@ -2,7 +2,7 @@
 Planning module
 """
 
-'''
+"""
  #############################################################################
  #                            _     _     _     _                            #
  #                           / \   / \   / \   / \                           #
@@ -14,7 +14,7 @@ Planning module
 
 MIT License
 
-Copyright (c) 2024 Dario Sirangelo
+Copyright (c) 2024 Dario Sirangelo, Nikolaj Jes Petersen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,7 +32,7 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-'''
+"""
 
 
 import json
@@ -49,9 +49,9 @@ from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
 log = logging.getLogger("MOMA")
 
+
 class Path:
-    """Path
-    """
+    """Path"""
 
     def __init__(self, waypoints, DiGraph):
         """Path object constructor. Defines a path using a provided set of waypoints.
@@ -63,7 +63,7 @@ class Path:
         self.waypoints = waypoints
         self.DiGraph = DiGraph
 
-    #def get_optimal_path_raster(self, shape):
+    # def get_optimal_path_raster(self, shape):
     #    """Optimal path raster generator
     #
     #    Args:
@@ -82,33 +82,49 @@ class Path:
     #
     #    self.raster = optimal_path_raster
 
-    def plot(self, overlay, vehicle, omnidirectional_based=False, show=False, export_path=False):
+    def plot(
+        self,
+        overlay,
+        vehicle,
+        omnidirectional_based=False,
+        show=False,
+        export_path=False,
+    ):
         import matplotlib as mpl  # Used for color maps definition
 
         (_, ax, _, _) = overlay.plot(show=False)
-        
-        # Transform path to UTM coordinates
-        x, y = rio.transform.xy(overlay.transform, self.yint, self.xint, offset="center") 
 
-        ax.scatter(x,
-                   y,
-                   color="k",
-                   marker="o",
-                   s=1.25,
-                   #cmap="seismic",
-                   )
+        # Transform path to UTM coordinates
+        x, y = rio.transform.xy(
+            overlay.transform, self.yint, self.xint, offset="center"
+        )
+
+        ax.scatter(
+            x,
+            y,
+            color="k",
+            marker="o",
+            s=1.25,
+            # cmap="seismic",
+        )
         ax.scatter(x[0], y[0], color="b", marker="s", s=7.5)
         ax.scatter(x[-1], y[-1], color="g", marker="X", s=7.5)
 
         if export_path:
-            plt.savefig(export_path / f"{vehicle}" / f"Optimal path{' (omni)' if omnidirectional_based else ''}.pdf", format="pdf", bbox_inches="tight")
+            plt.savefig(
+                export_path
+                / f"{vehicle}"
+                / f"Optimal path{' (omni)' if omnidirectional_based else ''}.pdf",
+                format="pdf",
+                bbox_inches="tight",
+            )
 
         if show:
             plt.show()
 
         plt.close()
 
-    #TODO Review spline smoothing algorithm
+    # TODO Review spline smoothing algorithm
     def smoothen_spline(self, shape, points=400):
 
         logging.info(
@@ -119,18 +135,47 @@ class Path:
         f, u = spi.splprep([x, y], k=1, s=0.15)
         self.xint, self.yint = spi.splev(np.linspace(0, 1, points), f)
 
-    def print_path(self, elevation_raster, slope_maps, directional_mobility_map, vehicle, minimum_speed, target_speed, fill_omnidirectional_info=False, omnidirectional_based=False, export=False):
+    def print_path(
+        self,
+        elevation_raster,
+        slope_maps,
+        directional_mobility_map,
+        vehicle,
+        minimum_speed,
+        target_speed,
+        fill_omnidirectional_info=False,
+        omnidirectional_based=False,
+        export=False,
+    ):
         log.info(f"Shortest path found! Printing cell list to .JSON file.")
 
-        path_json = directional_mobility_map.fill_path_with_mobility_data(nodes=self.waypoints, DiGraph=self.DiGraph, elevation_raster=elevation_raster, slope_maps=slope_maps, minimum_speed=minimum_speed, target_speed=target_speed, fill_omnidirectional_info=fill_omnidirectional_info)
+        path_json = directional_mobility_map.fill_path_with_mobility_data(
+            nodes=self.waypoints,
+            DiGraph=self.DiGraph,
+            elevation_raster=elevation_raster,
+            slope_maps=slope_maps,
+            minimum_speed=minimum_speed,
+            target_speed=target_speed,
+            fill_omnidirectional_info=fill_omnidirectional_info,
+        )
 
         if export:
-            with open(export / f"{vehicle}" / f"Optimal path{' (omni)' if omnidirectional_based else ''}.json", "w") as f:
+            with open(
+                export
+                / f"{vehicle}"
+                / f"Optimal path{' (omni)' if omnidirectional_based else ''}.json",
+                "w",
+            ) as f:
                 json.dump(path_json, f, indent=4)
 
     def plot_path(self, vehicle, export, omnidirectional_based=False, show=False):
         # load json file
-        with open(export / f"{vehicle}" / f"Optimal path{' (omni)' if omnidirectional_based else ''}.json", "r") as f:
+        with open(
+            export
+            / f"{vehicle}"
+            / f"Optimal path{' (omni)' if omnidirectional_based else ''}.json",
+            "r",
+        ) as f:
             data = json.load(f)["waypoints"]
 
         # Extract the coordinates from the JSON data
@@ -149,12 +194,14 @@ class Path:
         coordinates = np.array(np.moveaxis(coordinates, 0, -1)).T.reshape(-1, 1, 3)
         segments = np.concatenate([coordinates[:-1], coordinates[1:]], axis=1)
 
-        lc = Line3DCollection(segments, cmap='plasma', norm=plt.Normalize(speeds.min(), speeds.max()))
+        lc = Line3DCollection(
+            segments, cmap="plasma", norm=plt.Normalize(speeds.min(), speeds.max())
+        )
         lc.set_array(speeds[:-1])  # set the value used for coloring
         lc.set_linewidth(2)
 
         fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
+        ax = fig.add_subplot(111, projection="3d")
         ax.add_collection3d(lc)
 
         fig.colorbar(lc, ax=ax, label="Speed")
@@ -167,25 +214,31 @@ class Path:
         ax.set_zlim(coordinates[:, 0, 2].min(), coordinates[:, 0, 2].max())
 
         if export:
-            plt.savefig(export / f"{vehicle}" / f"Optimal path 3D{' (omni)' if omnidirectional_based else ''}.pdf", format="pdf", bbox_inches="tight")
+            plt.savefig(
+                export
+                / f"{vehicle}"
+                / f"Optimal path 3D{' (omni)' if omnidirectional_based else ''}.pdf",
+                format="pdf",
+                bbox_inches="tight",
+            )
 
         if show:
             plt.show()
 
         plt.close()
 
-    #TODO Define Savgol filter algorithm and compare with the spline algorithm
-    #def smoothen_savgol(self):
+    # TODO Define Savgol filter algorithm and compare with the spline algorithm
+    # def smoothen_savgol(self):
     #
     #    #yint = savgol_filter(y, 51, 3) # window size 51, polynomial order 3
     #    #shortpath = np.ravel_multi_index((xint, yint), (125,125))
 
-    #TODO Define an AUVAS specification for importing coordinates from a planner.
-    #def convert_path_to_coordinates(xmin, xmax, ymin, ymax, xres, yres, path):
+    # TODO Define an AUVAS specification for importing coordinates from a planner.
+    # def convert_path_to_coordinates(xmin, xmax, ymin, ymax, xres, yres, path):
     #
     #    pass
     #
-    #def convert_to_vehicle_origin(waypoints, vehiclex, vehicley):
+    # def convert_to_vehicle_origin(waypoints, vehiclex, vehicley):
     #
     #    new_waypoints = []
     #
@@ -193,9 +246,8 @@ class Path:
     #        new_waypoints.append(waypointx+vehiclex)
 
 
-class MobilityPlanner():
-    """Mobility planner object
-    """
+class MobilityPlanner:
+    """Mobility planner object"""
 
     def __init__(self, site):
 
@@ -225,8 +277,9 @@ def make_speed_graph(directional_mobility_map):
 
     return DG
 
+
 def define_weighted_edges(directional_mobility_map):
-    
+
     def compass_angle2next_cell(angle):
         """Convert an compass angle to the next cell direction
 
@@ -238,7 +291,9 @@ def define_weighted_edges(directional_mobility_map):
             tuple (int, int): A (dy, dx) tuple indicating the relative position of a neighboring cell in grid cell units
         """
 
-        angle = np.mod(np.deg2rad(angle) + np.pi, 2*np.pi) - np.pi  # Convert to radians and normalize to [-pi, pi]
+        angle = (
+            np.mod(np.deg2rad(angle) + np.pi, 2 * np.pi) - np.pi
+        )  # Convert to radians and normalize to [-pi, pi]
 
         if angle < np.arctan2(-0.5, -1) or angle > np.arctan2(0.5, -1):
             return "S", (1, 0)
@@ -275,19 +330,19 @@ def define_weighted_edges(directional_mobility_map):
                 begin_i = np.arange(0, shape[0])
             elif next_cell[0] == -1:
                 begin_i = np.arange(1, shape[0])
-            
+
             if next_cell[1] == 1:
                 begin_j = np.arange(0, shape[1] - 1)
             elif next_cell[1] == 0:
                 begin_j = np.arange(0, shape[1])
             elif next_cell[1] == -1:
                 begin_j = np.arange(1, shape[1])
-            
+
             end_i = begin_i + next_cell[0]
             end_j = begin_j + next_cell[1]
 
-            begin_i, begin_j = np.meshgrid(begin_i, begin_j, indexing='ij')
-            end_i,   end_j   = np.meshgrid(end_i,   end_j,   indexing='ij')
+            begin_i, begin_j = np.meshgrid(begin_i, begin_j, indexing="ij")
+            end_i, end_j = np.meshgrid(end_i, end_j, indexing="ij")
 
             # Putting each pair into the graph
             cells = (begin_i, begin_j)
@@ -295,15 +350,20 @@ def define_weighted_edges(directional_mobility_map):
             # Compute indices
             index = np.ravel_multi_index(cells, shape)
             neighbor_index = np.ravel_multi_index((end_i, end_j), shape)
-            
 
             cell_vals = map.raster.data[cells]
             # If the neighbor is speed 0 (nogo or steep slope), set a high weight equal til going 0.001 m/s ~equal to max weight on the Vejlby map
-            cell_vals = np.where(cell_vals == 0, 0.001, cell_vals)  # Avoid division by zero
-            
-            p = 1 # Power for the weight function
+            cell_vals = np.where(
+                cell_vals == 0, 0.001, cell_vals
+            )  # Avoid division by zero
+
+            p = 1  # Power for the weight function
             neighbor_weight = cell_vals ** (-p)
-            neighbor_weight *= directional_mobility_map.DIRECTIONAL_DISTANCES_MULTIPLIER[next_cell_direction]
+            neighbor_weight *= (
+                directional_mobility_map.DIRECTIONAL_DISTANCES_MULTIPLIER[
+                    next_cell_direction
+                ]
+            )
 
             # Average the weight for a 5x5 kernel
             average_kernel = np.ones((5, 5)) / 25.0
@@ -316,8 +376,8 @@ def define_weighted_edges(directional_mobility_map):
                     key = (index[i, j], neighbor_index[i, j])
 
                     # Find centre of the kernel for the next cell direction
-                    kernel_i = i + next_cell[0]*2
-                    kernel_j = j + next_cell[1]*2
+                    kernel_i = i + next_cell[0] * 2
+                    kernel_j = j + next_cell[1] * 2
                     # If the kernel is out of bound go to bounds
                     if kernel_i < 0:
                         kernel_i = 0
@@ -332,7 +392,7 @@ def define_weighted_edges(directional_mobility_map):
                     # Kernel penalty from an average in the move direction
 
                     kernel_penalty = average_neighbor_weight[kernel_i, kernel_j]
-                    weight = neighbor_weight[i, j] + 1/20*kernel_penalty
+                    weight = neighbor_weight[i, j] + 1 / 20 * kernel_penalty
 
                     if key not in weighted_edges_dict:
                         weighted_edges_dict[key] = {
@@ -345,12 +405,16 @@ def define_weighted_edges(directional_mobility_map):
                         weighted_edges_dict[key]["angle"] = angle
 
     # Convert the dictionary to a list
-    weighted_edges_list = [(start, end, data) for (start, end), data in weighted_edges_dict.items()]
+    weighted_edges_list = [
+        (start, end, data) for (start, end), data in weighted_edges_dict.items()
+    ]
 
     return weighted_edges_list
 
 
-def find_shortest_path(mobility_digraph, source, target, omnidirectional=False, verbose=True):
+def find_shortest_path(
+    mobility_digraph, source, target, omnidirectional=False, verbose=True
+):
     """Returns the shortest path between a source and target nodes in a directional mobility digraph
 
     Returns the shortest path between a source and target nodes in a directional mobility digraph.
@@ -365,18 +429,19 @@ def find_shortest_path(mobility_digraph, source, target, omnidirectional=False, 
         _type_: _description_
     """
 
-    log.info(f"Finding shortest path between {source} and {target}{', with omnidirectional predictions' if omnidirectional else ''}.")
+    log.info(
+        f"Finding shortest path between {source} and {target}{', with omnidirectional predictions' if omnidirectional else ''}."
+    )
 
-    best_path = nx.shortest_path(mobility_digraph,
-                                 source=source,
-                                 target=target,
-                                 weight="weight")
+    best_path = nx.shortest_path(
+        mobility_digraph, source=source, target=target, weight="weight"
+    )
 
     return Path(best_path, mobility_digraph)
 
 
-#TODO Implement weighted edges search through a convolution kernel
-#def define_weighted_edges_kernel(mobility_maps):
+# TODO Implement weighted edges search through a convolution kernel
+# def define_weighted_edges_kernel(mobility_maps):
 #
 #    weighted_edges_list = []
 #

@@ -1,8 +1,8 @@
-'''
+"""
 Plotting module
-'''
+"""
 
-'''
+"""
  #############################################################################
  #                            _     _     _     _                            #
  #                           / \   / \   / \   / \                           #
@@ -14,7 +14,7 @@ Plotting module
 
 MIT License
 
-Copyright (c) 2024 Dario Sirangelo
+Copyright (c) 2024 Dario Sirangelo, Nikolaj Jes Petersen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,7 +32,7 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-'''
+"""
 
 
 import logging
@@ -47,90 +47,98 @@ from rioxarray import open_rasterio
 from scipy.ndimage import gaussian_filter
 
 
-class Plotter3D():
+class Plotter3D:
 
-    def __init__(self,
-                 path: str,
-                 resample_factor: int = 1,
-                 scale_factor: float = 1.0):
+    def __init__(self, path: str, resample_factor: int = 1, scale_factor: float = 1.0):
 
         self._layers = {}
 
-        assert (type(resample_factor) == int)
-        assert (resample_factor > 0)
+        assert type(resample_factor) == int
+        assert resample_factor > 0
         self._resample_factor: int = resample_factor
 
-        assert (type(scale_factor) == float)
-        assert (scale_factor > 0)
+        assert type(scale_factor) == float
+        assert scale_factor > 0
         self._scale_factor: int = scale_factor
 
         self._plotter = Plotter()
 
-        assert (Path(path).exists())
+        assert Path(path).exists()
         self._load_elevation(Path(path))
 
     def load_values(self, path: str, key, factor: float = 1.0) -> None:
-        logging.info('Loading GeoTIFF \"%s\" to layer \"%s\" ...',
-                     Path(path).name, key)
+        logging.info('Loading GeoTIFF "%s" to layer "%s" ...', Path(path).name, key)
 
         data = open_rasterio(path)
 
         if len(data.shape) > 2:
             data = data[0]
 
-        if (data.shape != self._data.shape):
+        if data.shape != self._data.shape:
 
             logging.info(
-                'Resampling input layer \"%s\" of size (%i, %i) to (%i, %i) ...',
-                Path(path).name, data.shape[0], data.shape[1],
-                self._data.shape[0], self._data.shape[1])
+                'Resampling input layer "%s" of size (%i, %i) to (%i, %i) ...',
+                Path(path).name,
+                data.shape[0],
+                data.shape[1],
+                self._data.shape[0],
+                self._data.shape[1],
+            )
             data = self._resample_from_reference(data, self._data)
         self._layers[key] = data
 
     def find_elevations(self, cx, cy):
 
-        return np.array([
-            self._values.sel(x=x, y=y, method="nearest").values
-            for x, y in zip(cx, cy)
-        ])
+        return np.array(
+            [
+                self._values.sel(x=x, y=y, method="nearest").values
+                for x, y in zip(cx, cy)
+            ]
+        )
 
     def _load_elevation(self, path: Path) -> None:
 
         # Reading in the data
         self._data = open_rasterio(path)
-        self._data = self._resample_from_factor(self._data,
-                                                self._resample_factor)
+        self._data = self._resample_from_factor(self._data, self._resample_factor)
         self._values = np.asarray(self._data[0])
 
-        #logging.info("Adding values for layer at path \"%s\"", path)
-        logging.info("Layer size: (%i, %i)", self._values.shape[0],
-                     self._values.shape[1])
+        # logging.info("Adding values for layer at path \"%s\"", path)
+        logging.info(
+            "Layer size: (%i, %i)", self._values.shape[0], self._values.shape[1]
+        )
 
         self._create_mesh()
 
-    def _resample_from_factor(self,
-                              raster,
-                              factor: float,
-                              resampling=Resampling.average):
+    def _resample_from_factor(
+        self, raster, factor: float, resampling=Resampling.average
+    ):
 
         return self._resample(
             raster,
             (int(raster.rio.height * factor), int(raster.rio.width * factor)),
-            resampling)
+            resampling,
+        )
 
-    def _resample_from_reference(self,
-                                 raster,
-                                 reference_raster,
-                                 resampling=Resampling.average):
+    def _resample_from_reference(
+        self, raster, reference_raster, resampling=Resampling.average
+    ):
 
         return self._resample(
-            raster, (reference_raster.rio.height, reference_raster.rio.width),
-            resampling)
+            raster,
+            (reference_raster.rio.height, reference_raster.rio.width),
+            resampling,
+        )
 
     def _resample(self, raster, shape, resampling=Resampling.average):
 
-        logging.info("Layer size before/after: (%i x %i) => (%i x %i)",
-                     raster.rio.width, raster.rio.height, shape[1], shape[0])
+        logging.info(
+            "Layer size before/after: (%i x %i) => (%i x %i)",
+            raster.rio.width,
+            raster.rio.height,
+            shape[1],
+            shape[0],
+        )
 
         return raster.rio.reproject(
             raster.rio.crs,
@@ -148,7 +156,7 @@ class Plotter3D():
 
     def _get_meshgrid(self) -> None:
 
-        x, y = np.meshgrid(self._data['x'], self._data['y'])
+        x, y = np.meshgrid(self._data["x"], self._data["y"])
         z = np.zeros_like(x)
 
         return x, y, z
@@ -157,43 +165,47 @@ class Plotter3D():
 
         x, y, z = self._get_meshgrid()
         self._mesh = StructuredGrid(x, y, z)
-        self._mesh["Elevation"] = self._values.ravel(order='F')
+        self._mesh["Elevation"] = self._values.ravel(order="F")
 
-        self._topo = self._mesh.warp_by_scalar(scalars="Elevation",
-                                               factor=self._scale_factor)
+        self._topo = self._mesh.warp_by_scalar(
+            scalars="Elevation", factor=self._scale_factor
+        )
 
     def plot_path(self, plotter, pts) -> None:
 
         pts = np.multiply(pts, [1.0, 1.0, self._scale_factor])
-        plotter.add_points(pts,
-                           cmap='viridis',
-                           scalars=pts[:, 2],
-                           render_points_as_spheres=True,
-                           point_size=10.0,
-                           show_scalar_bar=False)
+        plotter.add_points(
+            pts,
+            cmap="viridis",
+            scalars=pts[:, 2],
+            render_points_as_spheres=True,
+            point_size=10.0,
+            show_scalar_bar=False,
+        )
 
     def plot_map(self, layer: str, label: str) -> None:
 
-        self._plotter.add_mesh(mesh=self._topo,
-                               scalars=np.array(
-                                   self._layers[layer]).ravel(order='F'),
-                               cmap='terrain',
-                               interpolate_before_map=True,
-                               flip_scalars=False,
-                               show_scalar_bar=False,
-                               smooth_shading=True,
-                               split_sharp_edges=True,
-                               reset_camera=True,
-                               log_scale=False)
+        self._plotter.add_mesh(
+            mesh=self._topo,
+            scalars=np.array(self._layers[layer]).ravel(order="F"),
+            cmap="terrain",
+            interpolate_before_map=True,
+            flip_scalars=False,
+            show_scalar_bar=False,
+            smooth_shading=True,
+            split_sharp_edges=True,
+            reset_camera=True,
+            log_scale=False,
+        )
 
         self._plotter.add_scalar_bar(
             label,
             vertical=False,
             width=0.8,
             position_x=0.1,
-            font_family='courier',
+            font_family="courier",
             bold=False,
-            fmt='%0.2f',
+            fmt="%0.2f",
             fill=True,
             title_font_size=24,
             label_font_size=24,
@@ -201,7 +213,7 @@ class Plotter3D():
 
     def clear(self):
 
-        #self._plotter.clear()
+        # self._plotter.clear()
         self._plotter = Plotter()
 
     def set_camera_position(self):
@@ -216,7 +228,8 @@ class Plotter3D():
         self._plotter.off_screen = False
         self._plotter.window_size = (3 * 1920, 3 * 1080)
         self._plotter.save_graphic(
-            Path(path).with_stem(Path(path).stem + '_3d').with_suffix('.pdf'))
+            Path(path).with_stem(Path(path).stem + "_3d").with_suffix(".pdf")
+        )
         self._plotter.off_screen = True
 
     def show(self) -> None:
@@ -247,8 +260,11 @@ class Plotter3D():
         new_up = new_up / np.linalg.norm(new_up)
 
         # Our translation is now in terms of the right and new_up vectors
-        translation = translation_vector[0] * right + translation_vector[
-            1] * new_up + translation_vector[2] * view_dir
+        translation = (
+            translation_vector[0] * right
+            + translation_vector[1] * new_up
+            + translation_vector[2] * view_dir
+        )
 
         # Apply translation to both camera and focus
         self._plotter.camera.position = tuple(camera + translation)

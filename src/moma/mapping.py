@@ -1,8 +1,8 @@
-'''
+"""
 Mapping module
-'''
+"""
 
-'''
+"""
  #############################################################################
  #                            _     _     _     _                            #
  #                           / \   / \   / \   / \                           #
@@ -14,7 +14,7 @@ Mapping module
 
 MIT License
 
-Copyright (c) 2024 Dario Sirangelo
+Copyright (c) 2024 Dario Sirangelo, Nikolaj Jes Petersen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,7 +32,7 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-'''
+"""
 
 import logging
 
@@ -51,10 +51,12 @@ from matplotlib.colors import ListedColormap
 
 log = logging.getLogger("MOMA")
 
+
 # Draw samples from a uniform distribution between lower_bound and upper_bound
 @jit
 def uniform(key, lower_bound, upper_bound):
     return jrand.uniform(key, shape=(), minval=lower_bound, maxval=upper_bound)
+
 
 def LatinHyperCube(means, stds, n_samples, seed=None):
     if seed is None:
@@ -80,7 +82,7 @@ def LatinHyperCube(means, stds, n_samples, seed=None):
 
     @jit
     def lhs_sample(row, col):
-        
+
         # Use one key per cell.
         cell_key = cell_keys[row, col, :]
 
@@ -88,7 +90,7 @@ def LatinHyperCube(means, stds, n_samples, seed=None):
         keys = jrand.split(cell_key, n_samples + 1)
         perm_key = keys[0]
         sample_keys = keys[1:]
-        
+
         # Define n intervals in [0, 1]
         intervals = jnp.linspace(0, 1, n_samples + 1)
         lower_bounds = intervals[:-1]
@@ -96,8 +98,9 @@ def LatinHyperCube(means, stds, n_samples, seed=None):
 
         # Use vmap to generate one sample per interval using a separate key
         samples = vmap(uniform, in_axes=(0, 0, 0))(
-            sample_keys, lower_bounds, upper_bounds) # Map over the intervals
-        
+            sample_keys, lower_bounds, upper_bounds
+        )  # Map over the intervals
+
         # Shuffle the stratified samples to remove any ordering bias.
         shuffled_samples = jrand.permutation(perm_key, samples)
 
@@ -106,12 +109,16 @@ def LatinHyperCube(means, stds, n_samples, seed=None):
         shuffled_samples = jnp.clip(shuffled_samples, epsilon, 1 - epsilon)
 
         # Transform the uniform samples to normal samples using the inverse CDF.
-        cell_samples = norm.ppf(shuffled_samples, loc=means[row, col], scale=stds[row, col])
+        cell_samples = norm.ppf(
+            shuffled_samples, loc=means[row, col], scale=stds[row, col]
+        )
 
         return cell_samples
 
     # Map over each cell to generate LHS samples and then transform them to the normal distribution.
-    vmap_lhs_sample = vmap(lhs_sample, in_axes=(0, 0), out_axes=-1) # Map over the rows and columns
+    vmap_lhs_sample = vmap(
+        lhs_sample, in_axes=(0, 0), out_axes=-1
+    )  # Map over the rows and columns
 
     index_row, index_col = np.unravel_index(np.arange(0, means.size), means.shape)
 
@@ -127,34 +134,32 @@ def sample_points(data, n_samples=1):
         data: 3D array of shape (n_layers, n_rows, n_cols).
             n_layers: is either 1 (mean), 2 (mean and std) or more (mean, and different noise layers).
         n_samples: Number of samples to draw.
-    
+
     Returns:
         3D array of shape (n_samples, n_rows, n_cols) with the sampled points.
     """
-    
+
     uncertainty_layers = data.shape[0] - 1
     if uncertainty_layers > 1:
         # Mean values are in the first layer, and different noise layers are in the rest.
-        return data[0] + data[1:] 
+        return data[0] + data[1:]
 
     if n_samples > 1 and uncertainty_layers == 1:
         # Mean values in the first layer, and std in the second layer.
         return LatinHyperCube(data[0], data[1], n_samples)
 
-    # If only one sample is requested or no uncertainty layers exist, return the mean value. 
+    # If only one sample is requested or no uncertainty layers exist, return the mean value.
     return data[0][np.newaxis, ...]
 
 
 class Map(ABC):
-    """Map
-    """
+    """Map"""
 
     pass
 
 
 class AerialMap(Map):
-    """Aerial map
-    """
+    """Aerial map"""
 
     def __init__(self, name, raster):
 
@@ -163,23 +168,29 @@ class AerialMap(Map):
         self.name = name
         self.raster = raster
 
-    def plot(self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False):
+    def plot(
+        self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
+    ):
 
         rgb = np.copy(self.raster.data)
-        
+
         # Set nodata values
         rgb[rgb == 0] = 255
 
         rgb = np.moveaxis(rgb, 0, -1)
 
         self.raster.plot(
-            rgb=rgb, 
-            export_path=export_path / "Aerial view.pdf", 
-            show=show, export=export, save_maps=save_maps, hide_utm=hide_utm)
+            rgb=rgb,
+            export_path=export_path / "Aerial view.pdf",
+            show=show,
+            export=export,
+            save_maps=save_maps,
+            hide_utm=hide_utm,
+        )
+
 
 class ElevationMap(Map):
-    """Elevation map
-    """
+    """Elevation map"""
 
     def __init__(self, name, raster):
 
@@ -188,13 +199,19 @@ class ElevationMap(Map):
         self.name = name
         self.raster = raster
 
-    def plot(self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False):
+    def plot(
+        self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
+    ):
 
         return_vals = self.raster.plot(
-            colorbar="Elevation (m)", 
-            export_path=export_path / "Elevation map.pdf", 
-            show=show, export=export, save_maps=save_maps, hide_utm=hide_utm)
-        
+            colorbar="Elevation (m)",
+            export_path=export_path / "Elevation map.pdf",
+            show=show,
+            export=export,
+            save_maps=save_maps,
+            hide_utm=hide_utm,
+        )
+
         if not (show, export, save_maps):
             return return_vals
 
@@ -212,18 +229,19 @@ class DirectionalMap(Map):
         "NW": np.sqrt(2),
         "SE": np.sqrt(2),
         "NE": np.sqrt(2),
-        "SW": np.sqrt(2)
+        "SW": np.sqrt(2),
     }
+
 
 def direction2compass_angle(direction):
     """Convert a direction to a compass angle.
-    
+
     Args:
-        direction (str): Direction as a string, e.g. "N", "NNE", "NE", 
-            "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", 
+        direction (str): Direction as a string, e.g. "N", "NNE", "NE",
+            "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W",
             "WNW", "NW", "NNW".
     Returns:
-        float: Compass angle in degrees, where 0 is North, 90 is East, 
+        float: Compass angle in degrees, where 0 is North, 90 is East,
             180 is South, and 270 is West.
     """
     direction = direction.upper()
@@ -243,7 +261,7 @@ def direction2compass_angle(direction):
         "W": 270,
         "WNW": 292.5,
         "NW": 315,
-        "NNW": 337.5
+        "NNW": 337.5,
     }
 
     if direction in compass_directions:
@@ -252,6 +270,7 @@ def direction2compass_angle(direction):
         return "omni"
     else:
         return np.round(float(direction), 3)
+
 
 class SlopeMap(DirectionalMap):
 
@@ -264,12 +283,13 @@ class SlopeMap(DirectionalMap):
 
         self.slope_raster = self.elevation_raster.return_empty_copy()
         self.aspect_raster = self.elevation_raster.return_empty_copy()
-        self.aspect_raster.colormap = "twilight" # Set cyclic colormap
+        self.aspect_raster.colormap = "twilight"  # Set cyclic colormap
 
         self.slope_raster.data, self.aspect_raster.data = self.slope_aspect_vmap()(
-            jnp.array(self.elevation_raster.data), 
-            self.elevation_raster.resolution_x, 
-            self.elevation_raster.resolution_y)
+            jnp.array(self.elevation_raster.data),
+            self.elevation_raster.resolution_x,
+            self.elevation_raster.resolution_y,
+        )
 
         new_directions = []
         new_angles = []
@@ -278,7 +298,9 @@ class SlopeMap(DirectionalMap):
             for direction in ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]:
                 angle = direction2compass_angle(direction)
                 if angle not in directions["angles"]:
-                    log.info(f"Adding slope map for direction {direction} degrees to have all slopes available for omnidirectional predictions.")
+                    log.info(
+                        f"Adding slope map for direction {direction} degrees to have all slopes available for omnidirectional predictions."
+                    )
                     new_directions.append(angle)
                     new_angles.append(angle)
 
@@ -288,8 +310,13 @@ class SlopeMap(DirectionalMap):
             new_angles.append(angle)
             if not angle == "omni":
                 rotated_angle = np.mod(angle + 90, 360)
-                if rotated_angle not in directions["angles"] and rotated_angle not in new_angles:
-                    log.info(f"Adding slope map for direction {rotated_angle} degrees to have sideslopes available for {direction}.")
+                if (
+                    rotated_angle not in directions["angles"]
+                    and rotated_angle not in new_angles
+                ):
+                    log.info(
+                        f"Adding slope map for direction {rotated_angle} degrees to have sideslopes available for {direction}."
+                    )
                     new_directions.append(angle)
                     new_angles.append(rotated_angle)
 
@@ -299,7 +326,6 @@ class SlopeMap(DirectionalMap):
             self.directional_rasters[angle].direction = direction
             self.directional_slope(direction, angle)
 
-
     def slope_aspect_vmap(self):
         @jit
         def slope_aspect(elevation, dx, dy):
@@ -307,25 +333,30 @@ class SlopeMap(DirectionalMap):
 
             # Pads data to handle edges
             padded = jnp.pad(elevation, 1, mode="reflect", reflect_type="odd")
-            
+
             # Slope and aspect with Horn's algorithm according to: https://xdem.readthedocs.io/en/stable/terrain.html
-            h_0m = padded[1:-1, 2:  ]
-            h_pm = padded[2:  , 2:  ]
-            h_p0 = padded[2:  , 1:-1]
-            h_pp = padded[2:  ,  :-2]
-            h_0p = padded[1:-1,  :-2]
-            h_mp = padded[ :-2,  :-2]
-            h_m0 = padded[ :-2, 1:-1]
-            h_mm = padded[ :-2, 2:  ]
-            
-            p = ((h_pp + 2*h_p0 + h_pm) - (h_mp + 2*h_m0 + h_mm))/(8*dx)
-            q = ((h_pp + 2*h_0p + h_mp) - (h_pm + 2*h_0m + h_mm))/(8*dy)
-            
-            slope = jnp.sqrt(p**2 + q**2) # Slope in ratio (rise/run)
-            aspect = jnp.mod(jnp.arctan2(q, p), 2*jnp.pi) # Aspect (downward direction of slope) given in radians
+            h_0m = padded[1:-1, 2:]
+            h_pm = padded[2:, 2:]
+            h_p0 = padded[2:, 1:-1]
+            h_pp = padded[2:, :-2]
+            h_0p = padded[1:-1, :-2]
+            h_mp = padded[:-2, :-2]
+            h_m0 = padded[:-2, 1:-1]
+            h_mm = padded[:-2, 2:]
+
+            p = ((h_pp + 2 * h_p0 + h_pm) - (h_mp + 2 * h_m0 + h_mm)) / (8 * dx)
+            q = ((h_pp + 2 * h_0p + h_mp) - (h_pm + 2 * h_0m + h_mm)) / (8 * dy)
+
+            slope = jnp.sqrt(p**2 + q**2)  # Slope in ratio (rise/run)
+            aspect = jnp.mod(
+                jnp.arctan2(q, p), 2 * jnp.pi
+            )  # Aspect (downward direction of slope) given in radians
 
             return slope, aspect
-        return vmap(slope_aspect, in_axes=(0, None, None), out_axes=0) # Maps over the samples
+
+        return vmap(
+            slope_aspect, in_axes=(0, None, None), out_axes=0
+        )  # Maps over the samples
 
     def directional_slope(self, direction="N", direction_angle=0):
 
@@ -336,42 +367,65 @@ class SlopeMap(DirectionalMap):
             self.directional_rasters[direction_angle].data = self.slope_raster.data
         else:
             # Directional slope as given by: https://gis.stackexchange.com/a/169722
-            self.directional_rasters[direction_angle].data = self.slope_raster.data*(
-                - np.cos(np.deg2rad(direction_angle)) * np.cos(self.aspect_raster.data) 
-                - np.sin(np.deg2rad(direction_angle)) * np.sin(self.aspect_raster.data) 
+            self.directional_rasters[direction_angle].data = self.slope_raster.data * (
+                -np.cos(np.deg2rad(direction_angle)) * np.cos(self.aspect_raster.data)
+                - np.sin(np.deg2rad(direction_angle)) * np.sin(self.aspect_raster.data)
             )
-        
+
         log.info(
             f"Slope max in direction {direction}: {colorama.Fore.BLUE}Mean {np.mean(self.directional_rasters[direction_angle].data):0.2g} deg{colorama.Fore.RESET}, Std. deviation: {np.std(self.directional_rasters[direction_angle].data):0.2g} deg."
         )
-    
-    def plot_slope_aspect(self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False):
+
+    def plot_slope_aspect(
+        self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
+    ):
 
         # Plot steepest decline map
         self.slope_raster.plot(
-            data=self.slope_raster.data*100, 
-            colorbar="Slope [\%]", 
-            export_path=export_path / "slope_maps" / f"Steepest slope.pdf", 
-            show=show, export=export, save_maps=save_maps, hide_utm=hide_utm)
+            data=self.slope_raster.data * 100,
+            colorbar="Slope [\%]",
+            export_path=export_path / "slope_maps" / f"Steepest slope.pdf",
+            show=show,
+            export=export,
+            save_maps=save_maps,
+            hide_utm=hide_utm,
+        )
 
         # Plot aspect decline map
         self.aspect_raster.plot(
-            data=np.rad2deg(self.aspect_raster.data), 
-            colorbar="Direction of steepest decline (deg)", 
-            clim = (0, 360),
-            export_path=export_path / "slope_maps" / f"Aspect.pdf", 
-            show=show, export=export, save_maps=save_maps, hide_utm=hide_utm)
+            data=np.rad2deg(self.aspect_raster.data),
+            colorbar="Direction of steepest decline (deg)",
+            clim=(0, 360),
+            export_path=export_path / "slope_maps" / f"Aspect.pdf",
+            show=show,
+            export=export,
+            save_maps=save_maps,
+            hide_utm=hide_utm,
+        )
 
-    def plot(self, directions, export_path=None, show=True, export=False, save_maps=False, hide_utm=False):
+    def plot(
+        self,
+        directions,
+        export_path=None,
+        show=True,
+        export=False,
+        save_maps=False,
+        hide_utm=False,
+    ):
 
         for direction, angle in zip(directions["names"], directions["angles"]):
 
             self.directional_rasters[angle].plot(
-                data=self.directional_rasters[angle].data*100,
-                colorbar="Slope [\%]", 
-                clim = (-20, 20),
-                export_path=export_path / "slope_maps" / f"Slope map ({direction}).pdf", 
-                show=show, export=export, save_maps=save_maps, hide_utm=hide_utm)
+                data=self.directional_rasters[angle].data * 100,
+                colorbar="Slope [\%]",
+                clim=(-20, 20),
+                export_path=export_path / "slope_maps" / f"Slope map ({direction}).pdf",
+                show=show,
+                export=export,
+                save_maps=save_maps,
+                hide_utm=hide_utm,
+            )
+
 
 class ParameterMap(Map):
 
@@ -379,8 +433,7 @@ class ParameterMap(Map):
 
 
 class LandUseMap(ParameterMap):
-    """Land use map coded through an RGB raster mapped to ECDS classification codes. Used to delineate no-go zones and hard surfaces on the map.
-    """
+    """Land use map coded through an RGB raster mapped to ECDS classification codes. Used to delineate no-go zones and hard surfaces on the map."""
 
     # More information on land use codes at the following link:
     # https://www.sedris.org/sdk_4.1/src/lib/edcs/docs/dictionary/ECC_C.htm
@@ -389,38 +442,34 @@ class LandUseMap(ParameterMap):
             "edcs_classification_label": "BUILT_UP_REGION",
             "edcs_classification_symbolic_constant": "ECC_BUILT_UP_REGION",
             "edcs_classification_code": 177,
-            "definition":
-            "A <TRACT> containing a concentration of <BUILDING>s and other <STRUCTURE>s; a built-up region.",
+            "definition": "A <TRACT> containing a concentration of <BUILDING>s and other <STRUCTURE>s; a built-up region.",
             "edcs_group_labels": ["SHELTER"],
             "reference_type": "IR",
-            "reference": "S57A, Object: BUAARE"
+            "reference": "S57A, Object: BUAARE",
         },
         "EA010": {
-            "edcs_classification_label":
-            "CROP_LAND",
-            "edcs_classification_symbolic_constant":
-            "ECC_CROP_LAND",
-            "edcs_classification_code":
-            295,
-            "definition":
-            "A <TRACT> that has been tilled for the planting of crops.",
-            "edcs_group_labels":
-            ["AGRICULTURE", "LIVING_ORGANISM", "PLANT", "USAGE_REGION"],
-            "reference_type":
-            "IR",
-            "reference":
-            "FACC, Annex A: EA010"
+            "edcs_classification_label": "CROP_LAND",
+            "edcs_classification_symbolic_constant": "ECC_CROP_LAND",
+            "edcs_classification_code": 295,
+            "definition": "A <TRACT> that has been tilled for the planting of crops.",
+            "edcs_group_labels": [
+                "AGRICULTURE",
+                "LIVING_ORGANISM",
+                "PLANT",
+                "USAGE_REGION",
+            ],
+            "reference_type": "IR",
+            "reference": "FACC, Annex A: EA010",
         },
         "EC030": {
             "edcs_classification_label": "TREED_TRACT",
             "edcs_classification_symbolic_constant": "ECC_TREED_TRACT",
             "edcs_classification_code": 1282,
-            "definition":
-            "A tract covered by a non empty set of trees; a treed tract. examples: copse, thicket, stand of trees.",
+            "definition": "A tract covered by a non empty set of trees; a treed tract. examples: copse, thicket, stand of trees.",
             "edcs_group_labels": ["LIVING_ORGANISM", "PHYSIOGRAPHY", "PLANT"],
             "reference_type": "IR",
-            "reference": "FACC, Annex A: EC030"
-        }
+            "reference": "FACC, Annex A: EC030",
+        },
     }
 
     def __init__(self, name, raster, value_map, nogo):
@@ -442,9 +491,10 @@ class LandUseMap(ParameterMap):
 
         # Map colors from RGB integer values to corresponding map quantity (e.g. "255: "EC030")
         self.col_dict = {hex_to_rgb(k): v for k, v in self.value_map.items()}
-        
+
         self.rgb = jnp.dstack(
-            (self.raster.data[0], self.raster.data[1], self.raster.data[2]))
+            (self.raster.data[0], self.raster.data[1], self.raster.data[2])
+        )
 
         # List of landuse RGB that is nogo
         self.rgb_nogo = np.zeros(256**3)
@@ -452,7 +502,7 @@ class LandUseMap(ParameterMap):
         # Convert the nogo landuse to a boolean array
         for rgb, landuse in self.col_dict.items():
             if nogo[landuse]:
-                self.rgb_nogo[rgb] = 1 
+                self.rgb_nogo[rgb] = 1
         self.rgb_nogo = jnp.array(self.rgb_nogo)
 
         # Sets the boolean value for each pixel in the raster
@@ -462,29 +512,35 @@ class LandUseMap(ParameterMap):
             combined_rgb = rgb_value[0] * 256 * 256 + rgb_value[1] * 256 + rgb_value[2]
             return self.rgb_nogo[combined_rgb]
 
-        self.vmap_is_nogo = vmap(is_nogo) # Maps over the rows and columns
+        self.vmap_is_nogo = vmap(is_nogo)  # Maps over the rows and columns
 
-        index_y, index_x = jnp.unravel_index(np.arange(0, self.raster.data[0].size), self.raster.data[0].shape)
+        index_y, index_x = jnp.unravel_index(
+            np.arange(0, self.raster.data[0].size), self.raster.data[0].shape
+        )
         self.nogo = self.vmap_is_nogo(index_y, index_x)
         self.nogo = np.array(self.nogo).reshape(self.raster.data[0].shape)
 
-    def plot(self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False):
+    def plot(
+        self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
+    ):
 
         # Generate a colormap based on available colors
-        discrete_colormap = ListedColormap(
-            [k for k, _ in self.value_map.items()])
+        discrete_colormap = ListedColormap([k for k, _ in self.value_map.items()])
 
         # Plots colormap
         self.raster.plot(
-            rgb=self.rgb, 
+            rgb=self.rgb,
             discrete_colormap=(discrete_colormap, self.col_dict),
-            export_path=export_path / "Land use.pdf", 
-            show=show, export=export, save_maps=save_maps, hide_utm=hide_utm)
+            export_path=export_path / "Land use.pdf",
+            show=show,
+            export=export,
+            save_maps=save_maps,
+            hide_utm=hide_utm,
+        )
 
 
 class SoilTypeMap(ParameterMap):
-    """Soil type map
-    """
+    """Soil type map"""
 
     SOIL_LIST = {
         "GW": "Well-graded gravel, fine to coarse gravel",
@@ -501,7 +557,7 @@ class SoilTypeMap(ParameterMap):
         "MH": "Elastic silt",
         "CH": "Fat clay",
         "OH": "Organic clay, organic silt",
-        "PT": "Peat"
+        "PT": "Peat",
     }
 
     def __init__(self, name, raster, value_map):
@@ -529,35 +585,42 @@ class SoilTypeMap(ParameterMap):
 
         self.soilarray = np.zeros(self.raster.data[0].shape, dtype=object)
 
-        rgb = self.raster.data[0] * 256 * 256 + self.raster.data[1] * 256 + self.raster.data[2]
+        rgb = (
+            self.raster.data[0] * 256 * 256
+            + self.raster.data[1] * 256
+            + self.raster.data[2]
+        )
 
         for rgb_key, soil in self.rgb_map.items():
             index = np.where(rgb == rgb_key)
             self.soilarray[index] = soil
 
-    def plot(self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False):
+    def plot(
+        self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
+    ):
 
         # Map colors from RGB integer values to corresponding map quantity (e.g. "255: "EC030")
         col_dict = {hex_to_rgb(k): v for k, v in self.value_map.items()}
 
         # Generate a colormap based on available colors
-        discrete_colormap = ListedColormap(
-            [k for k, _ in self.value_map.items()])
+        discrete_colormap = ListedColormap([k for k, _ in self.value_map.items()])
 
-        rgb = np.dstack(
-            (self.raster.data[0], self.raster.data[1], self.raster.data[2]))
+        rgb = np.dstack((self.raster.data[0], self.raster.data[1], self.raster.data[2]))
 
         # Plots colormap
         self.raster.plot(
-            rgb=rgb, 
+            rgb=rgb,
             discrete_colormap=(discrete_colormap, col_dict),
-            export_path=export_path / "Soil map.pdf", 
-            show=show, export=export, save_maps=save_maps, hide_utm=hide_utm)
+            export_path=export_path / "Soil map.pdf",
+            show=show,
+            export=export,
+            save_maps=save_maps,
+            hide_utm=hide_utm,
+        )
 
 
 class MoistureContentMap(ParameterMap):
-    """Moisture content map
-    """
+    """Moisture content map"""
 
     def __init__(self, name, raster, value_map):
 
@@ -583,27 +646,38 @@ class MoistureContentMap(ParameterMap):
 
         self.moisturearray = np.zeros_like(self.raster.data[0])
 
-        rgb = self.raster.data[0] * 256 * 256 + self.raster.data[1] * 256 + self.raster.data[2]
+        rgb = (
+            self.raster.data[0] * 256 * 256
+            + self.raster.data[1] * 256
+            + self.raster.data[2]
+        )
 
         for rgb_key, moisture in self.rgb_map.items():
             index = np.where(rgb == rgb_key)
             self.moisturearray[index] = moisture
 
-        self.moisturearray = np.concatenate((self.moisturearray[np.newaxis, ...], self.raster.data[4:]), axis=0)
+        self.moisturearray = np.concatenate(
+            (self.moisturearray[np.newaxis, ...], self.raster.data[4:]), axis=0
+        )
 
-    def plot(self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False):
+    def plot(
+        self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
+    ):
 
         # Plots colormap
         self.raster.plot(
             data=self.moisturearray,
             reverse_colormap=False,
-            export_path=export_path / "Moisture map.pdf", 
-            show=show, export=export, save_maps=save_maps, hide_utm=hide_utm)
+            export_path=export_path / "Moisture map.pdf",
+            show=show,
+            export=export,
+            save_maps=save_maps,
+            hide_utm=hide_utm,
+        )
 
 
 class FrictionMap(ParameterMap):
-    """Soil friction map
-    """
+    """Soil friction map"""
 
     def __init__(self, name, raster):
 
@@ -612,12 +686,18 @@ class FrictionMap(ParameterMap):
         self.name = name
         self.raster = raster
 
-    def plot(self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False):
+    def plot(
+        self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
+    ):
 
         self.raster.plot(
-            colorbar="Friction", 
-            export_path=export_path / "Friction map.pdf", 
-            show=show, export=export, save_maps=save_maps, hide_utm=hide_utm)
+            colorbar="Friction",
+            export_path=export_path / "Friction map.pdf",
+            show=show,
+            export=export,
+            save_maps=save_maps,
+            hide_utm=hide_utm,
+        )
 
 
 def convert_coordinate_to_pixel(data, raster, shape, coordinate_system="utm"):
@@ -628,18 +708,21 @@ def convert_coordinate_to_pixel(data, raster, shape, coordinate_system="utm"):
     ):
         raise ValueError(
             f"UTM coordinate ({x}, {y}) is outside the map bounds ([{round(raster.x_min)}, {round(raster.x_max)}], [{round(raster.y_min)}, {round(raster.y_max)}])"
-    )
+        )
     if coordinate_system == "map" and (
         x < 0 or x > raster.x_max or y < 0 or y > raster.y_max
     ):
         raise ValueError(
             f"Map coordinate ({x}, {y}) is outside the map bounds ([{0}, {round(raster.x_max - raster.x_min)}], [{0}, {round(raster.y_max - raster.y_min)}])"
-    )
+        )
 
+    new_x = (
+        x - (raster.x_min if coordinate_system == "utm" else 0)
+    ) / raster.resolution_x
+    new_y = (
+        y - (raster.y_min if coordinate_system == "utm" else 0)
+    ) / raster.resolution_y
 
-    new_x = (x - (raster.x_min if coordinate_system == "utm" else 0)) / raster.resolution_x
-    new_y = (y - (raster.y_min if coordinate_system == "utm" else 0)) / raster.resolution_y
-    
     return np.floor(new_x).astype(int), shape[0] - np.floor(new_y).astype(int) - 1
 
 
@@ -648,8 +731,7 @@ def convert_coordinate_length_to_pixel_length(l, raster):
 
 
 class NoGoMap(Map):
-    """No-go map
-    """
+    """No-go map"""
 
     def __init__(self, name, vehicle, aerial, landuse):
 
@@ -667,22 +749,34 @@ class NoGoMap(Map):
         def add_box(data, description):
             x_min, x_max, y_min, y_max = data
             log.info(
-                f"Adding zone \"{description}\" with bounding box [{x_min}, {x_max}, {y_min}, {y_max}]"
+                f'Adding zone "{description}" with bounding box [{x_min}, {x_max}, {y_min}, {y_max}]'
             )
-            x_pixel_min, y_pixel_min = convert_coordinate_to_pixel((x_min, y_min), self.landuse.raster, self.data.shape)
-            x_pixel_max, y_pixel_max = convert_coordinate_to_pixel((x_max, y_max), self.landuse.raster, self.data.shape)
+            x_pixel_min, y_pixel_min = convert_coordinate_to_pixel(
+                (x_min, y_min), self.landuse.raster, self.data.shape
+            )
+            x_pixel_max, y_pixel_max = convert_coordinate_to_pixel(
+                (x_max, y_max), self.landuse.raster, self.data.shape
+            )
             self.data[y_pixel_max:y_pixel_min, x_pixel_min:x_pixel_max] = 1
-            
+
         def add_circle(data, description):
             x, y, r = data
             log.info(
-                f"Adding zone \"{description}\" with bounding circle centrum [{x}, {y}] and radius {r}"
+                f'Adding zone "{description}" with bounding circle centrum [{x}, {y}] and radius {r}'
             )
-            x_pixel, y_pixel = convert_coordinate_to_pixel((x, y), self.landuse.raster, self.data.shape)
+            x_pixel, y_pixel = convert_coordinate_to_pixel(
+                (x, y), self.landuse.raster, self.data.shape
+            )
             r_pixel = convert_coordinate_length_to_pixel_length(r, self.landuse.raster)
-            index_y, index_x = np.unravel_index(np.arange(0, self.data.size), self.data.shape)
-            nogo_index_x = index_x[(index_x - x_pixel)**2 + (index_y - y_pixel)**2 <= r_pixel**2]
-            nogo_index_y = index_y[(index_x - x_pixel)**2 + (index_y - y_pixel)**2 <= r_pixel**2]
+            index_y, index_x = np.unravel_index(
+                np.arange(0, self.data.size), self.data.shape
+            )
+            nogo_index_x = index_x[
+                (index_x - x_pixel) ** 2 + (index_y - y_pixel) ** 2 <= r_pixel**2
+            ]
+            nogo_index_y = index_y[
+                (index_x - x_pixel) ** 2 + (index_y - y_pixel) ** 2 <= r_pixel**2
+            ]
             self.data[nogo_index_y, nogo_index_x] = 1
 
         # If no description is provided, use zone number
@@ -701,25 +795,33 @@ class NoGoMap(Map):
             self.zones[-1]["type"] = "Circle"
             add_circle(data, description)
         else:
-            log.info(f"Unsupported zone type for \"{description}\" with bounding data [{data}]")
+            log.info(
+                f'Unsupported zone type for "{description}" with bounding data [{data}]'
+            )
 
         log.info(f"Total number of zones updated to: {len(self.zones)}")
 
-    def plot(self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False):
-        """Plot no-go zones
-        """
+    def plot(
+        self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
+    ):
+        """Plot no-go zones"""
 
         # Open new figure
         (figure, axes) = plt.subplots(1, 1)
 
-        rgb = np.dstack((self.aerial.raster.data[0], self.aerial.raster.data[1],
-                         self.aerial.raster.data[2]))
+        rgb = np.dstack(
+            (
+                self.aerial.raster.data[0],
+                self.aerial.raster.data[1],
+                self.aerial.raster.data[2],
+            )
+        )
         # Set nodata values
         rgb[rgb == 0] = 255
 
         (_, axes, _, _) = self.aerial.raster.plot(
-            rgb=rgb, 
-            show=False, export=False, save_maps=False)
+            rgb=rgb, show=False, export=False, save_maps=False
+        )
 
         # Set style for the no-go zone labels
         label_style = dict(boxstyle="round", facecolor="indianred", alpha=0.9)
@@ -730,8 +832,15 @@ class NoGoMap(Map):
         colormap2 = mpl.colors.ListedColormap(["none", "crimson"])
 
         # Add no-go from land use
-        extent = [self.landuse.raster.x_min, self.landuse.raster.x_max, self.landuse.raster.y_min, self.landuse.raster.y_max]
-        axes.imshow(self.landuse.nogo, vmin=0, vmax=1, extent=extent, cmap=colormap1, alpha=0.7)
+        extent = [
+            self.landuse.raster.x_min,
+            self.landuse.raster.x_max,
+            self.landuse.raster.y_min,
+            self.landuse.raster.y_max,
+        ]
+        axes.imshow(
+            self.landuse.nogo, vmin=0, vmax=1, extent=extent, cmap=colormap1, alpha=0.7
+        )
 
         # Plot no-go zones
         axes.imshow(self.data, vmin=0, vmax=1, extent=extent, cmap=colormap2, alpha=0.7)
@@ -755,26 +864,32 @@ class NoGoMap(Map):
 
                 txt_x = x_pixel
                 txt_y = y_pixel - r_pixel - offset
-            
-            axes.text(txt_x,
-                      txt_y,
-                      entry["description"],
-                      bbox=label_style,
-                      fontdict=font_style,
-                      ha="center",
-                      va="top")
+
+            axes.text(
+                txt_x,
+                txt_y,
+                entry["description"],
+                bbox=label_style,
+                fontdict=font_style,
+                ha="center",
+                va="top",
+            )
 
         if show:
             plt.show()
 
         if export:
             log.info(f"Exporting raster plot to {export_path}.")
-            plt.savefig(export_path / f"{self.vehicle}" / "No-go map.pdf", format="pdf", bbox_inches="tight")
+            plt.savefig(
+                export_path / f"{self.vehicle}" / "No-go map.pdf",
+                format="pdf",
+                bbox_inches="tight",
+            )
 
         # Saves the raster as a GeoTIFF file if save_maps is True
         if save_maps:
             log.info(f"Exporting no go as GeoTiff is not yet supported.")
-            #TODO: add possibility to save the no-go map as a GeoTIFF file
+            # TODO: add possibility to save the no-go map as a GeoTIFF file
 
         plt.close()
 
@@ -837,7 +952,6 @@ def hex_to_rgb(hex_color):
     rgb_triplet = tuple([int(255 * x) for x in rgb_triplet])
 
     # Convert RGB triplet to an integer
-    rgb_integer = rgb_triplet[0] * 256 * 256 + rgb_triplet[
-        1] * 256 + rgb_triplet[2]
+    rgb_integer = rgb_triplet[0] * 256 * 256 + rgb_triplet[1] * 256 + rgb_triplet[2]
 
     return rgb_integer
