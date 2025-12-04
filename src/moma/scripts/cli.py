@@ -28,6 +28,8 @@ import platform
 import pathlib
 import argparse
 
+from types import SimpleNamespace
+
 from moma.toolboxes import MobilityToolbox
 from moma.mobility import generate_vehicle_mobility_file
 
@@ -196,16 +198,27 @@ mobility_parser.add_argument(
 # Test map generation
 # ====================
 def generate_test_map(args):
+    test_map_params = SimpleNamespace()
+    test_map_params.seed = args.seed
+    test_map_params.max_slope_percent = args.max_slope_percent
+    test_map_params.map_dim = args.map_dim
+    test_map_params.plateaus = args.plateaus
+    test_map_params.slope_length = args.slope_length
+    test_map_params.resolution = args.resolution
+    test_map_params.transition_pad = args.transition_pad
+    test_map_params.start_pad = args.start_pad
 
-    TestMapGenerator.main_generate(
+    test_map_generator = TestMapGenerator()
+    test_map_generator.main_generate(
         base_output_dir=args.output if args.output != "None" else None,
         N_test_maps=args.N_maps,
         std_elevation=args.std_elevation,
         friction_coefficient=args.friction_coefficient,
         friction_coefficient_std=args.friction_coefficient_std,
         map_type=args.map_type,
-        output_resolution=args.resolution,
+        output_resolution=args.output_resolution,
         create_rasters=args.create_rasters,
+        test_map_params=test_map_params,
     )
 
 
@@ -243,9 +256,9 @@ test_map_parser.add_argument(
     default="bmp",
 )
 test_map_parser.add_argument(
-    "--resolution",
+    "--output_resolution",
     type=int,
-    help="resolution of the map, output is resolution x 0.25 m",
+    help="resolution of the geenrated map, output is resolution x 0.25 m",
     default=6,
 )
 test_map_parser.add_argument(
@@ -253,6 +266,57 @@ test_map_parser.add_argument(
     action="store_true",
     help="create rasters of test map for use in MOMA",
     default=False,
+)
+test_map_parser.add_argument(
+    "--seed", 
+    type=int, 
+    help="seed for random map generation", 
+    default=42
+)
+test_map_parser.add_argument(
+    "--max_slope_percent",
+    type=float,
+    help="maximum slope percentage for the test map, default 15.0",
+    default=15.0,
+)
+test_map_parser.add_argument(
+    "--map_dim",
+    nargs=2,
+    type=int,
+    help="dimensions of the map in number of cells, default 200 200",
+    default=(200, 200),
+)
+test_map_parser.add_argument(
+    "--plateaus",
+    nargs=2,
+    type=int,
+    help="number of plateaus in the test map, default 4 4",
+    default=(4, 4),
+)
+test_map_parser.add_argument(
+    "--slope_length",
+    nargs=2,
+    type=int,
+    help="average length of slopes in the test map, default 30 30",
+    default=(30, 30),
+)
+test_map_parser.add_argument(
+    "--resolution",
+    type=int,
+    help="resolution of the test map in pixels per meter, default 4",
+    default=4,
+)
+test_map_parser.add_argument(
+    "--transition_pad",
+    type=int,
+    help="length of transition padding around the test map in meters, default 15",
+    default=15,
+)
+test_map_parser.add_argument(
+    "--start_pad",
+    type=int,
+    help="length of start padding around the test map in meters, default 10",
+    default=10,
 )
 
 

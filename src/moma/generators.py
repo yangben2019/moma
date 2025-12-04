@@ -62,7 +62,10 @@ plt.style.use(
 
 class TestMapGenerator:
 
-    def fill_slopes(Z, sections_start_and_end):
+    def __init__(self):
+        pass
+
+    def fill_slopes(self, Z, sections_start_and_end):
         for i in range(1, len(sections_start_and_end[0]) - 2, 2):
 
             x1 = sections_start_and_end[0][i] - 1
@@ -175,19 +178,40 @@ class TestMapGenerator:
 
         return Z
 
-    def generate_test_map(scale_map=1, seed=42):
+    def generate_test_map(self,
+        seed=42,
+        max_slope_percent=30,
+        map_dim=(500, 500),
+        plateaus=(5, 5),
+        slope_length=(50, 50),
+        resolution=4,# Pixel/meter        
+        transition_pad = 15,
+        start_pad = 10,
+        ):
 
-        max_slope_percent = 30
+        slopes_x = plateaus[0] - 1
+        slopes_y = plateaus[1] - 1
 
-        # Gives test map like the following:
+        plateau_length = (
+            (map_dim[0] - slope_length[0] * slopes_x) // plateaus[0],
+            (map_dim[1] - slope_length[1] * slopes_y) // plateaus[1],
+        )
+        # Remainder pixels to distribute among plateaus to ensure correct map size
+        plateau_remainder = (
+            (map_dim[0] - slope_length[0] * slopes_x) % plateaus[0],
+            (map_dim[1] - slope_length[1] * slopes_y) % plateaus[1],
+        )
+
+        assert np.min(plateau_length[0]) >= 3, f"Smallest plateau length in x direction less than 3. Plateau lengths: {plateau_length}. Reduce number of plateaus or slope length."
+        assert np.min(plateau_length[1]) >= 3, f"Smallest plateau length in y direction less than 3. Plateau lengths: {plateau_length}. Reduce number of plateaus or slope length."
 
         Slope_length = [
-            [50 for _ in range(9)],
-            [50 for _ in range(9)],
+            [slope_length[0] for _ in range(slopes_x)],
+            [slope_length[1] for _ in range(slopes_y)],
         ]  # Length of the slope sections in x and y direction
         Flat_length = [
-            [50 for _ in range(10)],
-            [50 for _ in range(10)],
+            [plateau_length[0] + (1 if i + 1 <= plateau_remainder[0] else 0) for i in range(plateaus[0])],
+            [plateau_length[1] + (1 if i + 1 <= plateau_remainder[1] else 0) for i in range(plateaus[1])],
         ]  # Length of the flat  sections in x and y direction
 
         Flat_sections = [len(Flat_length[0]), len(Flat_length[1])]
@@ -244,11 +268,6 @@ class TestMapGenerator:
         # Make min value equal to 0
         elevation_grid -= np.min(elevation_grid)
 
-        # Scale the map
-        elevation_grid *= scale_map
-
-        resolution = 4  # Pixel/meter
-
         map_size = (
             sum(Flat_length[0]) + sum(Slope_length[0]),
             sum(Flat_length[1]) + sum(Slope_length[1]),
@@ -284,11 +303,7 @@ class TestMapGenerator:
                     ],
                 ] = elevation_grid[i, j]
 
-        Z = TestMapGenerator.fill_slopes(Z, sections_start_and_end)
-
-        # Create the flat starting spots for the vehicle
-        transition_pad = 15
-        start_pad = 10
+        Z = self.fill_slopes(Z, sections_start_and_end)
 
         map_size = (
             map_size[0] + 2 * (transition_pad + start_pad),
@@ -304,30 +319,30 @@ class TestMapGenerator:
         sections_start_and_end[0] += transition_pad + start_pad
         sections_start_and_end[1] += transition_pad + start_pad
 
-        new_Z = np.zeros((map_size[1] * resolution, map_size[0] * resolution))
+        if transition_pad > 0 and start_pad > 0:
+            new_Z = np.zeros((map_size[1] * resolution, map_size[0] * resolution))
 
-        new_Z[
-            (transition_pad + start_pad) : -(transition_pad + start_pad),
-            (transition_pad + start_pad) : -(transition_pad + start_pad),
-        ] = Z
-        Z = new_Z
-
-        Z = TestMapGenerator.fill_pad(
-            Z, start_pad, transition_pad, sections_start_and_end
-        )
+            new_Z[
+                (transition_pad + start_pad) : -(transition_pad + start_pad),
+                (transition_pad + start_pad) : -(transition_pad + start_pad),
+            ] = Z
+            Z = new_Z
+            Z = self.fill_pad(
+                Z, start_pad, transition_pad, sections_start_and_end
+            )
 
         return Z, map_size, resolution, sections
 
-    def generate_test_map_uncertainty(map_size, resolution, uncertainty=0.02):
+    def generate_test_map_uncertainty(self, map_size, resolution, uncertainty=0.02):
         Z = np.ones((map_size[1] * resolution, map_size[0] * resolution)) * uncertainty
 
         return Z
 
-    def smooth(Z, sigma, truncate):
+    def smooth(self, Z, sigma, truncate):
         return gaussian_filter(Z, sigma=sigma, truncate=truncate)
 
     def plot_surface(
-        output_dir, elevation, sections, map_size, show_plot=False, subname=""
+        self, output_dir, elevation, sections, map_size, show_plot=False, subname=""
     ):
         fig = plt.figure(figsize=(10, 8))
         gs = gridspec.GridSpec(1, 2, width_ratios=[8, 10], wspace=0.4)
@@ -395,6 +410,7 @@ class TestMapGenerator:
         plt.close(fig)
 
     def save_data_for_moma(
+        self,
         raster_dir,
         elevation,
         uncertainty_map,
@@ -545,7 +561,7 @@ class TestMapGenerator:
         path = raster_dir / f"friction_coefficient_1m_clipped_{coor_string}.tif"
         save_new_raster(friction_coefficient_map, path, transform)
 
-    def metadata(elev_min, elev_max, map_size, friction_coefficient):
+    def metadata(self, elev_min, elev_max, map_size, friction_coefficient):
         """
         Generate metadata dictionary for the elevation map.
         """
@@ -557,14 +573,14 @@ class TestMapGenerator:
         }
         return meta
 
-    def generate_diffuse_map(elevation):
+    def generate_diffuse_map(self, elevation):
         """
         Generate a diffuse map from the elevation data by interpret the slopes in the x and y directions as R and G channels for RGB color.
         """
         slope_x, slope_y = np.gradient(elevation)
 
-        slope_x = TestMapGenerator.smooth(slope_x, sigma=2, truncate=15)
-        slope_y = TestMapGenerator.smooth(slope_y, sigma=2, truncate=15)
+        slope_x = self.smooth(slope_x, sigma=2, truncate=15)
+        slope_y = self.smooth(slope_y, sigma=2, truncate=15)
 
         x_min, x_max = np.min(slope_x), np.max(slope_x)
         y_min, y_max = np.min(slope_y), np.max(slope_y)
@@ -577,14 +593,14 @@ class TestMapGenerator:
 
         return np.dstack((x_normalized, y_normalized, np.zeros_like(x_normalized)))
 
-    def save_diffuse_map(output_dir, elevation, subname=""):
+    def save_diffuse_map(self, output_dir, elevation, subname=""):
         # Save the diffuse map as a .png file
-        diffuse_map = TestMapGenerator.generate_diffuse_map(elevation)
+        diffuse_map = self.generate_diffuse_map(elevation)
         diffuse_map_img = Image.fromarray(diffuse_map)
 
         diffuse_map_img.save(output_dir / f"map-diffuse{subname}.png")
 
-    def save_bitmap(
+    def save_bitmap(self,
         output_dir,
         elevation,
         map_size,
@@ -610,14 +626,14 @@ class TestMapGenerator:
 
         with open(output_dir / f"map-meta{subname}.json", "w") as f:
             json.dump(
-                TestMapGenerator.metadata(
+                self.metadata(
                     elev_min, elev_max, map_size, friction_coefficient
                 ),
                 f,
                 indent=4,
             )
 
-    def save_obj(
+    def save_obj(self,
         output_dir,
         elevation,
         map_size,
@@ -667,14 +683,14 @@ class TestMapGenerator:
 
         with open(output_dir / f"map-meta{subname}.json", "w") as f:
             json.dump(
-                TestMapGenerator.metadata(
+                self.metadata(
                     elev_min, elev_max, map_size, friction_coefficient
                 ),
                 f,
                 indent=4,
             )
 
-    def slope_hist(output_dir, elevation, resolution, show_plot=False):
+    def slope_hist(self, output_dir, elevation, resolution, show_plot=False):
         # Calculate the slope of the elevation map
         gradient_x, gradient_y = np.gradient(elevation)
         slope = np.sqrt(gradient_x**2 + gradient_y**2).flatten() * resolution * 100
@@ -694,11 +710,10 @@ class TestMapGenerator:
             plt.show()
         plt.close()
 
-    def main_generate(
+    def main_generate(self,
         create_rasters=False,
         base_output_dir=None,
         plot_additional_files=False,
-        scale_map=1,
         N_test_maps=1,
         std_elevation=0.00,
         friction_coefficient=0.5,
@@ -706,9 +721,37 @@ class TestMapGenerator:
         map_type="bmp",
         output_resolution=6,
         return_map=False,
+        test_map_params=SimpleNamespace(
+            seed=42,
+            max_slope_percent=30,
+            map_dim=(20, 20),
+            plateaus=(2, 2),
+            slope_length=(10, 10),        
+            transition_pad = 15,
+            start_pad = 10,
+            resolution=4,
+        )
     ):
 
-        # If map is not returned as an array, create the output directory
+        # Fill in default parameters if not provided
+        if getattr(test_map_params, "seed", None) is None:
+            test_map_params.seed = 42
+        if getattr(test_map_params, "max_slope_percent", None) is None:
+            test_map_params.max_slope_percent = 30
+        if getattr(test_map_params, "map_dim", None) is None:
+            test_map_params.map_dim = (500, 500)
+        if getattr(test_map_params, "plateaus", None) is None: 
+            test_map_params.plateaus = (5, 5)
+        if getattr(test_map_params, "slope_length", None) is None:
+            test_map_params.slope_length = (50, 50)
+        if getattr(test_map_params, "resolution", None) is None:
+            test_map_params.resolution = 4
+        if getattr(test_map_params, "transition_pad", None) is None:
+            test_map_params.transition_pad = 15
+        if getattr(test_map_params, "start_pad", None) is None:
+            test_map_params.start_pad = 10
+
+        # If map is not returned to caller function as an array, create the output directory
         if base_output_dir is None:
             base_output_dir = pathlib.Path(".") / "examples" / "sites" / "testmap"
         else:
@@ -728,23 +771,31 @@ class TestMapGenerator:
             )
 
         print("Generating test map...")
-        elevation, map_size, resolution, sections = TestMapGenerator.generate_test_map(
-            scale_map
+        elevation, map_size, resolution, sections = self.generate_test_map(
+            seed=test_map_params.seed,
+            max_slope_percent=test_map_params.max_slope_percent,
+            map_dim=test_map_params.map_dim,
+            plateaus=test_map_params.plateaus,
+            slope_length=test_map_params.slope_length,
+            resolution=test_map_params.resolution,
+            transition_pad=test_map_params.transition_pad,
+            start_pad=test_map_params.start_pad,
         )
-        smoothed_elevation = TestMapGenerator.smooth(elevation, sigma=15, truncate=60)
+        
+        smoothed_elevation = self.smooth(elevation, sigma=15, truncate=60)
         if return_map and not create_rasters:
             return smoothed_elevation, resolution
 
-        uncertainty_map = TestMapGenerator.generate_test_map_uncertainty(
+        uncertainty_map = self.generate_test_map_uncertainty(
             map_size, resolution, uncertainty=std_elevation
         )
 
         if plot_additional_files:
             print("Plotting test map...")
-            TestMapGenerator.plot_surface(
+            self.plot_surface(
                 output_dir, elevation, sections, map_size, show_plot=False
             )
-            TestMapGenerator.plot_surface(
+            self.plot_surface(
                 output_dir,
                 smoothed_elevation,
                 sections,
@@ -754,14 +805,14 @@ class TestMapGenerator:
             )
 
             print("Plotting slope histogram...")
-            TestMapGenerator.slope_hist(output_dir, smoothed_elevation, resolution)
+            self.slope_hist(output_dir, smoothed_elevation, resolution)
 
         # Save the diffuse map as a .png file for terrain texture
 
         if create_rasters:
             print("Saving test map for MOMA...")
-            diffuse = TestMapGenerator.generate_diffuse_map(smoothed_elevation)
-            TestMapGenerator.save_data_for_moma(
+            diffuse = self.generate_diffuse_map(smoothed_elevation)
+            self.save_data_for_moma(
                 raster_dir,
                 smoothed_elevation,
                 uncertainty_map,
@@ -790,7 +841,7 @@ class TestMapGenerator:
 
         if plot_additional_files:
             print("Plotting one test map with uncertainty...")
-            TestMapGenerator.plot_surface(
+            self.plot_surface(
                 output_dir,
                 smoothed_sampled_elevation[0, :, :],
                 sections,
@@ -801,7 +852,7 @@ class TestMapGenerator:
 
         # Save a single map without
         if map_type == "bmp":
-            TestMapGenerator.save_bitmap(
+            self.save_bitmap(
                 output_dir,
                 smoothed_elevation,
                 map_size,
@@ -810,7 +861,7 @@ class TestMapGenerator:
                 output_resolution=output_resolution,
             )
         elif map_type == "obj":
-            TestMapGenerator.save_obj(
+            self.save_obj(
                 output_dir,
                 smoothed_elevation,
                 map_size,
@@ -825,14 +876,14 @@ class TestMapGenerator:
             )
 
         # Save the diffuse map as a .png file for terrain texture
-        TestMapGenerator.save_diffuse_map(
+        self.save_diffuse_map(
             output_dir, smoothed_elevation, subname="-without"
         )
 
         for i in range(smoothed_sampled_elevation.shape[0]):
-            print(f"Saving test map {i} of {smoothed_sampled_elevation.shape[0]}...")
+            print(f"Saving test map {i + 1} of {smoothed_sampled_elevation.shape[0]}...")
             if map_type == "bmp":
-                TestMapGenerator.save_bitmap(
+                self.save_bitmap(
                     output_dir,
                     smoothed_sampled_elevation[i, :, :],
                     map_size,
@@ -841,7 +892,7 @@ class TestMapGenerator:
                     output_resolution=output_resolution,
                 )
             elif map_type == "obj":
-                TestMapGenerator.save_obj(
+                self.save_obj(
                     output_dir,
                     smoothed_sampled_elevation[i, :, :],
                     map_size,
@@ -852,18 +903,9 @@ class TestMapGenerator:
                 )
 
             # Save the diffuse map as a .png file for terrain texture
-            TestMapGenerator.save_diffuse_map(
+            self.save_diffuse_map(
                 output_dir, smoothed_sampled_elevation[i, :, :], subname=f"-{i}"
             )
-
-    if __name__ == "__main__":
-        main_generate(
-            create_rasters=True,
-            N_test_maps=2,
-            plot_additional_files=True,
-            return_map=False,
-        )
-
 
 class TestPathsGenerator:
 
