@@ -61,6 +61,7 @@ plt.style.use(
 
 
 class TestMapGenerator:
+    __test__ = False # Mark as non test class for pytest
 
     def __init__(self):
         pass
@@ -82,7 +83,7 @@ class TestMapGenerator:
 
         return Z
 
-    def fill_pad(Z, start_pad, transition_pad, sections_start_and_end):
+    def fill_pad(self, Z, start_pad, transition_pad, sections_start_and_end):
         # Left
         values = Z[
             np.round(
@@ -908,6 +909,7 @@ class TestMapGenerator:
             )
 
 class TestPathsGenerator:
+    __test__ = False # Mark as non test class for pytest
 
     def get_paths(map):
 
