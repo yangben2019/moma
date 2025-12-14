@@ -66,7 +66,7 @@ class MobilityToolbox:
     def __init__(
         self,
         sites_path,
-        vehicle_path,
+        vehicles_path,
         site_name,
         vehicle_name,
         n_samples,
@@ -95,7 +95,7 @@ class MobilityToolbox:
         self.site_name = site_name
 
         # Database for vehicle mobility and landuse_nogo
-        self.vehicle_path = vehicle_path / vehicle_name
+        self.vehicles_path = vehicles_path / vehicle_name
         self.vehicle = vehicle_name
 
         # Creating and export directory if it does not exist
@@ -149,7 +149,6 @@ class MobilityToolbox:
         # Sets default for plotting
         rcParams.update(
             {
-                "font.family": "Times New Roman",
                 "font.size": 14,
                 "axes.labelpad": 10,
             }
@@ -249,7 +248,7 @@ class MobilityToolbox:
         # Import land use no-go mappings
         # TODO Get rid of the hard-coded land use no-go mappings
         with open(
-            self.vehicle_path / "landuse_nogo.yaml", encoding="utf8"
+            self.vehicles_path / "landuse_nogo.yaml", encoding="utf8"
         ) as landuse_nogo_file:
             landuse_nogo = yaml.load(landuse_nogo_file, Loader=yaml.SafeLoader)
 
@@ -384,7 +383,7 @@ class MobilityToolbox:
         # Generate mobility tensors
         soil_parameter = ["friction_coefficient", "moisture_content"]
         mobility_analysis = MobilityAnalysis(
-            self.vehicle_path / "mobility.yaml",
+            self.vehicles_path / "mobility.yaml",
             self.vehicle,
             self.SOIL_TYPES,
             soil_parameter,

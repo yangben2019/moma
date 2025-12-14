@@ -65,6 +65,8 @@ log = logging.getLogger("MOMA")
 plt.style.use(
     importlib.resources.path("moma", "data") / pathlib.Path("matplotlib/moma.mplstyle")
 )
+# Ensure that LaTeX is not used for rendering text in plots
+plt.rc('text', usetex=False)
 
 
 def generate_vehicle_mobility_file(vehicle, minimum_speed=0.01, plot_mobility=False):

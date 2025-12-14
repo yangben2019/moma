@@ -125,7 +125,7 @@ mobility_parser.add_argument(
 )
 # Start and end waypoints for the path planner
 mobility_parser.add_argument(
-    "--path", help="Path used for loading data", type=str, default=pathlib.Path.cwd()
+    "--path", help="Path used for loading data", type=str, default=pathlib.Path.cwd() / "src" / "moma" / "data" / "examples"
 )
 
 mobility_parser.add_argument(

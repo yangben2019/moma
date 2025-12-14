@@ -1,6 +1,6 @@
 
 DataSource: DataforsyningenFriction
-Coordinates: [542616, 6217995, 543616, 543616] # [W, S, E, N]
+Coordinates: [0, 0, 265, 190] # [W, S, E, N]
 NoGoZones:
 #   - [x1, x2, y1, y2, (Description)]: Box
 #   - [x, y, r, (Description)]: Circle

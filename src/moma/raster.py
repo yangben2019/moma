@@ -129,7 +129,7 @@ class Raster(ABC):
         (figure, axes) = plt.subplots(1, 1)
 
         # Set and invert colormap
-        cmap = mpl.cm.get_cmap(self.colormap + ("_r" if reverse_colormap else ""))
+        cmap = mpl.colormaps.get_cmap(self.colormap + ("_r" if reverse_colormap else ""))
 
         # Normalise colormap range. Defaults to a range of three standard deviations around the mean value.
         def norm(data):
