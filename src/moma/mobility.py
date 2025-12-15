@@ -480,6 +480,12 @@ class MobilityAnalysis:
             if entry["soil"]["type"] == "sideslope":
                 sideslopes.append(entry["test"]["slope_angle"])
                 max_sideslope_speed.append(entry["value"])
+        
+        # Uses factor one if no sideslope data is available
+        if len(sideslopes) == 0:
+            self.sideslope_factors = lambda sideslope, **_: jnp.ones_like(sideslope)
+            log.info("No sideslope data available, sideslope factor set to 1 everywhere.")
+            return
 
         self.sideslope_factors = SideslopeFactor(
             sideslopes=sideslopes, speeds=max_sideslope_speed

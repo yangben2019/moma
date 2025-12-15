@@ -57,7 +57,7 @@ def mapping_links():
             "src/moma/data/examples/dataloaders/dataforsyningen"
         ) / yaml
         link = pathlib.Path(
-            "test/output/dataloaders/dataforsyningen1"
+            "test/output/dataloaders/dataforsyningen"
         ) / yaml
 
         link.parent.mkdir(parents=True, exist_ok=True)
@@ -106,6 +106,10 @@ def test_main_mobility_generation(mapping_links):
 
     print("Testing directional_mobility_maps...")
     moma.generate_directional_mobility_maps(["mean"])
+
+    # check that mobility map is created
+    mobility_map_path = pytest_sites_dir / "testmap" / "mobility_maps" / "mock" / "Mobility map (0.0).pdf"
+    assert mobility_map_path.exists(), "Mobility map was not created correctly."
     
 #def test_paths_generator():
 #    test_paths_generator = TestPathsGenerator()
