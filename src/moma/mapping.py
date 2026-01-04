@@ -383,7 +383,7 @@ class SlopeMap(DirectionalMap):
         # Plot steepest decline map
         self.slope_raster.plot(
             data=self.slope_raster.data * 100,
-            colorbar="Slope [\%]",
+            colorbar="Slope [%]",
             export_path=export_path / "slope_maps" / f"Steepest slope.pdf",
             show=show,
             export=export,
@@ -417,7 +417,7 @@ class SlopeMap(DirectionalMap):
 
             self.directional_rasters[angle].plot(
                 data=self.directional_rasters[angle].data * 100,
-                colorbar="Slope [\%]",
+                colorbar="Slope [%]",
                 clim=(-20, 20),
                 export_path=export_path / "slope_maps" / f"Slope map ({direction}).pdf",
                 show=show,

@@ -1,25 +1,5 @@
-"""This file runs the moma_class.py with the given arguments
-
-Example call with CLI for calculating mobility:
-    python src/use_moma_class.py --clear mobility --show_plots --vehicle mungo --site Vejlby --n_samples 10 --sample_reduction quantile 0.9 --path_coordinate_system utm --path_start 573500 6230500 --path_end 575900 6230250
-    python src/use_moma_class.py --clear mobility --vehicle mungo --site oksbol --n_samples 50 --sample_reduction mean --directions N NE E SE S SW W NW omni --path_coordinate_system utm --path_start 450750 6163600 --path_end 452250 6164200
-
-Example call with CLI for calculating mobility on test map:
-    python src/use_moma_class.py --clear mobility --site testmap --vehicle olav --path_folder path/to/path/folder
-    python src/use_moma_class.py --clear mobility --site testmap --vehicle olav --path_coordinate_system map --path_start 7 65 --path_end 210 140 --sample_reduction quantile 0.9 --n_samples 100
-    python src/use_moma_class.py --clear mobility --site testmap --vehicle olav --directions N NE E SE S SW W NW omni --dont_export
-
-Example call with CLI for generating test map:
-    python src/use_moma_class.py --clear generate_test_map --N_maps 10
-    python src/use_moma_class.py generate_test_map --output path/to/output/folder --create_rasters
-
-Example call from CLI for generating straight line paths:
-    python src/use_moma_class.py --clear generate_test_paths --output path/to/output/folder --plot_paths
-    python src/use_moma_class.py --clear generate_test_paths --output path/to/output/folder --plot_paths --fill_metrics
-
-Example call with CLI for generating mobility file:
-    python src/use_moma_class.py --clear generate_mobility_file --vehicle olav
-    python src/use_moma_class.py --clear generate_mobility_file --vehicle olav --plot
+"""
+Command line interface for MOMA scripts
 """
 
 import os
@@ -34,7 +14,6 @@ from moma.toolboxes import MobilityToolbox
 from moma.mobility import generate_vehicle_mobility_file
 
 from moma.generators import TestMapGenerator
-from moma.generators import TestPathsGenerator
 
 # ============================================
 # Settings for parsing command line arguments
@@ -101,13 +80,13 @@ mobility_parser.add_argument(
 # Vehicle
 mobility_parser.add_argument(
     "--vehicle",
-    help="name of the vehicle to generate plots for, default mungo",
+    help="name of the vehicle to generate plots for, default mock",
     type=str,
-    default="mungo",
+    default="mock",
 )
 # Path to the site folder
 mobility_parser.add_argument(
-    "--site", help="name of the site folder", type=str, default="wtd41_copy"
+    "--site", help="name of the site folder", type=str, default="testmap"
 )
 # Number of sample points if one the mean value is used
 mobility_parser.add_argument(
@@ -120,7 +99,7 @@ mobility_parser.add_argument(
 mobility_parser.add_argument(
     "--sample_reduction",
     nargs="+",
-    help="Method used to reduce sample space to one value. Support ['mean'] and ['quantile', q], default mean",
+    help="Method used to reduce sample space to one value. Support 'mean' and 'quantile q', default mean",
     default=["mean"],
 )
 # Start and end waypoints for the path planner
@@ -158,7 +137,7 @@ mobility_parser.add_argument(
 mobility_parser.add_argument(
     "--dont_export", action="store_true", help="don't export plots to pdf files"
 )
-# mobility_parser.add_argument("--omnidirectional", action="store_true", help="Add omnidirectional mobility prediction to the paths", default=False)
+
 mobility_parser.add_argument(
     "--directions",
     nargs="+",
@@ -171,7 +150,7 @@ mobility_parser.add_argument(
 mobility_parser.add_argument(
     "--save_maps",
     action="store_true",
-    help="Save the generated maps as .tif files in the export folder",
+    help="Save the generated maps as GeoTIFF files in the export folder",
     default=False,
 )
 mobility_parser.add_argument(
@@ -212,13 +191,14 @@ def generate_test_map(args):
     test_map_generator.main_generate(
         base_output_dir=args.output if args.output != "None" else None,
         N_test_maps=args.N_maps,
-        std_elevation=args.std_elevation,
+        elevation_std=args.elevation_std,
         friction_coefficient=args.friction_coefficient,
         friction_coefficient_std=args.friction_coefficient_std,
         map_type=args.map_type,
         output_resolution=args.output_resolution,
         create_rasters=args.create_rasters,
         test_map_params=test_map_params,
+        coordinates_lower_left=args.coordinates_lower_left,
     )
 
 
@@ -229,7 +209,7 @@ test_map_parser.add_argument(
     "--N_maps", type=int, help="number of maps to generate, default 1", default=1
 )
 test_map_parser.add_argument(
-    "--std_elevation",
+    "--elevation_std",
     type=float,
     help="standard deviation of the elevation, default 0.02",
     default=0.00,
@@ -258,7 +238,7 @@ test_map_parser.add_argument(
 test_map_parser.add_argument(
     "--output_resolution",
     type=int,
-    help="resolution of the geenrated map, output is resolution x 0.25 m",
+    help="resolution of the generated map, output is resolution x 0.25 m",
     default=6,
 )
 test_map_parser.add_argument(
@@ -318,11 +298,17 @@ test_map_parser.add_argument(
     help="length of start padding around the test map in meters, default 10",
     default=10,
 )
+test_map_parser.add_argument(
+    "--coordinates_lower_left",
+    nargs=2,
+    type=int,
+    help="UTM Coordinates (easting, northing) of the lower left corner of the map, default (0, 0)",
+    default=(0, 0),
+)
 
 # =========================
 # Mobility file generation
 # =========================
-
 
 def generate_mobility_file(args):
     generate_vehicle_mobility_file(

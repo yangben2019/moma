@@ -422,13 +422,12 @@ class TestMapGenerator:
         friction_coefficient,
         friction_coefficient_std,
         diffuse_map,
-        coordinates_lower_left=(542616, 6217995),
+        coordinates_lower_left=(0, 0),
     ):
         # Save elevation raster
         print(f"Save rasters in folder: {raster_dir}...")
 
         # Coordinates of lower left corner
-        # Default coordinates is Himmelbjerget
         lat = coordinates_lower_left[0]  # E
         long = coordinates_lower_left[1]  # N
 
@@ -718,12 +717,12 @@ class TestMapGenerator:
         base_output_dir=None,
         plot_additional_files=False,
         N_test_maps=1,
-        std_elevation=0.00,
+        elevation_std=0.00,
         friction_coefficient=0.5,
         friction_coefficient_std=0.00,
         map_type="bmp",
         output_resolution=6,
-        return_map=False,
+        coordinates_lower_left=(0, 0),
         test_map_params=SimpleNamespace(
             seed=42,
             max_slope_percent=30,
@@ -787,7 +786,7 @@ class TestMapGenerator:
         smoothed_elevation = self.smooth(elevation, sigma=15, truncate=60)
 
         uncertainty_map = self.generate_test_map_uncertainty(
-            map_size, resolution, uncertainty=std_elevation
+            map_size, resolution, uncertainty=elevation_std
         )
 
         if plot_additional_files:
@@ -821,6 +820,7 @@ class TestMapGenerator:
                 friction_coefficient,
                 friction_coefficient_std,
                 diffuse,
+                coordinates_lower_left
             )
 
         print("Generation samples for Chrono...")

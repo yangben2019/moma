@@ -245,9 +245,8 @@ class Raster(ABC):
 
         # Add title
         if title is not None:
-            axes.title(title, pad=20)
+            axes.set_title(title, pad=120)
 
-        # Set horizontal and vertical labels
         # plt.tight_layout()
 
         if show:

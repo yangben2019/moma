@@ -120,6 +120,14 @@ class MobilityToolbox:
                 direction2compass_angle(direction) for direction in directions[0]
             ],
         }
+
+        # Use primary directions if no directions are provided
+        if len(self.directions["names"]) == 0 and directions[1] == 0:
+            self.directions = {
+                "names": ["N", "NE", "E", "SE", "S", "SW", "W", "NW"],
+                "angles": [0, 45, 90, 135, 180, 225, 270, 315],
+            }
+
         # Add directions given by N_directions
         if not directions[1] == 0:
             angles = np.round(np.linspace(0, 360, directions[1], endpoint=False), 3)
@@ -129,7 +137,7 @@ class MobilityToolbox:
                     self.directions["names"].append(angle)
 
         self.log.info(
-            f"Initialising MOMA for \n\tsite: {self.site_name} \n\tvehicle: {self.vehicle} \n\tn_samples: {n_samples}"
+            f"Initialising MOMA for \n\tsite: {self.site_name} \n\tvehicle: {self.vehicle} \n\tn_samples: {n_samples} \n\tdirections: {self.directions['names']}"
         )
 
         with open(base_path / "site.yaml") as site_yaml:
