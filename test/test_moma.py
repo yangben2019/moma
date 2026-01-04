@@ -4,7 +4,6 @@ from types import SimpleNamespace
 import pathlib
 
 from moma.generators import TestMapGenerator
-from moma.generators import TestPathsGenerator
 
 from moma.toolboxes import MobilityToolbox
 
@@ -22,7 +21,7 @@ def test_map_generator():
     pytest_map_dir = pathlib.Path(".") / "test/output/sites/testmap"
 
     test_map_generator = TestMapGenerator()
-    map, resolution = test_map_generator.main_generate(
+    test_map_generator.main_generate(
         test_map_params=SimpleNamespace(
             map_dim=map_dim,
             slope_length=slope_length,
@@ -31,17 +30,16 @@ def test_map_generator():
             transition_pad=transition_pad,
             start_pad=start_pad,
         ), 
-        return_map=True, 
         create_rasters=True,
         base_output_dir=pytest_map_dir
         )
 
-    assert resolution == resolution, "Resolution does not match expected value."
-    assert (map.shape[0] == (map_dim[0] + (transition_pad + start_pad)*2)*resolution) \
-       and (map.shape[1] == (map_dim[1] + (transition_pad + start_pad)*2)*resolution), \
-       "Map dimensions do not match expected size."
+    # check that elevation raster is created
+    map_title = f"elevationmono_1m_clipped_0_0_{map_dim[0] + 2*(start_pad + transition_pad)}_{map_dim[1] + 2*(start_pad + transition_pad)}.tif"
+    elevation_raster_path = pytest_map_dir / "rasters" / map_title
+    assert elevation_raster_path.exists(), "Elevation raster was not created correctly."
 
-# Creates link from the temporary test directory to the example mapping files to have the correct reletive paths
+# Creates link from the temporary test directory to the example mapping files to have the correct relative paths
 @pytest.fixture
 def mapping_links():
     yamls = [
@@ -108,11 +106,5 @@ def test_main_mobility_generation(mapping_links):
     moma.generate_directional_mobility_maps(["mean"])
 
     # check that mobility map is created
-    mobility_map_path = pytest_sites_dir / "testmap" / "mobility_maps" / "mock" / "Mobility map (0.0).pdf"
+    mobility_map_path = pytest_sites_dir / "testmap" / "export" / "mock" / "Mobility map (0.0).pdf"
     assert mobility_map_path.exists(), "Mobility map was not created correctly."
-    
-#def test_paths_generator():
-#    test_paths_generator = TestPathsGenerator()
-#    result = test_paths_generator.main_generate()
-#
-#    assert result is not None

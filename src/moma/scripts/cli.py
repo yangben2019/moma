@@ -319,66 +319,6 @@ test_map_parser.add_argument(
     default=10,
 )
 
-
-# =====================
-# Test path generation
-# =====================
-def generate_test_paths(args):
-
-    TestPathsGenerator.main_generate(
-        output_dir=args.output,
-        plot_paths=args.plot_paths,
-        fill_metrics=args.fill_metrics,
-        n_samples=args.n_samples,
-        sample_reduction=args.sample_reduction,
-        minimum_speed=args.minimum_speed,
-        target_speed=args.target_speed,
-    )
-
-
-test_path_parser = subparsers.add_parser(
-    "generate_test_paths", help="generate test paths"
-)
-test_path_parser.set_defaults(func=generate_test_paths)
-test_path_parser.add_argument(
-    "--output", type=str, help="path to output directory", default="."
-)
-test_path_parser.add_argument(
-    "--plot_paths", action="store_true", help="plot the generated paths", default=False
-)
-test_path_parser.add_argument(
-    "--fill_metrics",
-    action="store_true",
-    help="fill the generated paths with MOMA metrics",
-    default=False,
-)
-
-# Argument for creating the correct mobility maps when using fill metrics
-test_path_parser.add_argument(
-    "--n_samples",
-    help="number of sample points, if one the mean value is used, default 1",
-    type=int,
-    default=1,
-)
-test_path_parser.add_argument(
-    "--sample_reduction",
-    nargs="+",
-    help="Method used to reduce sample space to one value. Support ['mean'] and ['quantile', q], default mean",
-    default=["mean"],
-)
-test_path_parser.add_argument(
-    "--minimum_speed",
-    type=float,
-    help="minimum speed for the mobility calculation, default 0.5",
-    default=0.5,
-)
-test_path_parser.add_argument(
-    "--target_speed",
-    type=float,
-    help="target speed for the mobility calculation, default 5.0",
-    default=5.0,
-)
-
 # =========================
 # Mobility file generation
 # =========================
