@@ -76,40 +76,6 @@ Each path is a subfolder with the name `path-some_name` where `some_name` is the
 
 The mobility metrics will be added directly to each such file in the specified folder. 
 
-
-#### Examples calls
-
-Basic call where the console is cleared
-
-`moma --clear mobility`
-
-Vehicle and site specified and plot show as popups
-
-`moma mobility --show_plots --vehicle mock --site testmap`
-
-Destitution used for sampling values and 90% quantile is used for reducing tio single mobility value
-
-`moma mobility --n_samples 50 --sample_reduction quantile 0.9`
-
-Specifying directions
-
-`moma mobility --directions N omni SE`
-
-`moma mobility --n_directions 12`
-
-Finding path between points
-
-`moma mobility --path_coordinate_system utm --path_start 10 95 --path_end 255 95`
-
-Adding mobility calculations for paths in specified folder
-
-`moma mobility --path_folder src/moma/data/examples/sites/testmap/paths`
-
-
-Combined call
-
-`moma --clear mobility --vehicle mock --site testmap --n_samples 50 --sample_reduction mean --directions N NE E SE S SW W NW omni --path_coordinate_system utm --path_start 10 95 --path_end 255 95`
-
 ### Map generation arguments
 
 A synthetic testmap can be generated for use in MOMA. It consist of flat plateaus with slopes between them. The map can be padded with flat terrain around it.
@@ -140,6 +106,58 @@ Key; Description; Type [Range]; Default value
 \\-\\-start_pad; Flat padding around map; int ≥0; 10
 \\-\\-transition_pad; Transition padding between the flat padding and generated map; int ≥0; 15
 ```
+
+## Adding a New Site
+
+New sites can be added to MOMA by creating a dedicated directory under
+`Examples/sites`.
+
+Each site directory must contain a `site.yaml` file that defines the site
+configuration.
+
+The `site.yaml` file includes the following information:
+
+- **Data source identifier**  
+  A keyword specifying which data source or data loader should be used.
+
+- **Site extent**  
+  The west, south, east, and north boundaries of the site, defined as a bounding
+  box in **Universal Transverse Mercator (UTM)** coordinates.
+
+- **No-go zones**  
+  A list of areas that the vehicle must avoid. No-go zones may be specified as
+  either rectangular regions or circular regions.
+
+Based on this configuration, MOMA automatically creates the required directory
+structure and loads the relevant data from the specified data source.
+
+
+
+## Adding a New Data Loader
+
+If a site lies outside the geographical coverage of the existing data loaders, or
+if it relies on a different data source, a new data loader must be implemented.
+
+To add a new data loader, create a new class in `src/moma/dataloader.py`. This class
+must then be registered in the `get_dataloader` function, which instantiates the
+appropriate data loader based on the information provided in the `site.yaml` file.
+
+A data loader should implement functionality to:
+
+- retrieve data from the specified data source,
+- convert the data into the raster format used by MOMA, and
+- ensure consistent grid resolution and geographical extent across all generated
+  maps.
+
+To improve performance and reduce unnecessary data downloads, data loaders should
+preferably generate the required raster files once and store them locally for reuse.
+
+:::{warning}
+MOMA does not validate grid size or geographical consistency. It is therefore the
+responsibility of the data loader to ensure that all generated maps are spatially
+consistent.
+:::
+
 
 ```{toctree}
 :hidden:

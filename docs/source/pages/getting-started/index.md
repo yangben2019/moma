@@ -20,7 +20,7 @@ environment](./building-from-source/index.md#using-venv).
 ## Quick start
 
 If you are unsure about your specific application and just want to try and
-quicky run MOMA on your machine, you can run the following Docker command to get
+quickly run MOMA on your machine, you can run the following Docker command to get
 the latest runtime:
 
 ```shell
@@ -31,5 +31,5 @@ Once inside the container, generate a simple map using default options with the
 following command:
 
 ```shell
-moma --clear mobility --show_plots --vehicle mungo --site Vejlby --n_samples 10 --sample_reduction quantile 0.9 --path_coordinate_system utm --path_start 573500 6230500 --path_end 575900 6230250
+moma --clear mobility --vehicle mock --site testmap --n_samples 50 --sample_reduction mean --directions N NE E SE S SW W NW omni --path_coordinate_system utm --path_start 10 95 --path_end 255 95
 ```
