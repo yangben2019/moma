@@ -9,7 +9,7 @@ Generators module
  #                          ( M ) ( O ) ( M ) ( A )                          #
  #                           \_/   \_/   \_/   \_/                           #
  #                                                                           #
- #               MOMA: Ground vehicles mobility mapping toolkit              #
+ #   MOMA: Mobility maps and optimal routes generator for ground vehicles    #
  #############################################################################
 
 MIT License
@@ -508,7 +508,7 @@ class TestMapGenerator:
         path = raster_dir / f"soiltype_1m_clipped_{coor_string}.tif"
         save_new_raster(soil_type, path, transform)
 
-        # Saves soil to use in Chrono
+        # Saves soil to use in DYNO
         soil_export = {"shape": shape, "resolution": 1, "labels": soils, "major": "row"}
         soil_data_export = np.zeros(shape)
         for i, soil in soils.items():
@@ -610,7 +610,7 @@ class TestMapGenerator:
         subname="",
         output_resolution=6,
     ):
-        # Save the elevation data as .bmp file for use in Chrono
+        # Save the elevation data as .bmp file for use in DYNO
 
         # Downsample the elevation data to (0.25*output_resolution)x(0.25*output_resolution)m grid
         elevation_out = elevation[::output_resolution, ::output_resolution]
@@ -823,7 +823,7 @@ class TestMapGenerator:
                 coordinates_lower_left
             )
 
-        print("Generation samples for Chrono...")
+        print("Generation samples for DYNO...")
         smoothed_sampled_elevation = np.array(
             LatinHyperCube(smoothed_elevation, uncertainty_map, N_test_maps, seed=21)
         )

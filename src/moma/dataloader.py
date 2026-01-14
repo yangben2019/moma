@@ -9,7 +9,7 @@ Dataloader module
  #                          ( M ) ( O ) ( M ) ( A )                          #
  #                           \_/   \_/   \_/   \_/                           #
  #                                                                           #
- #               MOMA: Ground vehicles mobility mapping toolkit              #
+ #   MOMA: Mobility maps and optimal routes generator for ground vehicles    #
  #############################################################################
 
 MIT License
@@ -61,10 +61,20 @@ from moma.raster import RasterRGBA, RasterMono
 log = logging.getLogger("MOMA")
 
 
-# Factory generator that initializes the correct dataloader based on the data source
 def get_dataloader(site_path, data_source, coordinates):
-    if data_source == "Trier_raster":
-        return DataloaderTrier(site_path)
+    """
+    Factory generator that initializes the correct dataloader based on the data source.
+
+    Args:
+        site_path (str): The path to the site data.
+        data_source (str): The data source.
+        coordinates (str): The coordinate reference system.
+
+    Returns:
+        Union[DataloaderGeoHornet, DataloaderDataforsyningen, DataloaderDataforsyningenFriction, DataLoaderOksbolPaper]: The dataloader.
+    """
+    if data_source == "GeoHornet":
+        return DataloaderGeoHornet(site_path)
 
     if data_source == "Dataforsyningen":
         return DataloaderDataforsyningen(site_path, coordinates)
@@ -78,10 +88,15 @@ def get_dataloader(site_path, data_source, coordinates):
     raise ValueError(f"Unknown data source: {data_source}")
 
 
-# Functions to save a raster with the number of layer corresponding to the number of bands in the array
 def save_new_raster(array, path, transform, epsg=25832):
     """
-    EPSG = 25832 is the coordinate system used in Denmark, which is UTM zone 32N.
+    Save a new raster.
+
+    Args:
+        array (numpy.ndarray): The array containing the raster data.
+        path (str): The path to save the raster to.
+        transform (rasterio.Affine): The affine transformation for the raster.
+        epsg (int, optional): The EPSG code for the coordinate reference system. Defaults to 25832.
     """
     new_dataset = rasterio.open(
         path,
@@ -99,6 +114,19 @@ def save_new_raster(array, path, transform, epsg=25832):
 
 
 def generate_synthetic_data(h, w, grid_size, bias, scale):
+    """
+    Generates synthetic elevation data.
+
+    Args:
+        h (int): Height of the synthetic data.
+        w (int): Width of the synthetic data.
+        grid_size (int): Size of the coarse grid.
+        bias (float): Bias to add to the synthetic data.
+        scale (float): Scale to multiply the synthetic data by.
+
+    Returns:
+        numpy.ndarray: Synthetic elevation data.
+    """
     # Generate a coarse grid of random values
     gw, gh = w // grid_size + 1, h // grid_size + 1
     coarse_grid = np.random.rand(gh, gw)  # Random elevations in [0,1]
@@ -129,16 +157,6 @@ def generate_synthetic_data(h, w, grid_size, bias, scale):
     return bias + synthetic * scale
 
 
-"""
-Data loader should return the following rasters in a consistent grid along with some color mappings for them:
-- Aerial
-- Elevation
-- Landuse
-- Soiltype
-- Moisturecontent
-"""
-
-
 # Create a url with parameters for a get request
 def create_url_with_parameters(netloc, query_params):
     Components = namedtuple(
@@ -158,10 +176,32 @@ def create_url_with_parameters(netloc, query_params):
     return url
 
 
-class DataloaderTrier:
+class Dataloader:
+    """
+    Data loader for site data.
+
+    A valid data loader should return the following rasters in a consistent grid along with some color mappings for them:
+       - Aerial
+       - Elevation
+       - Land Use
+       - Soil type
+       - Moisture content
+    """
+
+    pass
+
+
+class DataloaderGeoHornet(Dataloader):
     def __init__(self, site_path):
+        """
+        Initializes the GeoHornet dataloader.
+
+        Args:
+            site_path (Path): The path to the site data.
+        """
+
         self.site_path = site_path
-        self.source = "Dataloader for pregenerated Trier"
+        self.source = "Dataloader for GeoHornet data"
 
         # Raster locations
         self.AERIAL_PATH = site_path / "rasters" / "aerial_1m_clipped.tif"
@@ -187,6 +227,13 @@ class DataloaderTrier:
         )
 
     def get_aerial_raster(self):
+        """
+        Returns the aerial raster.
+
+        Returns:
+            RasterRGBA: The aerial raster.
+        """
+
         processed_path = str(self.AERIAL_PATH)[0:-4] + "_processed.tif"
 
         # Add one line of pixels to make to match dimensions of the other rasters
@@ -204,9 +251,21 @@ class DataloaderTrier:
         return RasterRGBA(processed_path)
 
     def get_elevation_raster(self):
+        """
+        Returns the elevation raster.
+
+        Returns:
+            RasterMono: The elevation raster.
+        """
         return RasterMono(self.ELEVATION_PATH)
 
     def get_landuse_raster(self):
+        """
+        Returns the land use raster.
+
+        Returns:
+            Tuple[RasterRGBA, dict]: The land use raster and value map.
+        """
         # TODO Get rid of the hard-coded land use value mappings
         with open(self.LANDUSE_MAPPING, encoding="utf8") as landuse_valuemap_file:
             landuse_valuemap = yaml.load(landuse_valuemap_file, Loader=yaml.SafeLoader)
@@ -214,12 +273,25 @@ class DataloaderTrier:
         return RasterRGBA(self.LANDUSE_PATH), landuse_valuemap
 
     def get_soiltype_raster(self):
+        """
+        Returns the soil type raster.
+
+        Returns:
+            Tuple[RasterMono, dict]: The soil type raster and value map.
+        """
         with open(self.SOILTYPE_MAPPING, encoding="utf8") as soiltype_mapping_file:
             soiltype_valuemap = yaml.load(soiltype_mapping_file, Loader=yaml.SafeLoader)
 
         return RasterRGBA(self.SOILTYPE_PATH), soiltype_valuemap
 
     def get_moisturecontent_raster(self):
+        """
+        Returns the moisture content raster.
+
+        Returns:
+            Tuple[RasterRGBA, dict]: The moisture content raster and value map.
+        """
+
         with open(
             self.MOISTURECONTENT_MAPPING, encoding="utf8"
         ) as moisturecontent_valuemap_file:
@@ -231,7 +303,14 @@ class DataloaderTrier:
 
 
 class DataloaderDataforsyningen:
-    def __init__(self, site_path, coordinates):
+    def __init__(self, site_path, coordinates, username, password):
+        """
+        Initializes the Dataforsyningen dataloader.
+
+        Args:
+            site_path (Path): The path to the site data.
+            coordinates (List[float]): The coordinate reference system.
+        """
         self.site_path = site_path
         self.coordinates = coordinates
         self.source = "Dataforsyningen, Datafordeleren, GEUS and BaseMap04"
@@ -249,10 +328,9 @@ class DataloaderDataforsyningen:
         self.jordartskort_location = pathlib.Path.cwd()
 
         # Query parameters for datafordeleren
-        # TODO: Write an interface to provide user/password
         self.query_params = {
-            "username": "",
-            "password": "",
+            "username": username,
+            "password": password,
             "BBOX": f"{self.coordinates[0]},{self.coordinates[1]},{self.coordinates[2]},{self.coordinates[3]}",
             "WIDTH": f"{self.coordinates[2] - self.coordinates[0]}",
             "HEIGHT": f"{self.coordinates[3] - self.coordinates[1]}",
@@ -296,7 +374,14 @@ class DataloaderDataforsyningen:
         )
 
     def get_aerial_raster(self):
-        """Source: https://datafordeler.dk/dataoversigt/geodanmark-ortofoto/ortofoto-foraar-wms/"""
+        """
+        Downloads the aerial raster from Dataforsyningen and saves it locally.
+
+        Data source: https://datafordeler.dk/dataoversigt/geodanmark-ortofoto/ortofoto-foraar-wms/
+
+        Returns:
+            RasterRGBA: The aerial raster.
+        """
         if pathlib.Path.exists(self.AERIAL_PATH):
             log.info(
                 "Aerial raster is already stored locally and will not be downloaded again"
@@ -345,7 +430,15 @@ class DataloaderDataforsyningen:
         return RasterRGBA(self.AERIAL_PATH)
 
     def get_elevation_raster(self):
-        """Source: https://datafordeler.dk/dataoversigt/danmarks-hoejdemodel-historisk-dhm/dhm-2007-historik-wcs/"""
+        """
+        Downloads the elevation raster from Dataforsyningen and saves it locally.
+
+        Data source: https://datafordeler.dk/dataoversigt/danmarks-hoejdemodel-historisk-dhm/dhm-2007-historik-wcs/
+
+        Returns:
+            RasterMono: The elevation raster.
+        """
+
         if pathlib.Path.exists(self.ELEVATION_PATH):
             log.info(
                 "Elevation raster is already stored locally and will not be downloaded again"
@@ -391,7 +484,14 @@ class DataloaderDataforsyningen:
         return RasterMono(self.ELEVATION_PATH)
 
     def get_landuse_raster(self):
-        """Source: https://envs.au.dk/om-instituttet-1/faglige-omraader/samfund-miljoe-og-ressourcer/arealanvendelse-og-gis/basemap/basemap03-til-download-1"""
+        """
+        Creates a land use raster from BaseMap04.
+
+        Data source: https://envs.au.dk/om-instituttet-1/faglige-omraader/samfund-miljoe-og-ressourcer/arealanvendelse-og-gis/basemap/basemap03-til-download-1
+
+        Returns:
+            Tuple[RasterRGBA, dict]: The land use raster and value map.
+        """
 
         with open(self.LANDUSE_MAPPING, encoding="utf8") as landuse_valuemap_file:
             loaded_data = yaml.load(landuse_valuemap_file, Loader=yaml.SafeLoader)
@@ -462,7 +562,14 @@ class DataloaderDataforsyningen:
         return RasterRGBA(self.LANDUSE_PATH), landuse_valuemap
 
     def get_soiltype_raster(self):
-        """Source: https://www.geus.dk/produkter-ydelser-og-faciliteter/data-og-kort/danske-kort/download-jordartskort"""
+        """
+        Creates a soil type raster from Jordartskort.
+
+        Data source: https://www.geus.dk/produkter-ydelser-og-faciliteter/data-og-kort/danske-kort/download-jordartskort
+
+        Returns:
+            Tuple[RasterRGBA, dict]: The soil type raster and value map.
+        """
 
         with open(self.SOILTYPE_MAPPING, encoding="utf8") as soiltype_valuemap_file:
             loaded_data = yaml.load(soiltype_valuemap_file, Loader=yaml.SafeLoader)
@@ -529,7 +636,13 @@ class DataloaderDataforsyningen:
         return RasterRGBA(self.SOILTYPE_PATH), soiltype_valuemap
 
     def get_moisturecontent_raster(self):
-        # TODO find moisture content data source
+        """
+        Creates a synthetic moisture content raster.
+
+        Returns:
+            Tuple[RasterRGBA, dict]: The moisture content raster and value map.
+        """
+
         with open(
             self.MOISTURECONTENT_MAPPING, encoding="utf8"
         ) as moisturecontent_valuemap_file:
@@ -537,8 +650,6 @@ class DataloaderDataforsyningen:
                 moisturecontent_valuemap_file, Loader=yaml.SafeLoader
             )
 
-        """ Source: synthetic data to illustrate feature
-        """
         if pathlib.Path.exists(self.MOISTURECONTENT_PATH):
             log.info(
                 "Moisture raster is already stored locally and will not be downloaded again"
@@ -577,8 +688,22 @@ class DataloaderDataforsyningen:
 
 
 class DataloaderDataforsyningenFriction(DataloaderDataforsyningen):
-    def __init__(self, site_path, coordinates):
-        super().__init__(site_path, coordinates)
+    """
+    A class for integrating synthethic terrain friction data for Dataforsyningen rasters.
+    """
+
+    def __init__(self, site_path, coordinates, username, password):
+        """
+        Initializes the `DataloaderDataforsyningen` class.
+
+        Args:
+            site_path: The path to the site directory.
+            coordinates: The coordinates of the area of interest.
+            username: The username for Dataforsyningen authentication.
+            password: The password for Dataforsyningen authentication.
+        """
+
+        super().__init__(site_path, coordinates, username, password)
         self.FRICTION_PATH = (
             site_path
             / "rasters"
@@ -586,6 +711,12 @@ class DataloaderDataforsyningenFriction(DataloaderDataforsyningen):
         )
 
     def get_friction_raster(self):
+        """
+        Creates a synthetic friction coefficient raster.
+
+        Returns:
+            RasterMono: The friction raster.
+        """
         if pathlib.Path.exists(self.FRICTION_PATH):
             log.info(
                 "Friction raster is already stored locally and will not be downloaded again"
@@ -608,7 +739,19 @@ class DataloaderDataforsyningenFriction(DataloaderDataforsyningen):
 
 
 class DataLoaderOksbolPaper(DataloaderDataforsyningenFriction):
+    """
+    A class for downloading Oksbøl site data from Dataforsyningen.
+    """
+
     def __init__(self, site_path, coordinates):
+        """
+        Initializes the `DataLoaderOksbolPaper` class.
+
+        Args:
+            site_path: The path to the site directory.
+            coordinates: The coordinates of the area of interest.
+        """
+
         super().__init__(site_path, coordinates)
 
         self.LANDUSE_JSON_PATH = (
@@ -629,8 +772,14 @@ class DataLoaderOksbolPaper(DataloaderDataforsyningenFriction):
         )
 
     def get_landuse_raster(self):
-        """Source: https://envs.au.dk/om-instituttet-1/faglige-omraader/samfund-miljoe-og-ressourcer/arealanvendelse-og-gis/basemap/basemap03-til-download-1"""
+        """
+        Creates landuse and soil type rasters from BaseMap04.
 
+        Data source: https://envs.au.dk/om-instituttet-1/faglige-omraader/samfund-miljoe-og-ressourcer/arealanvendelse-og-gis/basemap/basemap03-til-download-1
+
+        Returns:
+            Tuple[RasterRGBA, dict]: The landuse raster and value map.
+        """
         with open(self.LANDUSE_MAPPING, encoding="utf8") as landuse_valuemap_file:
             loaded_data = yaml.load(landuse_valuemap_file, Loader=yaml.SafeLoader)
             basemap_to_landuse_label = loaded_data["basemap_to_landuse_label"]
@@ -787,7 +936,7 @@ class DataLoaderOksbolPaper(DataloaderDataforsyningenFriction):
             with open(self.SOILTYPE_JSON_PATH, "w") as json_file:
                 json.dump(soil_export, json_file)
 
-        # Saves soil to use in Chrono
+        # Saves soil to use in DYNO
         landuse_valuemap = {}
 
         for label, color in landuse_label_to_color.items():
@@ -799,7 +948,14 @@ class DataLoaderOksbolPaper(DataloaderDataforsyningenFriction):
         return RasterRGBA(self.LANDUSE_PATH), landuse_valuemap
 
     def get_soiltype_raster(self):
-        """Source: https://www.geus.dk/produkter-ydelser-og-faciliteter/data-og-kort/danske-kort/download-jordartskort"""
+        """
+        Creates soil type raster from soil type mapping.
+
+        Data source: https://www.geus.dk/produkter-ydelser-og-faciliteter/data-og-kort/danske-kort/download-jordartskort
+
+        Returns:
+            Tuple[RasterRGBA, dict]: The soil type raster and value map.
+        """
 
         with open(self.SOILTYPE_MAPPING, encoding="utf8") as soiltype_valuemap_file:
             loaded_data = yaml.load(soiltype_valuemap_file, Loader=yaml.SafeLoader)

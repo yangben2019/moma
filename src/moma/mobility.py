@@ -9,7 +9,7 @@ Mobility module
  #                          ( M ) ( O ) ( M ) ( A )                          #
  #                           \_/   \_/   \_/   \_/                           #
  #                                                                           #
- #               MOMA: Ground vehicles mobility mapping toolkit              #
+ #   MOMA: Mobility maps and optimal routes generator for ground vehicles    #
  #############################################################################
 
 MIT License
@@ -66,12 +66,20 @@ plt.style.use(
     importlib.resources.path("moma", "data") / pathlib.Path("matplotlib/moma.mplstyle")
 )
 # Ensure that LaTeX is not used for rendering text in plots
-plt.rc('text', usetex=False)
+plt.rc("text", usetex=False)
 
 
 def generate_vehicle_mobility_file(vehicle, minimum_speed=0.01, plot_mobility=False):
     """
-    Generate a vehicle mobility file for the MOMA framework based on vehicle unit tests from Chrono
+    Generates a mobility file for a given vehicle.
+
+    Args:
+        vehicle (str): Name of the vehicle.
+        minimum_speed (float): Minimum speed for valid runs.
+        plot_mobility (bool): Whether to plot the mobility data.
+
+    Returns:
+        None
     """
 
     print(f"Generating vehicle mobility file for {vehicle}")
@@ -212,12 +220,29 @@ def generate_vehicle_mobility_file(vehicle, minimum_speed=0.01, plot_mobility=Fa
 
 def slope_percentage_to_angle(slope_percentage):
     """
-    Convert slope percentage to angle in degrees
+    Converts slope percentage to slope angle in degrees.
+
+    Args:
+        slope_percentage (np.ndarray): Slope percentage values.
+
+    Returns:
+        np.ndarray: Slope angle values in degrees.
     """
+
     return np.arctan(slope_percentage / 100) * 180 / np.pi
 
 
 def investigate_single_runs(vehicle, test_runs, minimum_speed=0.01, save_figures=False):
+    """
+    Investigates single runs for a given vehicle.
+
+    Args:
+        vehicle (str): Name of the vehicle.
+        test_runs (List[int]): List of test run numbers.
+        minimum_speed (float): Minimum speed for valid runs.
+        save_figures (bool): Whether to save figures.
+    """
+
     vehicle_dir = pathlib.Path() / "examples" / "vehicles" / f"{vehicle}"
 
     for test_run in test_runs:
@@ -283,23 +308,21 @@ def investigate_single_runs(vehicle, test_runs, minimum_speed=0.01, save_figures
                 plt.close(fig)
 
 
-if __name__ == "__main__":
-    # test_runs = [3381, 3382, 3383, 866, 3397, 3396, 3395, 3394]
-    # test_runs = np.arange(2984, 3058, 5)
-    # test_runs = [3381, 866, 3397, 2984, 3058]
-    # test_runs = [2955, 2984, 3058, 3003]
-    # test_runs = np.arange(1, 344, 20)
-    test_runs = [135, 165]
-
-    investigate_single_runs("olav", test_runs, save_figures=True)
-
-
 class ReductionFunction:
-    """class that return the wanted sample reduction functions
-    __call__ methods must be jit-able
+    """
+    Class that returns the wanted sample reduction functions.
+
+    __call__ methods must be jit-able.
     """
 
     def __init__(self, parameters):
+        """
+        Initializes the SampleReduction object with a specified function.
+
+        Args:
+            parameters (List[str]): List of function parameters.
+        """
+
         function_name = parameters[0]
         function_parameters = parameters[1:]
         if not hasattr(self, function_name):
@@ -307,14 +330,42 @@ class ReductionFunction:
         self.function = getattr(self, function_name)(*function_parameters)
 
     class mean:
+        """
+        Mean reduction function.
+        """
+
         def __init__(self):
+            """
+            Initializes the mean reduction function.
+            """
+
             self.name = "mean"
 
         def __call__(self, values):
+            """
+            Calculates the mean of the input values.
+
+            Args:
+                values (jnp.ndarray): Input values.
+
+            Returns:
+                jnp.ndarray: Mean of the input values.
+            """
             return jnp.mean(values)
 
     class quantile:
+        """
+        Quantile reduction function.
+        """
+
         def __init__(self, q_val):
+            """
+            Initializes the quantile reduction function.
+
+            Args:
+                q_val (float): Quantile value.
+            """
+
             q_val = float(q_val)
             self.q_val = jnp.array(
                 [1 - q_val]
@@ -322,13 +373,28 @@ class ReductionFunction:
             self.name = f"${100*q_val:.0f}\%$ confident quantile"
 
         def __call__(self, values):
+            """
+            Calculates the quantile of the input values.
+
+            Args:
+                values (jnp.ndarray): Input values.
+
+            Returns:
+                jnp.ndarray: Quantile of the input values.
+            """
+
             return jnp.quantile(values, self.q_val)[0]
 
 
 class MobilityAnalysis:
     """Mobility analysis object class.
 
-    A mobility analysis object encapsulates a vehicle and its corresponding simulation results database subset, an arbitrary number of soil types and an arbitrary number of soil parameters for the soil types set. On the basis of the provided data, it allows for the generation of mobility tensors, one for each soil type, allowing for interpolation of simulated data over the n-dimensional hyperplane defined by the chosen parameters.
+    A mobility analysis object encapsulates a vehicle and its corresponding
+    simulation results database subset, an arbitrary number of soil types and an
+    arbitrary number of soil parameters for the soil types set. On the basis of
+    the provided data, it allows for the generation of mobility tensors, one for
+    each soil type, allowing for interpolation of simulated data over the
+    n-dimensional hyperplane defined by the chosen parameters.
     """
 
     # List of parameters for each mobility test
@@ -344,12 +410,17 @@ class MobilityAnalysis:
         minimum_speed,
         target_speed,
     ):
-        """Mobility analysis object constructor
+        """
+        Initializes the mobility analysis object.
 
         Args:
-            vehicle (string): Vehicle name.
-            soil_types (list): _description_
-            soil_parameters (list): _description_
+            database_path (str): Path to the simulation results database.
+            vehicle (str): Name of the vehicle.
+            soil_types (List[str]): List of soil types.
+            soil_parameters (List[str]): List of soil parameters.
+            sample_reduction (ReductionFunction): Sample reduction function.
+            minimum_speed (float): Minimum speed for valid runs.
+            target_speed (float): Target speed for mobility interpolation.
         """
 
         log.info(
@@ -381,10 +452,11 @@ class MobilityAnalysis:
         self.sample_reduction = ReductionFunction(sample_reduction)
 
     def load_vehicle_metrics(self, database_path):
-        """Load simulation results database subset for a given vehicle.
+        """
+        Loads simulation results database subset for a given vehicle.
 
         Args:
-            vehicle (string): Vehicle name.
+            database_path (str): Path to the simulation results database.
 
         Returns:
             dict: Simulation results database subset.
@@ -398,6 +470,12 @@ class MobilityAnalysis:
         return mobility_database
 
     def generate_mobility_tensors(self, test):
+        """
+        Generates mobility tensors for each soil type.
+
+        Args:
+            test (str): Name of the mobility test.
+        """
 
         for soil_type in self.soil_types:
 
@@ -472,6 +550,9 @@ class MobilityAnalysis:
                 )
 
     def generate_sideslope_factor(self):
+        """
+        Generates sideslope factor for interpolation of sideslope data.
+        """
 
         sideslopes = []
         max_sideslope_speed = []
@@ -480,11 +561,13 @@ class MobilityAnalysis:
             if entry["soil"]["type"] == "sideslope":
                 sideslopes.append(entry["test"]["slope_angle"])
                 max_sideslope_speed.append(entry["value"])
-        
+
         # Uses factor one if no sideslope data is available
         if len(sideslopes) == 0:
             self.sideslope_factors = lambda sideslope, **_: jnp.ones_like(sideslope)
-            log.info("No sideslope data available, sideslope factor set to 1 everywhere.")
+            log.info(
+                "No sideslope data available, sideslope factor set to 1 everywhere."
+            )
             return
 
         self.sideslope_factors = SideslopeFactor(
@@ -492,9 +575,26 @@ class MobilityAnalysis:
         )
 
     def create_evaluate_functions(self):
-        # Evaluate the mobility tensor for a given soil type and parameters
+        """
+        Creates functions to evaluate mobility tensors.
+        """
+
         @jit
         def evaluate_mobility_tensor(soil, moisture, friction, slope, sideslope):
+            """
+            Evaluates mobility tensor for a given soil type and parameters.
+
+            Args:
+                soil (int): Index of the soil type.
+                moisture (float): Moisture value.
+                friction (float): Friction value.
+                slope (float): Slope value.
+                sideslope (float): Sideslope value.
+
+            Returns:
+                float: Steady-state speed.
+            """
+
             params = jnp.array([moisture, friction, slope])
             steady_state_speed = jnp.minimum(
                 jax.lax.switch(soil, self.mobility_tensors, params), self.target_speed
@@ -508,7 +608,21 @@ class MobilityAnalysis:
 
         @jit
         def evaluate_point_in_space(soil, moisture, friction, slope, sideslope):
-            # TODO handle high negative slopes as no-go zones, like you would not go down a steep hill
+            """
+            Evaluates point in space for mobility evaluation.
+
+            Args:
+                soil (int): Index of the soil type.
+                moisture (float): Moisture value.
+                friction (float): Friction value.
+                slope (float): Slope value.
+                sideslope (float): Sideslope value.
+
+            Returns:
+                float: Reduced speed based on sample reduction function.
+            """
+
+            # TODO: Handle high negative slopes as no-go zones.
             # Take care of negative slopes and filter out for small slopes
             low_slope_mask = slope < 1
             slope_masked = jnp.where(low_slope_mask, 0.0, slope)
@@ -523,6 +637,20 @@ class MobilityAnalysis:
 
         @jit
         def vmap_evaluate_point_in_space(soil, moisture, friction, slope, sideslope):
+            """
+            Vmaps evaluation of point in space for mobility evaluation.
+
+            Args:
+                soil (int): Index of the soil type.
+                moisture (float): Moisture value.
+                friction (float): Friction value.
+                slope (float): Slope value.
+                sideslope (float): Sideslope value.
+
+            Returns:
+                ndarray: Reduced speeds based on sample reduction function.
+            """
+
             self.vmap_evaluate_mobility_tensor = vmap(
                 evaluate_mobility_tensor,
                 in_axes=(
@@ -544,7 +672,10 @@ class MobilityAnalysis:
 class MobilityTensor:
     """Mobility tensor object class.
 
-    A mobility tensor object is an n-dimensional interpolator defined for a given soil type and an arbitrarily long set of parameter for the given soil. When called with an n-tuple of parameters as argument, it returns the interpolator evaluation for the given soil parameters coordinate.
+    A mobility tensor object is an n-dimensional interpolator defined for a
+    given soil type and an arbitrarily long set of parameter for the given soil.
+    When called with an n-tuple of parameters as argument, it returns the
+    interpolator evaluation for the given soil parameters coordinate.
     """
 
     def __init__(
@@ -556,15 +687,16 @@ class MobilityTensor:
         values,
         vehicle,
     ):
-        """Mobility tensor object constructor.
+        """
+        Initialises a mobility tensor.
 
         Args:
-            soil_type (string): Soil type to be associated with the mobility tensor.
-            parameters (list): List of parameters (with each element being a np.array) associated with the soil type.
-            soil_parameter_name (list): List of names of the soil parameters used in the mobility tensor.
-            test_parameter_name (list): List of names of the test parameters used in the mobility tensor.
-            values (list): List of objective function value associated with each grid point of the parameters grid.
-            vehicle (string): Vehicle name to be associated with the mobility tensor.
+            soil_type (str): Soil type.
+            parameters (ndarray): Grid points.
+            soil_parameter_name (list[str]): Soil parameters.
+            test_parameter_name (list[str]): Test parameters.
+            values (ndarray): Values at grid points.
+            vehicle (str): Vehicle type.
         """
 
         self.soil_type = soil_type
@@ -588,7 +720,7 @@ class MobilityTensor:
             f"Initialising new RegularGridInterpolator for soil {soil_type}, using extrapolation for points outside the grid"
         )
 
-        # TODO: Standardize the structure of the parameters and values in the database
+        # TODO: Standardize the structure of the parameters and values in the database.
 
         # Initialise linear radial-basis function interpolator
         self.interpolator = RegularGridInterpolator(
@@ -596,13 +728,14 @@ class MobilityTensor:
         )
 
     def __call__(self, call):
-        """Evaluate radial-basis function interpolator at the provided n-tuple
+        """
+        Interpolates values at given points.
 
         Args:
-            call (np.array): n-tuple for which the objective function is evaluated.
+            call (ndarray): Points to interpolate.
 
         Returns:
-            double: Objective function value
+            float: Interpolated value.
         """
 
         return self.interpolator(
@@ -651,23 +784,54 @@ class SideslopeFactor:
 
 
 class Map(ABC):
+    """
+    Abstract base class for maps.
+
+    Provides a common interface for different map types.
+    """
 
     def overlay(self, axis, map):
+        """
+        Overlays a map on the given axis.
 
+        Args:
+            axis (matplotlib.axes.Axes): Axis to overlay the map on.
+            map (ndarray): Map to overlay.
+        """
         cmap2 = matplotlib.colors.ListedColormap(["none", "red"])
 
         axis.imshow(map, alpha=1.0, cmap=cmap2)
 
 
 class DirectionalMobilityMap(DirectionalMap):
+    """
+    Directional mobility map.
+
+    Extends the `DirectionalMap` class to create a map of mobility values for different soil types.
+    """
 
     def __init__(self, mobility_maps):
+        """
+        Initialises a directional mobility map container.
+
+        Args:
+            mobility_maps (list[MobilityMap]): List of mobility maps.
+        """
 
         log.info(f"Initialising directional mobility map container.")
 
         self.mobility_maps = mobility_maps
 
     def show_overview(self, directions="N"):
+        """
+        Displays an overview of the directional mobility map.
+
+        Args:
+            directions (str): Directions to show.
+
+        Returns:
+            list[matplotlib.axes.Axes]: List of axes with the overview.
+        """
 
         axes = []
 
@@ -684,10 +848,18 @@ class DirectionalMobilityMap(DirectionalMap):
         return axes
 
     def show_separate(self, directions="N"):
+        """
+        Displays separate overview of the directional mobility map.
 
+        Args:
+            directions (str): Directions to show.
+
+        Returns:
+            list[matplotlib.axes.Axes]: List of axes with the separate overview.
+        """
         axes = []
 
-        for direction in directions:
+        for _ in directions:
             _, axis = plt.subplots(1, 1)
             axis.title(f"Directional mobility map\n{direction} direction")
             axis.set_xlabel("X coordinate (m)")
@@ -709,19 +881,31 @@ class DirectionalMobilityMap(DirectionalMap):
         fill_omnidirectional_info=False,
     ):
         """
-        Method for filling in mobility metrics for a given path.
-        The path can be either a path from the MOMA path planner given as a list of nodes or a path given as a json file with given map coordinates.
+        Fills in mobility metrics for a given path.
+
+        Args:
+            path_json (Optional[str]): Path to the json file containing the path coordinates.
+            nodes (Optional[list[Node]]): List of nodes representing the path.
+            DiGraph (Optional[nx.DiGraph]): Directed graph of the map.
+            elevation_raster (Optional[Raster]): Raster of elevation data.
+            slope_maps (Optional[list[Map]]): List of slope maps.
+            minimum_speed (Optional[float]): Minimum speed for mobility calculations.
+            target_speed (Optional[float]): Target speed for mobility calculations.
+            fill_omnidirectional_info (bool): Whether to fill in omnidirectional mobility information.
         """
 
         def get_direction(delta_map_coor):
-            """Zero angle is defined as the direction of the positive x-axis (east) and angles are measured counter-clockwise.
+            """
+            Calculates the direction of movement between two points.
+
+            Args:
+                delta_map_coor (Tuple[float, float]): Difference in map coordinates between the two points.
 
             Returns:
                 angle (float): Angle in radians between the positive x-axis and the vector from the first point to the second point.
                 direction (str): Direction of the movement in compass notation.
                 compass_direction (int): Direction of the movement in degrees, where 0 is north, 90 is east, 180 is south and 270 is west.
             """
-            # TODO: align 0 direction and rotation direction with compass
             angle = np.arctan2(delta_map_coor[1], delta_map_coor[0])
 
             if angle > np.pi * 7 / 8:
@@ -742,7 +926,18 @@ class DirectionalMobilityMap(DirectionalMap):
                 return angle, "SW", 225
 
         def info_from_node_num(node):
-            # Node number is giving by the path planner in MOMA, return map coordinates and the indices of the node to use the retrieve data from the raster
+            """
+            Returns the map coordinates and indices of a node in the raster.
+
+            Args:
+                node (int): Node number in the path.
+
+            Returns:
+                indices (np.ndarray): Indices of the node in the raster.
+                UTM_coor (Tuple[float, float]): UTM coordinates of the node.
+                map_coor (Tuple[float, float]): Map coordinates of the node.
+            """
+
             indices = np.unravel_index(node, elevation_raster.data.shape[-2:])
             UTM_coor = rio.transform.xy(
                 elevation_raster.transform, indices[0], indices[1], offset="center"
@@ -754,7 +949,17 @@ class DirectionalMobilityMap(DirectionalMap):
             return indices, UTM_coor, map_coor
 
         def info_from_map_coor(map_coor):
-            # Map coordinates are given by an external path planner, return map coordinates and the indices of the node to use the retrieve data from the raster
+            """
+            Returns the map coordinates and indices of a node in the raster.
+
+            Args:
+                map_coor (dict): Map coordinates of the node.
+
+            Returns:
+                indices (np.ndarray): Indices of the node in the raster.
+                UTM_coor (Tuple[float, float]): UTM coordinates of the node.
+                map_coor (Tuple[float, float]): Map coordinates of the node.
+            """
             raster = list(self.mobility_maps.values())[0].raster
             inv_transform = ~raster.transform
 
@@ -971,7 +1176,16 @@ class DirectionalMobilityMap(DirectionalMap):
         target_speed,
         fill_omnidirectional_info=False,
     ):
+        """
+        Calculates mobility metrics for paths in a folder.
 
+        Args:
+            path_folder (Path): Path to the folder containing the path files.
+            slope_maps (list[Map]): List of slope maps.
+            minimum_speed (float): Minimum speed for mobility calculations.
+            target_speed (float): Target speed for mobility calculations.
+            fill_omnidirectional_info (bool): Whether to fill in omnidirectional mobility information.
+        """
         for folder in path_folder.iterdir():
             if folder.is_dir() and folder.name.startswith("path-"):
                 for file in folder.iterdir():
@@ -1009,6 +1223,21 @@ class MobilityMap(Map):
         minimum_speed,
         target_speed,
     ):
+        """
+        Initialises a new mobility map.
+
+        Args:
+            direction (tuple): Tuple containing the direction and angle of the mobility map.
+            slope_map (Map): Slope map.
+            land_use_map (Map): Land use map.
+            nogo_map (Map): Nogo map.
+            moisture_content_map (Map): Moisture content map.
+            friction_map (Map): Friction map.
+            soil_type_map (Map): Soil type map.
+            mobility_analysis (MobilityAnalysis): Mobility analysis object.
+            minimum_speed (float): Minimum speed for mobility calculations.
+            target_speed (float): Target speed for mobility calculations.
+        """
 
         log.info("Initialising new mobility map.")
 
@@ -1044,11 +1273,22 @@ class MobilityMap(Map):
         self.populate_map(minimum_speed=minimum_speed, target_speed=target_speed)
 
     def __call__(self):
+        """
+        Returns the mobility map as a NumPy array.
 
+        Returns:
+            np.ndarray: Mobility map as a NumPy array.
+        """
         return np.array(self.data)
 
     def populate_map(self, minimum_speed, target_speed):
+        """
+        Populates the mobility map with speeds for each cell.
 
+        Args:
+            minimum_speed (float): Minimum speed for mobility calculations.
+            target_speed (float): Target speed for mobility calculations.
+        """
         index_x, index_y = np.unravel_index(
             np.arange(0, self.raster.data.size), self.raster.data.shape
         )
@@ -1114,7 +1354,13 @@ class MobilityMap(Map):
         self.raster.data[go_index_x, go_index_y] = speeds
 
     def get_values(self, slope_dataset, slope_mobility):
+        """
+        Sets the speed values in the mobility map based on the slope mobility dictionary.
 
+        Args:
+            slope_dataset (np.ndarray): Slope values for each cell in the mobility map.
+            slope_mobility (dict): Dictionary mapping slope values to speeds.
+        """
         # Initialise interpolator for speed values
         speed_interpolator = spi.interp1d(
             list(slope_mobility.keys()), list(slope_mobility.values()), kind="linear"
@@ -1133,7 +1379,17 @@ class MobilityMap(Map):
         save_maps=False,
         hide_utm=False,
     ):
+        """
+        Plots the mobility map.
 
+        Args:
+            n_samples (int): Number of samples to plot.
+            export_path (str): Path to export the plot.
+            show (bool): Whether to display the plot.
+            export (bool): Whether to export the plot.
+            save_maps (bool): Whether to save the mobility map as an image.
+            hide_utm (bool): Whether to hide the UTM coordinates.
+        """
         title = (
             None
             if n_samples <= 1
@@ -1151,3 +1407,12 @@ class MobilityMap(Map):
             save_maps=save_maps,
             hide_utm=hide_utm,
         )
+
+
+def main():
+    test_runs = [135, 165]
+    investigate_single_runs("olav", test_runs, save_figures=True)
+
+
+if __name__ == "__main__":
+    main()

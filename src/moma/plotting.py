@@ -9,7 +9,7 @@ Plotting module
  #                          ( M ) ( O ) ( M ) ( A )                          #
  #                           \_/   \_/   \_/   \_/                           #
  #                                                                           #
- #               MOMA: Ground vehicles mobility mapping toolkit              #
+ #   MOMA: Mobility maps and optimal routes generator for ground vehicles    #
  #############################################################################
 
 MIT License

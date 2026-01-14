@@ -9,7 +9,7 @@ Raster module
  #                          ( M ) ( O ) ( M ) ( A )                          #
  #                           \_/   \_/   \_/   \_/                           #
  #                                                                           #
- #               MOMA: Ground vehicles mobility mapping toolkit              #
+ #   MOMA: Mobility maps and optimal routes generator for ground vehicles    #
  #############################################################################
 
 MIT License
@@ -36,26 +36,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 import logging
+
 from abc import ABC
 
-import numpy as np  # Used for raster data array operations
-import matplotlib as mpl  # Used for color maps definition
-import matplotlib.pyplot as plt  # Used for generating raster plots
-import shapely.geometry as shpgeo  # Used for no-go zones definition
-import rasterio  # Used for raster data import
 import json
-from rasterio.enums import Resampling  # Used for rasters resampling operations
-from matplotlib.ticker import MultipleLocator  # Used for minor grid ticks
-import matplotlib.colors as mcolors
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-
 import numpy as np
+import matplotlib as mpl
+import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
+import numpy as np
+import shapely.geometry as shpgeo
+import rasterio
+
+from matplotlib.ticker import MultipleLocator
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from rasterio.enums import Resampling
+
 
 log = logging.getLogger("MOMA")
 
 
 class Raster(ABC):
-    """Raster"""
 
     COLORMAPS = ["RdYlBu"]
 
@@ -68,10 +69,13 @@ class Raster(ABC):
     }
 
     def set_colormap(self, key):
-        """Set raster colormap
+        """Sets the colormap for the raster.
 
         Args:
-            key (string): Colormap name. Possible values are "RdYlBu". Defaults to "RdYlBu".
+            key (str): Name of the colormap. Possible values are "RdYlBu". Defaults to "RdYlBu".
+
+        Raises:
+            ValueError: If the colormap name is not valid.
         """
 
         self.colormap = (
@@ -81,7 +85,12 @@ class Raster(ABC):
         )
 
     def return_empty_copy(self):
-        """Return empty copy of raster"""
+        """Returns an empty copy of the raster object.
+
+        Returns:
+            Raster: A new raster object with the same dimensions and metadata as the original raster.
+        """
+
         new_raster = self.__class__(self.path)
         new_raster.data = np.zeros_like(self.data)
         new_raster.dtype = self.dtype
@@ -117,7 +126,30 @@ class Raster(ABC):
         save_maps=False,
         hide_utm=False,
     ):
-        """Show raster"""
+        """Plots raster data.
+
+        This function plots raster data, including both continuous and discrete
+        data. It provides options for customizing the plot, such as setting a
+        title, adding a colorbar, and hiding UTM ticks. The function also
+        supports exporting the plot to a file or displaying it on the screen.
+
+        Args:
+            data (numpy.ndarray): Data to plot.
+            rgb (numpy.ndarray): RGB data to plot.
+            colorbar (str): Label for the colorbar.
+            clim (tuple): Minimum and maximum values for the colormap.
+            discrete_colormap (tuple): List of colors and labels for a discrete colormap.
+            reverse_colormap (bool): Whether to reverse the colormap.
+            title (str): Title of the plot.
+            export_path (str): Path to export the plot to.
+            show (bool): Whether to display the plot.
+            export (bool): Whether to export the plot to a file.
+            save_maps (bool): Whether to save the raster as a GeoTIFF file.
+            hide_utm (bool): Whether to hide the UTM ticks.
+
+        Returns:
+            tuple: A tuple containing the figure, axes, colorbar, and image.
+        """
 
         # Use stored data in raster if no data is provided
         if data is not None:
@@ -129,7 +161,9 @@ class Raster(ABC):
         (figure, axes) = plt.subplots(1, 1)
 
         # Set and invert colormap
-        cmap = mpl.colormaps.get_cmap(self.colormap + ("_r" if reverse_colormap else ""))
+        cmap = mpl.colormaps.get_cmap(
+            self.colormap + ("_r" if reverse_colormap else "")
+        )
 
         # Normalise colormap range. Defaults to a range of three standard deviations around the mean value.
         def norm(data):
@@ -243,11 +277,8 @@ class Raster(ABC):
         else:
             color_bar = None
 
-        # Add title
         if title is not None:
             axes.set_title(title, pad=120)
-
-        # plt.tight_layout()
 
         if show:
             plt.show()
@@ -256,7 +287,6 @@ class Raster(ABC):
             log.info(f"Exporting raster plot to {export_path}.")
             plt.savefig(export_path, format="pdf", bbox_inches="tight")
 
-        # Saves the raster as a GeoTIFF file if save_maps is True
         if save_maps:
             export_path = export_path.with_suffix(".tif")
             log.info(f"Exporting raster plot to {export_path}.")
@@ -296,10 +326,14 @@ class Raster(ABC):
             return (figure, axes, color_bar, image)
 
     def save(self, path, data=None):
-        """Save raster to disk
+        """Saves the raster data to a GeoTIFF file.
+
         Args:
-            path (str): Path to save raster to
-            data (np.ndarray, optional): Raster data to save. Defaults to None, which uses the raster's internal stored data.
+            path (str): Path to the GeoTIFF file.
+            data (numpy.ndarray): Data to save. If not provided, the data from the raster object will be used.
+
+        Raises:
+            ValueError: If the data is not in the correct shape.
         """
 
         if data is None:
@@ -328,9 +362,16 @@ class Raster(ABC):
 
 
 class RasterMono(Raster):
-    """Single-band raster"""
 
     def __init__(self, path):
+        """Initialises a single-channel raster object from a file.
+
+        Args:
+            path (str): Path to the raster file.
+
+        Raises:
+            RasterioError: If the raster file cannot be opened.
+        """
 
         log.info(f"Initialising new single-channel raster from file {path}.")
 
@@ -364,11 +405,14 @@ class RasterMono(Raster):
         raster.close()
 
     def resample(self, factor, resampling="average"):
-        """Resample raster
+        """Resamples the raster data to a new size.
 
         Args:
-            factor (float): Scaling factor
-            resampling (str, optional): Resampling algorithm. Valid options are "average", "bilinear", "cubic", "lanczos" or "nearest". Defaults to "average".
+            factor (float): Scaling factor for the new raster.
+            resampling (str): Resampling method. Valid options are "average", "bilinear", "cubic", "lanczos" or "nearest". Defaults to "average".
+
+        Raises:
+            ValueError: If the resampling method is not valid.
         """
 
         # Compute new raster size and shape
@@ -400,13 +444,13 @@ class RasterMono(Raster):
     def add_cylinder(
         self, coordinate_x: float, coordinate_y: float, radius: float, height: float
     ):
-        """Add cylindrical feature
+        """Adds a cylinder shape to the raster.
 
         Args:
-            coordinate_x (float): Cylinder center x coordinate
-            coordinate_y (float): Cylinder center y coordinate
-            radius (float): Cylinder radius
-            height (float): Cylinder height
+            coordinate_x (float): X-coordinate of the center of the cylinder.
+            coordinate_y (float): Y-coordinate of the center of the cylinder.
+            radius (float): Radius of the cylinder.
+            height (float): Height of the cylinder.
         """
 
         circle = shpgeo.Point(coordinate_x, coordinate_y).buffer(radius)
@@ -419,23 +463,30 @@ class RasterMono(Raster):
                 self.data[i, j] = height
 
     def coordinates(self, i, j):
-        """Retrieve raster coordinates for index pair (i, j).
+        """Converts raster coordinates to geographic coordinates.
 
         Args:
-            i (int): X coordinate index
-            j (int): Y coordinate index
+            i (int): Row index of the raster.
+            j (int): Column index of the raster.
 
         Returns:
-            double: Raster value at cell (i, j)
+            tuple: Tuple containing the geographic coordinates (x, y).
         """
 
         return self.transform * (i, j)
 
 
 class RasterRGBA(Raster):
-    """4-band raster"""
 
     def __init__(self, path):
+        """Initialises a four-channel raster object from a file.
+
+        Args:
+            path (str): Path to the raster file.
+
+        Raises:
+            RasterioError: If the raster file cannot be opened.
+        """
 
         log.info(f"Initialising new four-channel raster from file {path}.")
 
@@ -469,11 +520,14 @@ class RasterRGBA(Raster):
         raster.close()
 
     def resample(self, factor, resampling="average"):
-        """Resample raster
+        """Resamples the raster data to a new size.
 
         Args:
-            factor (float): Scaling factor
-            resampling (str, optional): Resampling algorithm. Valid options are "average", "bilinear", "cubic", "lanczos" or "nearest". Defaults to "average".
+            factor (float): Scaling factor for the new raster.
+            resampling (str): Resampling method. Valid options are "average", "bilinear", "cubic", "lanczos" or "nearest". Defaults to "average".
+
+        Raises:
+            ValueError: If the resampling method is not valid.
         """
 
         log.info(
@@ -507,7 +561,15 @@ class RasterRGBA(Raster):
         self.resolution_y = -self.transform[4]
 
     def get_indices(self, lon, lat):
+        """Converts geographic coordinates to raster indices.
 
+        Args:
+            lon (float): Longitude of the geographic coordinate.
+            lat (float): Latitude of the geographic coordinate.
+
+        Returns:
+            tuple: Tuple containing the raster indices (row, column).
+        """
         # Create RasterIO raster handle
         with rasterio.open(self.path, "r") as raster:
             (py, px) = raster.index(lon, lat)

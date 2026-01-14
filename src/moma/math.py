@@ -9,7 +9,7 @@ Math module
  #                          ( M ) ( O ) ( M ) ( A )                          #
  #                           \_/   \_/   \_/   \_/                           #
  #                                                                           #
- #               MOMA: Ground vehicles mobility mapping toolkit              #
+ #   MOMA: Mobility maps and optimal routes generator for ground vehicles    #
  #############################################################################
 
 MIT License
@@ -39,47 +39,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from scipy.interpolate import splprep, splev
-
-
-def main():
-
-    path = np.array(
-        [
-            [0, 0],
-            [0, 1],
-            [0, 2],
-            [1, 3],
-            [2, 3],
-            [3, 2],
-            [4, 2],
-            [5, 1],
-            [6, 1],
-            [7, 0],
-            [8, 0],
-            [9, 0],
-            [-4.5, -7],
-            [-9, -15],
-        ]
-    )
-
-    path_mdf = path.copy()
-    path_mdf[5, 1] = 3
-    path_mdf[8, 1] = 0
-
-    tck, u = splprep([path[:, 0], path[:, 1]], k=3, s=0.0)
-    u_fine = np.linspace(0, 1, 100)
-    x_smooth, y_smooth = splev(u_fine, tck)
-
-    fig, ax = plt.subplots(1, 1, figsize=(8, 4))
-
-    ax.plot(path[:, 0] + 0.5, path[:, 1] + 0.5, "r", linewidth=2, label="Path")
-    ax.plot(x_smooth + 0.5, y_smooth + 0.5, "b", linewidth=2, label="Smoothened path")
-
-    plt.show()
-
-
-if __name__ == "__main__":
-    main()
 
 
 import math
@@ -292,3 +251,43 @@ if __name__ == "__main__":
     # main_1d()
     # main_2d()
     pass
+
+def main():
+
+    path = np.array(
+        [
+            [0, 0],
+            [0, 1],
+            [0, 2],
+            [1, 3],
+            [2, 3],
+            [3, 2],
+            [4, 2],
+            [5, 1],
+            [6, 1],
+            [7, 0],
+            [8, 0],
+            [9, 0],
+            [-4.5, -7],
+            [-9, -15],
+        ]
+    )
+
+    path_mdf = path.copy()
+    path_mdf[5, 1] = 3
+    path_mdf[8, 1] = 0
+
+    tck, u = splprep([path[:, 0], path[:, 1]], k=3, s=0.0)
+    u_fine = np.linspace(0, 1, 100)
+    x_smooth, y_smooth = splev(u_fine, tck)
+
+    fig, ax = plt.subplots(1, 1, figsize=(8, 4))
+
+    ax.plot(path[:, 0] + 0.5, path[:, 1] + 0.5, "r", linewidth=2, label="Path")
+    ax.plot(x_smooth + 0.5, y_smooth + 0.5, "b", linewidth=2, label="Smoothened path")
+
+    plt.show()
+
+
+if __name__ == "__main__":
+    main()

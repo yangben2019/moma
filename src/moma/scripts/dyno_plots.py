@@ -177,15 +177,15 @@ def get_Chrono_metric(run_number, plot=0):
 
 def compare_run(run_number, plot=0):
     MOMA = get_MOMA_metric(run_number)
-    Chrono = get_Chrono_metric(run_number, plot=plot)
+    DYNO = get_Chrono_metric(run_number, plot=plot)
 
     return_dict = {
         "run_number": run_number,
-        "failed": Chrono["failed"],
+        "failed": DYNO["failed"],
         "direction": MOMA["direction"],
     }
 
-    if not Chrono["failed"]:
+    if not DYNO["failed"]:
         MOMA["interpolators"] = {
             "distance": interp1d(MOMA["distance"], MOMA["speed"], kind="linear"),
             "distance_omni": interp1d(
@@ -198,20 +198,20 @@ def compare_run(run_number, plot=0):
         }
 
         # plot limits
-        min_x = min(MOMA["distance"][0], Chrono["distance"][0])
-        max_x = max(MOMA["distance"][-1], Chrono["distance"][-1])
+        min_x = min(MOMA["distance"][0], DYNO["distance"][0])
+        max_x = max(MOMA["distance"][-1], DYNO["distance"][-1])
         x_lim = get_lim((min_x, max_x))
 
         # Error between the two methods
         end = min(
             MOMA["distance"][-1], MOMA["distance"][-1]
         )  # Last point where both models have data
-        end_mask = Chrono["distance"] <= end
+        end_mask = DYNO["distance"] <= end
 
         return_dict["end_time"] = {
             "MOMA": MOMA["interpolators"]["time"](end),
             "MOMA_omni": MOMA["interpolators"]["time_omni"](end),
-            "Chrono": Chrono["time"][end_mask][-1],
+            "DYNO": DYNO["time"][end_mask][-1],
         }
 
         # ============
@@ -221,18 +221,18 @@ def compare_run(run_number, plot=0):
             output_dir_run = single_runs / "combined results"
             output_dir_run.mkdir(exist_ok=True)
 
-            error_dist = Chrono["distance"][end_mask]
+            error_dist = DYNO["distance"][end_mask]
             error = (
                 MOMA["interpolators"]["distance"](error_dist)
-                - Chrono["speed"][end_mask]
+                - DYNO["speed"][end_mask]
             )
-            error_percentage = np.abs(error / Chrono["speed"][end_mask]) * 100
+            error_percentage = np.abs(error / DYNO["speed"][end_mask]) * 100
 
             error_omni = (
                 MOMA["interpolators"]["distance_omni"](error_dist)
-                - Chrono["speed"][end_mask]
+                - DYNO["speed"][end_mask]
             )
-            error_percentage_omni = np.abs(error_omni / Chrono["speed"][end_mask]) * 100
+            error_percentage_omni = np.abs(error_omni / DYNO["speed"][end_mask]) * 100
 
             # Plotting the results
             fig, ax = plt.subplots(4, 1, figsize=(10, 12))
@@ -266,7 +266,7 @@ def compare_run(run_number, plot=0):
                 label="MOMA omnidirectional",
                 color="orange",
             )
-            ax[1].plot(Chrono["distance"], Chrono["speed"], label="Chrono", color="red")
+            ax[1].plot(DYNO["distance"], DYNO["speed"], label="DYNO", color="red")
 
             ax[1].set_xlabel("Distance [m]")
             ax[1].set_ylabel("Speed (m/s)")
@@ -286,13 +286,13 @@ def compare_run(run_number, plot=0):
             ax[3].plot(
                 error_dist,
                 error_percentage,
-                label=r"$y = \frac{|v_{diff}|}{v_{Chrono}}$",
+                label=r"$y = \frac{|v_{diff}|}{v_{DYNO}}$",
                 color="blue",
             )
             ax[3].plot(
                 error_dist,
                 error_percentage_omni,
-                label=r"$y = \frac{|v_{diff, omni}|}{v_{Chrono}}$",
+                label=r"$y = \frac{|v_{diff, omni}|}{v_{DYNO}}$",
                 color="orange",
             )
 
@@ -354,8 +354,8 @@ def compare_run(run_number, plot=0):
                 color="orange",
             )
             ax.plot(
-                Chrono["distance"],
-                Chrono["speed"],
+                DYNO["distance"],
+                DYNO["speed"],
                 label="Vehicle simulation",
                 color="red",
             )
@@ -383,12 +383,12 @@ for run in range(32):
 # Plot end time
 MOMA_directional = np.array([run["end_time"]["MOMA"] for run in runs])
 MOMA_omnidirectional = np.array([run["end_time"]["MOMA_omni"] for run in runs])
-Chrono = np.array([run["end_time"]["Chrono"] for run in runs])
+DYNO = np.array([run["end_time"]["DYNO"] for run in runs])
 
 fig, ax = plt.subplots(figsize=(10, 5))
-ax.plot(MOMA_directional / 60, Chrono / 60, "o", label="Directional approach")
-ax.plot(MOMA_omnidirectional / 60, Chrono / 60, "o", label="Omnidirectional approach")
-for xd, xo, y in zip(MOMA_directional, MOMA_omnidirectional, Chrono):
+ax.plot(MOMA_directional / 60, DYNO / 60, "o", label="Directional approach")
+ax.plot(MOMA_omnidirectional / 60, DYNO / 60, "o", label="Omnidirectional approach")
+for xd, xo, y in zip(MOMA_directional, MOMA_omnidirectional, DYNO):
     ax.plot(
         [xd / 60, xo / 60], [y / 60, y / 60], color="gray", linewidth=0.5, zorder=-1
     )

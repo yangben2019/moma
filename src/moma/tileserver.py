@@ -9,7 +9,7 @@ Tile server module
  #                          ( M ) ( O ) ( M ) ( A )                          #
  #                           \_/   \_/   \_/   \_/                           #
  #                                                                           #
- #               MOMA: Ground vehicles mobility mapping toolkit              #
+ #   MOMA: Mobility maps and optimal routes generator for ground vehicles    #
  #############################################################################
 
 MIT License
@@ -39,15 +39,15 @@ import subprocess
 
 
 class TileServer:
-    """Simple interface to Terracotta tile server"""
+    """Simple interface to the Terracotta tile server"""
 
     def __init__(self, input_path, output_path, database_path):
-        """Tile server object constructor. Defines a workspace with an input raster folder path and output folders for the processed rasters and the tile server database. At the current time it relies striclty on file names to label rasters.
+        """Initialises the TileServer.
 
         Args:
-            input_path (str): Path to the directory holding the site rasters.
-            output_path (str): Path to the directory where processed rasters will be stored.
-            database_path (str): Path to the Terracotta SQLite database.
+            input_path (str): Path to the input directory containing raster files.
+            output_path (str): Path to the output directory for optimized raster files.
+            database_path (str): Path to the database directory for storing optimized raster files.
         """
 
         # Define paths
@@ -62,7 +62,10 @@ class TileServer:
         self.optimized_rasters_mask = output_path + "/{name}.tif"
 
     def update(self):
-        """Update the tile server database with optimised versions of the rasters"""
+        """Updates the tile server by optimizing and ingesting raster files.
+
+        This method runs the Terracotta raster optimization and database update processes.
+        """
 
         # Run raster optimization process
         subprocess.run(
@@ -90,15 +93,14 @@ class TileServer:
         )
 
     def serve(self):
-        """Run the Terracotta XYZ tile server"""
+        """Runs the Terracotta XYZ tile server."""
 
-        # Run Terracotta XYZ tile server process
         subprocess.run(
             [
                 "terracotta",
                 "serve",
                 "--database",
-                f"{self.database_path}/aumap.sqlite",
+                f"{self.database_path}/moma.sqlite",
                 "--port",
                 "5100",
             ],
@@ -106,9 +108,8 @@ class TileServer:
         )
 
     def connect(self):
-        """Run the Terracotta XYZ tile client"""
+        """Connects to the Terracotta XYZ tile server."""
 
-        # Run Terracotta XYZ tile client process
         subprocess.run(
             ["terracotta", "connect", "localhost", "--port", "5100"], check=True
         )

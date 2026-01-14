@@ -9,7 +9,7 @@ Toolboxes module
  #                          ( M ) ( O ) ( M ) ( A )                          #
  #                           \_/   \_/   \_/   \_/                           #
  #                                                                           #
- #               MOMA: Ground vehicles mobility mapping toolkit              #
+ #   MOMA: Mobility maps and optimal routes generator for ground vehicles    #
  #############################################################################
 
 MIT License
@@ -78,6 +78,24 @@ class MobilityToolbox:
         show_plots=False,
         hide_utm=False,
     ):
+        """
+        Initialises the mobility toolbox.
+
+        Args:
+            sites_path (Path): Path to the directory containing site data.
+            vehicles_path (Path): Path to the directory containing vehicle data.
+            site_name (str): Name of the site.
+            vehicle_name (str): Name of the vehicle.
+            n_samples (int): Number of samples to generate.
+            directions (list): List of directions for slope maps and mobility maps.
+            minimum_speed (float): Minimum speed for mobility simulations.
+            target_speed (float): Target speed for mobility simulations.
+            export_plots (bool): Whether to export plots.
+            save_maps (bool): Whether to save mobility maps.
+            show_plots (bool): Whether to display plots.
+            hide_utm (bool): Whether to hide UTM coordinates in plots.
+        """
+
         # Initialise logger
         LOG_LEVEL = logging.INFO
         LOGFORMAT = "  %(asctime)s %(levelname)s %(message)s"
@@ -162,10 +180,17 @@ class MobilityToolbox:
             }
         )
 
-    # ============
-    #  AERIAL MAP
-    # ============
     def generate_aerial_map(self, show=True):
+        """
+        Generates an aerial map for the site.
+
+        Args:
+            show (bool): Whether to display the map.
+
+        Returns:
+            None
+        """
+
         # Import and process the aerial map raster
         self.aerial_raster = self.dataloader.get_aerial_raster()
 
@@ -185,10 +210,16 @@ class MobilityToolbox:
                 hide_utm=self.hide_utm,
             )
 
-    # ===============
-    #  ELEVATION MAP
-    # ===============
     def generate_elevation_map(self, show=True):
+        """
+        Generates an elevation map for the site.
+
+        Args:
+            show (bool): Whether to display the map.
+
+        Returns:
+            None
+        """
         # Import and process the elevation map raster
         self.elevation_raster = self.dataloader.get_elevation_raster()
 
@@ -215,10 +246,17 @@ class MobilityToolbox:
                 hide_utm=self.hide_utm,
             )
 
-    # ========================
-    #  DIRECTIONAL SLOPE MAPS
-    # ========================
     def generate_directional_slope_maps(self, show=True):
+        """
+        Generates directional slope maps for the site.
+
+        Args:
+            show (bool): Whether to display the maps.
+
+        Returns:
+            None
+        """
+
         # TODO Switch directional slope maps generation to user-initiated
         # Instantiate a slope map object (this will automatically compute directional slope maps!)
         self.slope_map = SlopeMap(
@@ -243,10 +281,16 @@ class MobilityToolbox:
                 hide_utm=self.hide_utm,
             )
 
-    # ==============
-    #  LAND USE MAP
-    # ==============
     def generate_land_use_map(self, show=True):
+        """
+        Generates a land use map for the site.
+
+        Args:
+            show (bool): Whether to display the map.
+
+        Returns:
+            None
+        """
         # Load land use raster and value mappings
         landuse_raster, landuse_valuemap = self.dataloader.get_landuse_raster()
 
@@ -275,10 +319,16 @@ class MobilityToolbox:
                 hide_utm=self.hide_utm,
             )
 
-    # ===============
-    #  SOIL TYPE MAP
-    # ===============
     def generate_soil_type_map(self, show=True):
+        """
+        Generates a soil type map for the site.
+
+        Args:
+            show (bool): Whether to display the map.
+
+        Returns:
+            None
+        """
         # Generate soil type map
         soiltype_raster, soiltype_valuemap = self.dataloader.get_soiltype_raster()
 
@@ -300,10 +350,17 @@ class MobilityToolbox:
                 hide_utm=self.hide_utm,
             )
 
-    # ======================
-    #  MOISTURE CONTENT MAP
-    # ======================
     def generate_moisture_content_map(self, show=True):
+        """
+        Generates a moisture content map for the site.
+
+        Args:
+            show (bool): Whether to display the map.
+
+        Returns:
+            None
+        """
+
         # Generate moisture content map
         moisturecontent_raster, moisturecontent_valuemap = (
             self.dataloader.get_moisturecontent_raster()
@@ -331,10 +388,16 @@ class MobilityToolbox:
                 hide_utm=self.hide_utm,
             )
 
-    # ==============
-    #  FRICTION MAP
-    # ==============
     def generate_friction_map(self, show=True):
+        """
+        Generates a friction map for the site.
+
+        Args:
+            show (bool): Whether to display the map.
+
+        Returns:
+            None
+        """
         # Generate friction map
         friction_raster = self.dataloader.get_friction_raster()
 
@@ -356,10 +419,17 @@ class MobilityToolbox:
                 hide_utm=self.hide_utm,
             )
 
-    # ===========
-    #  NO-GO MAP
-    # ===========
     def generate_no_go_map(self, show=True):
+        """
+        Generates a no-go map for the site.
+
+        Args:
+            show (bool): Whether to display the map.
+
+        Returns:
+            None
+        """
+
         # Generate no-go map, use aerial map for visualization
         self.nogo_map = NoGoMap(
             self.site_name, self.vehicle, self.aerial_map, self.landuse_map
@@ -383,10 +453,17 @@ class MobilityToolbox:
                 hide_utm=self.hide_utm,
             )
 
-    # ===========================
-    #  DIRECTIONAL MOBILITY MAPS
-    # ===========================
     def generate_directional_mobility_maps(self, sample_reduction, show=True):
+        """
+        Generates directional mobility maps for the site.
+
+        Args:
+            sample_reduction (float): Reduction factor for sampling points.
+            show (bool): Whether to display the maps.
+
+        Returns:
+            None
+        """
 
         # Generate mobility tensors
         soil_parameter = ["friction_coefficient", "moisture_content"]
@@ -456,10 +533,18 @@ class MobilityToolbox:
                     hide_utm=self.hide_utm,
                 )
 
-    # ===================
-    # Calculate mobility
-    # ===================
     def calculate_mobility(self, path_folder, omnidirectional=False):
+        """
+        Calculates mobility for a path.
+
+        Args:
+            path_folder (str): Path to the folder containing the path.
+            omnidirectional (bool): Whether to use omnidirectional mobility.
+
+        Returns:
+            None
+        """
+
         path_folder = pathlib.Path(path_folder)
 
         directional_mobility_map = DirectionalMobilityMap(self.mobility_maps)
@@ -472,10 +557,20 @@ class MobilityToolbox:
             omnidirectional,
         )
 
-    # ==============
-    #  PATH PLANNER
-    # ==============
     def path_planner(self, waypoint_start, waypoint_end, coordinate_system, show=True):
+        """
+        Plans a path between two waypoints.
+
+        Args:
+            waypoint_start (Tuple[float, float]): Starting waypoint coordinates.
+            waypoint_end (Tuple[float, float]): Ending waypoint coordinates.
+            coordinate_system (str): Coordinate system for the waypoints.
+            show (bool): Whether to display the path.
+
+        Returns:
+            None
+        """
+
         # Convert waypoint coordinates to pixel coordinates
         if coordinate_system in ["map", "utm"]:
             waypoint_start = convert_coordinate_to_pixel(

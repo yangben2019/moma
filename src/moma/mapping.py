@@ -9,7 +9,7 @@ Mapping module
  #                          ( M ) ( O ) ( M ) ( A )                          #
  #                           \_/   \_/   \_/   \_/                           #
  #                                                                           #
- #               MOMA: Ground vehicles mobility mapping toolkit              #
+ #   MOMA: Mobility maps and optimal routes generator for ground vehicles    #
  #############################################################################
 
 MIT License
@@ -52,25 +52,38 @@ from matplotlib.colors import ListedColormap
 log = logging.getLogger("MOMA")
 
 
-# Draw samples from a uniform distribution between lower_bound and upper_bound
 @jit
 def uniform(key, lower_bound, upper_bound):
+    """
+    Generates a uniform random number between lower_bound and upper_bound.
+
+    Args:
+        key (PRNGKey): PRNG key.
+        lower_bound (float): Lower bound of the range.
+        upper_bound (float): Upper bound of the range.
+
+    Returns:
+        float: Uniform random number.
+    """
     return jrand.uniform(key, shape=(), minval=lower_bound, maxval=upper_bound)
 
 
 def LatinHyperCube(means, stds, n_samples, seed=None):
+    """
+    Generates samples from a normal distribution using a Latin Hypercube Sampling (LHS) method.
+
+    Args:
+        means (np.ndarray): 2D array of means for each cell in the grid.
+        stds (np.ndarray): 2D array of standard deviations for each cell in the grid.
+        n_samples (int): Number of samples to generate.
+        seed (int): Seed for the PRNG key.
+
+    Returns:
+        lhs_samples (np.ndarray): 3D array of samples from the normal distribution.
+    """
     if seed is None:
         seed = np.random.randint(0, 2**16)
-    """
-    Generate samples from a normal distribution using a Latin Hypercube Sampling (LHS) method.
-    Parameters:
-      means: 2D (n*m) array of means for each cell in the grid.
-      stds: 2D (n*m) array of standard deviations for each cell in the grid.
-      n_samples: Number of samples to generate.
-      seed: Seed for the PRNG key.
-    Returns:
-      lhs_samples: 3D (n*m*n_samples) array of samples from the normal distribution
-    """
+
     means = jnp.array(means)
     stds = jnp.array(stds)
     rows, cols = means.shape
@@ -82,7 +95,16 @@ def LatinHyperCube(means, stds, n_samples, seed=None):
 
     @jit
     def lhs_sample(row, col):
+        """
+        Generates LHS samples for a single cell.
 
+        Args:
+            row (int): Row index of the cell.
+            col (int): Column index of the cell.
+
+        Returns:
+            np.ndarray: LHS samples for the cell.
+        """
         # Use one key per cell.
         cell_key = cell_keys[row, col, :]
 
@@ -130,13 +152,14 @@ def LatinHyperCube(means, stds, n_samples, seed=None):
 def sample_points(data, n_samples=1):
     """
     Samples points from a raster.
-    Arg:
-        data: 3D array of shape (n_layers, n_rows, n_cols).
-            n_layers: is either 1 (mean), 2 (mean and std) or more (mean, and different noise layers).
-        n_samples: Number of samples to draw.
+
+    Args:
+        data (np.ndarray): 3D array of shape (n_layers, n_rows, n_cols).
+            n_layers: Is either 1 (mean), 2 (mean and std) or more (mean, and different noise layers).
+        n_samples (int): Number of samples to draw.
 
     Returns:
-        3D array of shape (n_samples, n_rows, n_cols) with the sampled points.
+        np.ndarray: 3D array of shape (n_samples, n_rows, n_cols) with the sampled points.
     """
 
     uncertainty_layers = data.shape[0] - 1
@@ -153,7 +176,9 @@ def sample_points(data, n_samples=1):
 
 
 class Map(ABC):
-    """Map"""
+    """
+    Abstract base class for maps.
+    """
 
     pass
 
@@ -162,7 +187,13 @@ class AerialMap(Map):
     """Aerial map"""
 
     def __init__(self, name, raster):
+        """
+        Initialises a new aerial map.
 
+        Args:
+            name (str): Name of the map.
+            raster (Raster): Raster object containing the map data.
+        """
         log.info(f"Initialising new aerial map for site {name}.")
 
         self.name = name
@@ -171,7 +202,16 @@ class AerialMap(Map):
     def plot(
         self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
     ):
+        """
+        Plots the aerial map.
 
+        Args:
+            export_path (str): Path to export the plot.
+            show (bool): Whether to display the plot.
+            export (bool): Whether to export the plot.
+            save_maps (bool): Whether to save the aerial map as an image.
+            hide_utm (bool): Whether to hide the UTM coordinates.
+        """
         rgb = np.copy(self.raster.data)
 
         # Set nodata values
@@ -193,7 +233,13 @@ class ElevationMap(Map):
     """Elevation map"""
 
     def __init__(self, name, raster):
+        """
+        Initialises a new elevation map.
 
+        Args:
+            name (str): Name of the map.
+            raster (Raster): Raster object containing the map data.
+        """
         log.info(f"Initialising new elevation map for site {name}.")
 
         self.name = name
@@ -202,7 +248,16 @@ class ElevationMap(Map):
     def plot(
         self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
     ):
+        """
+        Plots the elevation map.
 
+        Args:
+            export_path (str): Path to export the plot.
+            show (bool): Whether to display the plot.
+            export (bool): Whether to export the plot.
+            save_maps (bool): Whether to save the elevation map as an image.
+            hide_utm (bool): Whether to hide the UTM coordinates.
+        """
         return_vals = self.raster.plot(
             colorbar="Elevation (m)",
             export_path=export_path / "Elevation map.pdf",
@@ -217,6 +272,9 @@ class ElevationMap(Map):
 
 
 class DirectionalMap(Map):
+    """
+    Directional map.
+    """
 
     directional_rasters = {}
 
@@ -234,12 +292,14 @@ class DirectionalMap(Map):
 
 
 def direction2compass_angle(direction):
-    """Convert a direction to a compass angle.
+    """
+    Convert a direction to a compass angle.
 
     Args:
         direction (str): Direction as a string, e.g. "N", "NNE", "NE",
             "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W",
             "WNW", "NW", "NNW".
+
     Returns:
         float: Compass angle in degrees, where 0 is North, 90 is East,
             180 is South, and 270 is West.
@@ -273,9 +333,19 @@ def direction2compass_angle(direction):
 
 
 class SlopeMap(DirectionalMap):
+    """
+    Slope map.
+    """
 
     def __init__(self, name, map_elevation, directions):
+        """
+        Initialises a slope map.
 
+        Args:
+            name (str): Name of the map.
+            map_elevation (ElevationMap): Elevation map.
+            directions (dict): Dictionary containing the directions and angles.
+        """
         log.info(f"Initialising slope map from elevation data.")
 
         self.name = name
@@ -327,9 +397,26 @@ class SlopeMap(DirectionalMap):
             self.directional_slope(direction, angle)
 
     def slope_aspect_vmap(self):
+        """
+        Creates a vectorized function to compute slope and aspect from elevation data.
+
+        Returns:
+            callable: Function that takes elevation data, x-resolution, and y-resolution as input and returns slope and aspect.
+        """
+
         @jit
         def slope_aspect(elevation, dx, dy):
-            "Compute slope and aspect from the elevation map."
+            """
+            Computes slope and aspect from elevation data.
+
+            Args:
+                elevation (jnp.ndarray): Elevation data.
+                dx (float): X-resolution of the elevation data.
+                dy (float): Y-resolution of the elevation data.
+
+            Returns:
+                tuple[jnp.ndarray, jnp.ndarray]: Tuple containing slope and aspect data.
+            """
 
             # Pads data to handle edges
             padded = jnp.pad(elevation, 1, mode="reflect", reflect_type="odd")
@@ -359,7 +446,13 @@ class SlopeMap(DirectionalMap):
         )  # Maps over the samples
 
     def directional_slope(self, direction="N", direction_angle=0):
+        """
+        Computes the slope map in a specific direction.
 
+        Args:
+            direction (str): Direction to compute the slope map in.
+            direction_angle (float): Angle of the direction in degrees.
+        """
         log.info(f"Computing slope map in direction {direction}.")
 
         if direction == "omni":
@@ -379,7 +472,16 @@ class SlopeMap(DirectionalMap):
     def plot_slope_aspect(
         self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
     ):
+        """
+        Plots the slope and aspect maps.
 
+        Args:
+            export_path (str): Path to export the plots to.
+            show (bool): Whether to show the plots.
+            export (bool): Whether to export the plots.
+            save_maps (bool): Whether to save the slope and aspect maps.
+            hide_utm (bool): Whether to hide the UTM coordinates on the plots.
+        """
         # Plot steepest decline map
         self.slope_raster.plot(
             data=self.slope_raster.data * 100,
@@ -412,7 +514,17 @@ class SlopeMap(DirectionalMap):
         save_maps=False,
         hide_utm=False,
     ):
+        """
+        Plots the slope maps for each direction.
 
+        Args:
+            directions (dict): Dictionary containing the directions and angles.
+            export_path (str): Path to export the plots to.
+            show (bool): Whether to show the plots.
+            export (bool): Whether to export the plots.
+            save_maps (bool): Whether to save the slope maps.
+            hide_utm (bool): Whether to hide the UTM coordinates on the plots.
+        """
         for direction, angle in zip(directions["names"], directions["angles"]):
 
             self.directional_rasters[angle].plot(
@@ -428,12 +540,16 @@ class SlopeMap(DirectionalMap):
 
 
 class ParameterMap(Map):
+    """
+    Parameter map.
+    """
 
     pass
 
 
 class LandUseMap(ParameterMap):
-    """Land use map coded through an RGB raster mapped to ECDS classification codes. Used to delineate no-go zones and hard surfaces on the map."""
+    """Land use map coded through an RGB raster mapped to ECDS classification
+    codes. Used to delineate no-go zones and hard surfaces on the map."""
 
     # More information on land use codes at the following link:
     # https://www.sedris.org/sdk_4.1/src/lib/edcs/docs/dictionary/ECC_C.htm
@@ -473,11 +589,14 @@ class LandUseMap(ParameterMap):
     }
 
     def __init__(self, name, raster, value_map, nogo):
-        """Instantiate a land use map through a given raster and color mapping.
+        """
+        Initialises a land use map.
 
         Args:
-            raster (aumap.RasterRGBA): RGBA land use raster
-            value_map (dict): Dictionary of {Hex color}: {EDCS code} mappings
+            name (str): Name of the map.
+            raster (RasterRGBA): RGBA land use raster.
+            value_map (dict): Dictionary of {Hex color}: {EDCS code} mappings.
+            nogo (dict): Dictionary of {EDCS code}: {True/False} mappings indicating nogo areas.
         """
 
         log.info(f"Initialising new land use map for site {name}.")
@@ -523,7 +642,16 @@ class LandUseMap(ParameterMap):
     def plot(
         self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
     ):
+        """
+        Plots the land use map.
 
+        Args:
+            export_path (str): Path to export the plot to.
+            show (bool): Whether to show the plot.
+            export (bool): Whether to export the plot.
+            save_maps (bool): Whether to save the land use map.
+            hide_utm (bool): Whether to hide the UTM coordinates on the plot.
+        """
         # Generate a colormap based on available colors
         discrete_colormap = ListedColormap([k for k, _ in self.value_map.items()])
 
@@ -561,7 +689,14 @@ class SoilTypeMap(ParameterMap):
     }
 
     def __init__(self, name, raster, value_map):
+        """
+        Initialises a soil type map.
 
+        Args:
+            name (str): Name of the map.
+            raster (Raster): RGBA soil type raster.
+            value_map (dict): Dictionary of {Hex color}: {Soil type name} mappings.
+        """
         log.info(f"Initialising new soil type map for site {name}")
 
         self.name = name
@@ -574,13 +709,18 @@ class SoilTypeMap(ParameterMap):
         self.make_soil_array()
 
     def make_rgb_int_map(self):
+        """
+        Maps hexadecimal color codes to integer RGB values.
+        """
 
         self.rgb_map = {}
         for key, value in self.value_map.items():
             self.rgb_map[hex_to_rgb(key)] = value
 
     def make_soil_array(self):
-
+        """
+        Converts the soil type raster from integers to soil labels.
+        """
         log.info("Converting soil type raster from integers to soil labels.")
 
         self.soilarray = np.zeros(self.raster.data[0].shape, dtype=object)
@@ -598,7 +738,16 @@ class SoilTypeMap(ParameterMap):
     def plot(
         self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
     ):
+        """
+        Plots the soil type map.
 
+        Args:
+            export_path (str): Path to export the plot to.
+            show (bool): Whether to show the plot.
+            export (bool): Whether to export the plot.
+            save_maps (bool): Whether to save the soil type map.
+            hide_utm (bool): Whether to hide the UTM coordinates on the plot.
+        """
         # Map colors from RGB integer values to corresponding map quantity (e.g. "255: "EC030")
         col_dict = {hex_to_rgb(k): v for k, v in self.value_map.items()}
 
@@ -623,6 +772,14 @@ class MoistureContentMap(ParameterMap):
     """Moisture content map"""
 
     def __init__(self, name, raster, value_map):
+        """
+        Initialises a moisture content map.
+
+        Args:
+            name (str): Name of the map.
+            raster (Raster): RGBA moisture content raster.
+            value_map (dict): Dictionary of {Hex color}: {Moisture content value} mappings.
+        """
 
         log.info(f"Initialising new moisture content map for site {name}.")
 
@@ -637,13 +794,17 @@ class MoistureContentMap(ParameterMap):
         log.info(f"Registered moisture content values:\n\t{value_map}")
 
     def make_rgb_int_map(self):
-
+        """
+        Maps hexadecimal color codes to integer RGB values.
+        """
         self.rgb_map = {}
         for key, value in self.value_map.items():
             self.rgb_map[hex_to_rgb(key)] = value
 
     def make_moisture_array(self):
-
+        """
+        Converts the moisture content raster from integers to moisture content labels.
+        """
         self.moisturearray = np.zeros_like(self.raster.data[0])
 
         rgb = (
@@ -663,7 +824,16 @@ class MoistureContentMap(ParameterMap):
     def plot(
         self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
     ):
+        """
+        Plots the moisture content map.
 
+        Args:
+            export_path (str): Path to export the plot to.
+            show (bool): Whether to show the plot.
+            export (bool): Whether to export the plot.
+            save_maps (bool): Whether to save the moisture content map.
+            hide_utm (bool): Whether to hide the UTM coordinates on the plot.
+        """
         # Plots colormap
         self.raster.plot(
             data=self.moisturearray,
@@ -677,10 +847,16 @@ class MoistureContentMap(ParameterMap):
 
 
 class FrictionMap(ParameterMap):
-    """Soil friction map"""
+    """Friction map"""
 
     def __init__(self, name, raster):
+        """
+        Initialises a friction map.
 
+        Args:
+            name (str): Name of the map.
+            raster (Raster): Friction raster.
+        """
         log.info(f"Initialising new friction map for site {name}.")
 
         self.name = name
@@ -689,7 +865,16 @@ class FrictionMap(ParameterMap):
     def plot(
         self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
     ):
+        """
+        Plots the friction map.
 
+        Args:
+            export_path (str): Path to export the plot to.
+            show (bool): Whether to show the plot.
+            export (bool): Whether to export the plot.
+            save_maps (bool): Whether to save the friction map.
+            hide_utm (bool): Whether to hide the UTM coordinates on the plot.
+        """
         self.raster.plot(
             colorbar="Friction",
             export_path=export_path / "Friction map.pdf",
@@ -701,6 +886,18 @@ class FrictionMap(ParameterMap):
 
 
 def convert_coordinate_to_pixel(data, raster, shape, coordinate_system="utm"):
+    """
+    Converts a coordinate to a pixel index in a raster.
+
+    Args:
+        data (Tuple[float, float]): The coordinate to convert.
+        raster (Raster): The raster to convert the coordinate to.
+        shape (Tuple[int, int]): The shape of the raster.
+        coordinate_system (str): The coordinate system of the coordinate. Can be "utm" or "map". Defaults to "utm".
+
+    Returns:
+        Tuple[int, int]: The pixel index in the raster.
+    """
     x, y = data
 
     if coordinate_system == "utm" and (
@@ -726,14 +923,32 @@ def convert_coordinate_to_pixel(data, raster, shape, coordinate_system="utm"):
     return np.floor(new_x).astype(int), shape[0] - np.floor(new_y).astype(int) - 1
 
 
-def convert_coordinate_length_to_pixel_length(l, raster):
-    return l / raster.resolution_x
+def convert_coordinate_length_to_pixel_length(l: float, raster: Raster) -> float:
+    """
+    Converts a coordinate length to a pixel length in a raster.
+
+    Args:
+        l (float): The coordinate length.
+        raster (Raster): The raster to convert the coordinate length to.
+
+    Returns:
+        float: The pixel length in the raster.
+    """
 
 
 class NoGoMap(Map):
     """No-go map"""
 
     def __init__(self, name, vehicle, aerial, landuse):
+        """
+        Initialises a no-go zones map.
+
+        Args:
+            name (str): Name of the map.
+            vehicle (str): Type of vehicle to consider.
+            aerial (Raster): Aerial raster.
+            landuse (str): Landuse type.
+        """
 
         log.info(f"Initialising no-go zones map site {name}, vehicle {vehicle}.")
 
@@ -746,7 +961,22 @@ class NoGoMap(Map):
         self.zones = []
 
     def add_zone(self, data, description=None):
+        """
+        Adds a zone to the no-go zones map.
+
+        Args:
+            data (np.ndarray): A binary array where True indicates a no-go zone.
+            description (str): A description of the zone. Defaults to None.
+        """
+
         def add_box(data, description):
+            """
+            Adds a bounding box zone to a no-go zones map.
+
+            Args:
+                data (Tuple[float, float, float, float]): A tuple containing the bounding box coordinates (x_min, x_max, y_min, y_max).
+                description (str): A description of the zone.
+            """
             x_min, x_max, y_min, y_max = data
             log.info(
                 f'Adding zone "{description}" with bounding box [{x_min}, {x_max}, {y_min}, {y_max}]'
@@ -760,6 +990,14 @@ class NoGoMap(Map):
             self.data[y_pixel_max:y_pixel_min, x_pixel_min:x_pixel_max] = 1
 
         def add_circle(data, description):
+            """
+            Adds a circular zone to a no-go zones map.
+
+            Args:
+                data (Tuple[float, float, float]): A tuple containing the circle coordinates (x, y, r).
+                description (str): A description of the zone.
+            """
+
             x, y, r = data
             log.info(
                 f'Adding zone "{description}" with bounding circle centrum [{x}, {y}] and radius {r}'
@@ -804,8 +1042,16 @@ class NoGoMap(Map):
     def plot(
         self, export_path=None, show=True, export=False, save_maps=False, hide_utm=False
     ):
-        """Plot no-go zones"""
+        """
+        Plots the no-go zones map.
 
+        Args:
+            export_path (str): Path to export the plot to.
+            show (bool): Whether to display the plot. Defaults to True.
+            export (bool): Whether to export the plot. Defaults to False.
+            save_maps (bool): Whether to save the map in the current working directory. Defaults to False.
+            hide_utm (bool): Whether to hide the UTM grid lines. Defaults to False.
+        """
         # Open new figure
         (figure, axes) = plt.subplots(1, 1)
 
@@ -895,8 +1141,12 @@ class NoGoMap(Map):
 
 
 class MapEditor:
+    """Map editor"""
 
     def __init__(self):
+        """
+        Initialises the map editor.
+        """
 
         pass
 
