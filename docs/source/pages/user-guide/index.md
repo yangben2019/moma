@@ -158,6 +158,9 @@ responsibility of the data loader to ensure that all generated maps are spatiall
 consistent.
 :::
 
+## Adding a New Vehicle
+
+
 
 ```{toctree}
 :hidden:
