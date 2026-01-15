@@ -155,7 +155,7 @@ def sample_points(data, n_samples=1):
 
     Args:
         data (np.ndarray): 3D array of shape (n_layers, n_rows, n_cols).
-            n_layers: Is either 1 (mean), 2 (mean and std) or more (mean, and different noise layers).
+        n_layers: Is either 1 (mean), 2 (mean and std) or more (mean, and different noise layers).
         n_samples (int): Number of samples to draw.
 
     Returns:
@@ -923,7 +923,7 @@ def convert_coordinate_to_pixel(data, raster, shape, coordinate_system="utm"):
     return np.floor(new_x).astype(int), shape[0] - np.floor(new_y).astype(int) - 1
 
 
-def convert_coordinate_length_to_pixel_length(l: float, raster: Raster) -> float:
+def convert_coordinate_length_to_pixel_length(l: float, raster) -> float:
     """
     Converts a coordinate length to a pixel length in a raster.
 

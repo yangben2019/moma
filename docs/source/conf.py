@@ -41,7 +41,8 @@ html_title = "MOMA"
 html_logo = "logo.png"
 html_context = {"default_mode": "dark"}
 html_theme_options = {
-    "show_nav_level": 2,
+    "show_nav_level": 3,
+    "show_toc_level": 3,
     "show_prev_next": False,
     "collapse_navigation": False
 }

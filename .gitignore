@@ -5,3 +5,8 @@
 .vscode/
 
 test/output/
+
+src/moma/data/examples/sites/testmap/rasters
+src/moma/data/examples/**/*.png
+src/moma/data/examples/**/*.bmp
+src/moma/data/examples/**/*.json
