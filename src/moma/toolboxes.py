@@ -77,6 +77,7 @@ class MobilityToolbox:
         save_maps=False,
         show_plots=False,
         hide_utm=False,
+        path_planning=False,
     ):
         """
         Initialises the mobility toolbox.
@@ -130,6 +131,7 @@ class MobilityToolbox:
 
         self.minimum_speed = minimum_speed
         self.target_speed = target_speed
+        self.path_planning = path_planning
 
         # Directions for slope maps and mobility maps, both name and angle in degrees
         self.directions = {
@@ -195,8 +197,8 @@ class MobilityToolbox:
         self.aerial_raster = self.dataloader.get_aerial_raster()
 
         # Resample the aerial raster by the specified factor
-        self.aerial_raster.resample(self.RESAMPLING_FACTOR, resampling="average")
-
+        self.aerial_raster.resample(self.RESAMPLING_FACTOR, resampling="nearest")
+        
         # Instantiate an aerial map object
         self.aerial_map = AerialMap(self.site_name, self.aerial_raster)
 
@@ -260,7 +262,7 @@ class MobilityToolbox:
         # TODO Switch directional slope maps generation to user-initiated
         # Instantiate a slope map object (this will automatically compute directional slope maps!)
         self.slope_map = SlopeMap(
-            self.site_name, self.elevation_map, directions=self.directions
+            self.site_name, self.elevation_map, directions=self.directions, path_planning=self.path_planning
         )
 
         # Show the directional slope maps
@@ -482,7 +484,7 @@ class MobilityToolbox:
 
         n_samples = list(self.slope_map.directional_rasters.values())[0].data.shape[0]
 
-        # Adds all 8 compass directions if omnidirectional is used
+        # Adds all 8 compass directions if omnidirectional is used and pathplanning is enabled
         calculate_directions = []
         calculate_angles = []
         for direction, angle in zip(
@@ -490,7 +492,7 @@ class MobilityToolbox:
         ):
             calculate_directions.append(direction)
             calculate_angles.append(angle)
-            if direction == "omni":
+            if direction == "omni" and self.path_planning:
                 for compass in ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]:
                     compass_angle = direction2compass_angle(compass)
                     if (

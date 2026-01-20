@@ -101,8 +101,8 @@ def generate_vehicle_mobility_file(vehicle, minimum_speed=0.01, plot_mobility=Fa
                 json_file = json.load(json_file)
 
                 # Only load and save data for runs with side slope = 0
-                side_slope_percentage = json_file["scenario"]["sideSlopePercentage"]
-                if side_slope_percentage == 0:
+                sideslope_percentage = json_file["scenario"]["sideSlopePercentage"]
+                if sideslope_percentage == 0:
 
                     friction_coefficient = json_file["scenario"]["terrain"]["rigid"][
                         "frictionCoefficient"
@@ -230,83 +230,6 @@ def slope_percentage_to_angle(slope_percentage):
     """
 
     return np.arctan(slope_percentage / 100) * 180 / np.pi
-
-
-def investigate_single_runs(vehicle, test_runs, minimum_speed=0.01, save_figures=False):
-    """
-    Investigates single runs for a given vehicle.
-
-    Args:
-        vehicle (str): Name of the vehicle.
-        test_runs (List[int]): List of test run numbers.
-        minimum_speed (float): Minimum speed for valid runs.
-        save_figures (bool): Whether to save figures.
-    """
-
-    vehicle_dir = pathlib.Path() / "examples" / "vehicles" / f"{vehicle}"
-
-    for test_run in test_runs:
-
-        run_dir = vehicle_dir / "straight_line_acceleration" / f"run.{test_run}"
-        if save_figures:
-            save_dir = vehicle_dir / "single runs"
-            save_dir.mkdir(exist_ok=True)
-
-        with open(run_dir / "case.json", "r") as json_file:
-            json_file = json.load(json_file)
-
-            # Only load and save data for runs with side slope = 0
-            side_slope_percentage = json_file["scenario"]["sideSlopePercentage"]
-            if side_slope_percentage == 0:
-
-                friction_coefficient = json_file["scenario"]["terrain"]["rigid"][
-                    "frictionCoefficient"
-                ]
-                slope_percentage = json_file["scenario"]["slopePercentage"]
-
-                with tables.open_file(
-                    run_dir / "case.h5", driver="H5FD_CORE"
-                ) as h5file:
-                    time = h5file.root.data.time[:]
-                    position = h5file.root.data.pose.position[:]
-                    rotation = h5file.root.data.pose.rotation[:]
-                    velocity = h5file.root.data.velocity.linear[:]
-
-                fig, ax = plt.subplots(4, 1, figsize=(8, 8))
-                ax[1].plot(rotation[:, 0], label="X")
-                ax[1].plot(rotation[:, 1], label="Y")
-                ax[1].plot(rotation[:, 2], label="Z")
-
-                ax[2].plot(position[:, 0], label="X")
-
-                ax[3].plot([])  # To make the color match
-                ax[3].plot(position[:, 1], label="Y")
-                ax[3].plot(position[:, 2], label="Z")
-
-                ax[0].plot(velocity[:, 0], label="Longitudinal")
-
-                ax[0].set_ylabel("Velocity [m/s]")
-                ax[1].set_ylabel("Rotation [rad]")
-                ax[2].set_ylabel("Position [m]")
-                ax[3].set_ylabel("Position [m]")
-
-                ax[-1].set_xlabel("Time Step")
-
-                for x in ax:
-                    x.legend(loc="center left", bbox_to_anchor=(1, 0.5))
-
-                ax[0].set_title(
-                    f"Run {test_run} - Slope: {slope_percentage}\%, Friction: {friction_coefficient}, End time = {time[-1]:.2f} s"
-                )
-
-                if save_figures:
-                    plt.savefig(
-                        save_dir / f"run_{test_run}_data.pdf", bbox_inches="tight"
-                    )
-                else:
-                    plt.show()
-                plt.close(fig)
-
 
 class ReductionFunction:
     """
@@ -1310,7 +1233,7 @@ class MobilityMap(Map):
         directional_slope = jnp.rad2deg(
             jnp.arctan(jnp.array(self.slope_raster.data))
         )  # Convert slope from ratio (raise/run) to degrees
-        side_slope = jnp.abs(
+        sideslope = jnp.abs(
             jnp.rad2deg(jnp.arctan(jnp.array(self.sideslope_data)))
         )  # Same to sideslope, uses only absolute value of the sideslope (= does not care about slope to the left or right)
 
@@ -1337,8 +1260,8 @@ class MobilityMap(Map):
                 go_index_x,
                 go_index_y,
             ],
-            side_slope[
-                slice(None) if side_slope.shape[0] == n_sample else 0,
+            sideslope[
+                slice(None) if sideslope.shape[0] == n_sample else 0,
                 go_index_x,
                 go_index_y,
             ],
@@ -1407,12 +1330,3 @@ class MobilityMap(Map):
             save_maps=save_maps,
             hide_utm=hide_utm,
         )
-
-
-def main():
-    test_runs = [135, 165]
-    investigate_single_runs("olav", test_runs, save_figures=True)
-
-
-if __name__ == "__main__":
-    main()

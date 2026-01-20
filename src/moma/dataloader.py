@@ -303,7 +303,7 @@ class DataloaderGeoHornet(Dataloader):
 
 
 class DataloaderDataforsyningen:
-    def __init__(self, site_path, coordinates, username, password):
+    def __init__(self, site_path, coordinates, username="", password=""):
         """
         Initializes the Dataforsyningen dataloader.
 
@@ -692,7 +692,7 @@ class DataloaderDataforsyningenFriction(DataloaderDataforsyningen):
     A class for integrating synthethic terrain friction data for Dataforsyningen rasters.
     """
 
-    def __init__(self, site_path, coordinates, username, password):
+    def __init__(self, site_path, coordinates, username="", password=""):
         """
         Initializes the `DataloaderDataforsyningen` class.
 

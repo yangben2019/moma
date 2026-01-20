@@ -224,6 +224,7 @@ class Raster(ABC):
             axes.grid(True, which="both")
             axes.set_xlabel("UTM Longitude [m]")
             axes.set_ylabel("UTM Latitude [m] ")
+            axes.tick_params(axis='x', labelrotation=30)
 
         # Add map ticks
         axes.secondary_xaxis(
@@ -265,6 +266,7 @@ class Raster(ABC):
                 format=colorbar_formatter,
                 ticks=ticks,
             )
+            color_bar.minorticks_off()
 
             color_bar.ax.xaxis.set_ticks_position("top")
             color_bar.ax.xaxis.set_label_position("top")

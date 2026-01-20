@@ -50,6 +50,14 @@ moma mobility --n_samples 50 --sample_reduction quantile 0.9
 
 ---
 
+Specifying target and minimum speed
+
+```shell
+moma mobility --directions --target_speed 15 --minimum_speed 1
+```
+
+---
+
 Specifying directions
 
 ```shell
@@ -82,5 +90,5 @@ moma mobility --path_folder src/moma/data/examples/sites/testmap/paths
 Combined call with use of the different arguments
 
 ```shell
-moma --clear mobility --vehicle mock --site testmap --n_samples 50 --sample_reduction mean --directions N NE E SE S SW W NW omni --path_coordinate_system utm --path_start 10 95 --path_end 255 95
+moma --clear mobility --vehicle mock --site testmap --n_samples 50 --sample_reduction mean --directions N NE E SE S SW W NW omni --path_coordinate_system utm --path_start 10 125 --path_end 240 125 --target_speed 20
 ```

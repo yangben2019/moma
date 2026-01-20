@@ -337,7 +337,7 @@ class SlopeMap(DirectionalMap):
     Slope map.
     """
 
-    def __init__(self, name, map_elevation, directions):
+    def __init__(self, name, map_elevation, directions, path_planning):
         """
         Initialises a slope map.
 
@@ -364,7 +364,7 @@ class SlopeMap(DirectionalMap):
         new_directions = []
         new_angles = []
         # all 8 primary compass directions are present for omnidirectional predictions
-        if "omni" in directions["angles"]:
+        if "omni" in directions["angles"] and path_planning:
             for direction in ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]:
                 angle = direction2compass_angle(direction)
                 if angle not in directions["angles"]:
@@ -374,7 +374,7 @@ class SlopeMap(DirectionalMap):
                     new_directions.append(angle)
                     new_angles.append(angle)
 
-        # Ensure that all sideslopes are available
+        # Ensure that all perpendicular slopemaps are availibe for sideslope computations
         for direction, angle in zip(directions["names"], directions["angles"]):
             new_directions.append(direction)
             new_angles.append(angle)
@@ -613,7 +613,7 @@ class LandUseMap(ParameterMap):
 
         self.rgb = jnp.dstack(
             (self.raster.data[0], self.raster.data[1], self.raster.data[2])
-        )
+        ).astype(jnp.uint8)
 
         # List of landuse RGB that is nogo
         self.rgb_nogo = np.zeros(256**3)
@@ -627,7 +627,7 @@ class LandUseMap(ParameterMap):
         # Sets the boolean value for each pixel in the raster
         @jit
         def is_nogo(index_y, index_x):
-            rgb_value = self.rgb[index_y, index_x, :].astype(int)
+            rgb_value = self.rgb[index_y, index_x, :].astype(jnp.uint8)
             combined_rgb = rgb_value[0] * 256 * 256 + rgb_value[1] * 256 + rgb_value[2]
             return self.rgb_nogo[combined_rgb]
 
@@ -729,7 +729,7 @@ class SoilTypeMap(ParameterMap):
             self.raster.data[0] * 256 * 256
             + self.raster.data[1] * 256
             + self.raster.data[2]
-        )
+        ).astype(np.uint8)
 
         for rgb_key, soil in self.rgb_map.items():
             index = np.where(rgb == rgb_key)
@@ -754,7 +754,7 @@ class SoilTypeMap(ParameterMap):
         # Generate a colormap based on available colors
         discrete_colormap = ListedColormap([k for k, _ in self.value_map.items()])
 
-        rgb = np.dstack((self.raster.data[0], self.raster.data[1], self.raster.data[2]))
+        rgb = np.dstack((self.raster.data[0], self.raster.data[1], self.raster.data[2])).astype(np.uint8)
 
         # Plots colormap
         self.raster.plot(
@@ -836,6 +836,7 @@ class MoistureContentMap(ParameterMap):
         """
         # Plots colormap
         self.raster.plot(
+            colorbar="Moisture content (%)",
             data=self.moisturearray,
             reverse_colormap=False,
             export_path=export_path / "Moisture map.pdf",
@@ -934,6 +935,8 @@ def convert_coordinate_length_to_pixel_length(l: float, raster) -> float:
     Returns:
         float: The pixel length in the raster.
     """
+
+    return l / raster.resolution_x
 
 
 class NoGoMap(Map):

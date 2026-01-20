@@ -1,4 +1,15 @@
-
+- soil:
+    type: sideslope
+  test:
+    type: sideslope
+    slope_angle: 0.0
+  value: 20.0
+- soil:
+    type: sideslope
+  test:
+    type: sideslope
+    slope_angle: 20.0
+  value: 0.0
 - soil:
     type: HT
     friction_coefficient: 0.0

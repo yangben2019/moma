@@ -50,6 +50,7 @@ def calculate_mobility(args):
         save_maps=args.save_maps,
         show_plots=args.show_plots,
         hide_utm=args.hide_utm,
+        path_planning=(not args.path_coordinate_system == "None" or not args.path_folder == "None")
     )
 
     # By adding show=False as argument to the following generate and path_planner functions the plots/maps are not generated stored regardless of the other inputs
@@ -168,8 +169,8 @@ mobility_parser.add_argument(
 mobility_parser.add_argument(
     "--target_speed",
     type=float,
-    help="target speed for the mobility calculation, default 5.0",
-    default=5.0,
+    help="target speed for the mobility calculation, default 10.0",
+    default=10.0,
 )
 
 
@@ -194,6 +195,7 @@ def generate_test_map(args):
         elevation_std=args.elevation_std,
         friction_coefficient=args.friction_coefficient,
         friction_coefficient_std=args.friction_coefficient_std,
+        plot_additional_files=args.plot_additional_files,
         map_type=args.map_type,
         output_resolution=args.output_resolution,
         create_rasters=args.create_rasters,
@@ -248,16 +250,22 @@ test_map_parser.add_argument(
     default=False,
 )
 test_map_parser.add_argument(
+    "--plot_additional_files",
+    action="store_true",
+    help="plot additional files such as elevation histogram",
+    default=False,
+)
+test_map_parser.add_argument(
     "--seed", 
     type=int, 
     help="seed for random map generation", 
-    default=42
+    default=2
 )
 test_map_parser.add_argument(
     "--max_slope_percent",
     type=float,
-    help="maximum slope percentage for the test map, default 15.0",
-    default=15.0,
+    help="maximum slope percentage for the test map, default 20.0",
+    default=20.0,
 )
 test_map_parser.add_argument(
     "--map_dim",

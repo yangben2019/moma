@@ -13,7 +13,6 @@ label_to_color:
   Stream:         [  0, 120, 255]
   Sea:            [  0,  40, 255]
   Non classified: [255, 105, 180]
-  Germany:        [255, 106,   0]
 
 # For test soils at oksbol
 label_to_soil_type:
@@ -31,7 +30,6 @@ label_to_soil_type:
   Stream:         "soft clay"
   Sea:            "soft clay"
   Non classified: "hard clay"
-  Germany:        "hard gravel"
 
 # Descriptions from https://dce2.au.dk/pub/TR252.pdf
 basemap_to_landuse_label:
@@ -79,4 +77,3 @@ basemap_to_landuse_label:
   420000: Sea                     # Sea                                        Surface covered with salt- or brackish water
 
   800000: Non classified          # Unmapped                                   Area, where none of the applied input data contain land use/land cover information
-  999999: Germany                 # Germany

@@ -434,8 +434,7 @@ class TestMapGenerator:
         # Site.yaml file
         with open(raster_dir / ".." / "site.yaml", "w") as site:
             site.write(
-                f"""
-    DataSource: DataforsyningenFriction
+f"""    DataSource: DataforsyningenFriction
     Coordinates: [{lat}, {long}, {lat + map_size[0]}, {lat + map_size[0]}] # [W, S, E, N]
     NoGoZones:
     #   - [x1, x2, y1, y2, (Description)]: Box
@@ -541,8 +540,8 @@ class TestMapGenerator:
         save_new_raster(moisture_content, path, transform)
 
         # Create friction coefficient raster
-        friction_low = 0.4
-        friction_high = 0.6
+        friction_low = 0.3
+        friction_high = 0.5
         friction = np.ones_like(elevation)
         friction[
             0,

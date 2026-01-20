@@ -36,13 +36,13 @@ Key; Description; Type [Range]; Default value
 \\-\\-path_start; Start waypoint for path planner (x y); int×2; 0 0
 \\-\\-path_end; End waypoint for path planner (x y); int×2; 0 0
 \\-\\-path_folder; Folder with predefined paths for mobility calculations; str; —
-\\-\\-dont_export; Disable exporting plots. Makes the calculation at debugging; bool flag; False
+\\-\\-dont_export; Disable exporting plots. Makes the calculation faster at debugging; bool flag; False
 \\-\\-directions; Directions for directional mobility. Accepted inputs: 'omni', angle in degrees or abbreviations ('N', 'NNE', 'NW', etc.) Defaults to the eight primary directions if no directions are given in both \\-\\-directions and \\-\\-n_directions; list[str]; —
 \\-\\-n_directions; Number of equally spaced directions used together with directions specified by \\-\\-directions; int ≥0; 0
 \\-\\-save_maps; Save generated maps as GeoTIFF; bool flag; False
 \\-\\-hide_utm; Hide UTM axis values in plots; bool flag; False
 \\-\\-minimum_speed; Minimum speed for the mobility calculation; float >0; 0.5
-\\-\\-target_speed; Target speed for the mobility calculation; float >0; 5.0
+\\-\\-target_speed; Target speed for the mobility calculation; float >0; 10.0
 ```
 
 #### Calculation mobility metrics for paths
@@ -96,9 +96,10 @@ Key; Description; Type [Range]; Default value
 \\-\\-map_type; Generated map file type (bmp or obj); str; bmp
 \\-\\-output_resolution; Output resolution multiplier. Resolution = 0.25 m*multiplier; int ≥1; 6
 \\-\\-create_rasters; Create MOMA-compatible rasters; bool flag; False
-\\-\\-seed; Seed for random map generation; int; 42
+\\-\\-plot_additional_files; plots slope histogram and rendering of the map; bool flag; False
+\\-\\-seed; Seed for random map generation; int; 2
 \\-\\-coordinates_lower_left; UTM Coordinates (easting, northing) of the lower left corner of the map; int×2; 0 0
-\\-\\-max_slope_percent; Maximum terrain slope; float %; 15.0
+\\-\\-max_slope_percent; Maximum terrain slope; float %; 20.0
 \\-\\-map_dim; Map dimensions (x y); int×2; 200 200
 \\-\\-plateaus; Number of plateaus (x y); int×2; 4 4
 \\-\\-slope_length; Length between plateaus (x y); int×2; 30 30
