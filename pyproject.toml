@@ -60,4 +60,4 @@ build-backend = "poetry.core.masonry.api"
 
 [project.scripts]
 moma = 'moma.scripts.cli:main'
-moma_plotter = 'moma.scripts.plotter:main'
+momaplot = 'moma.scripts.plotter:main'

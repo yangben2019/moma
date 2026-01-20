@@ -34,6 +34,8 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+from random import uniform
+from typing import Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -44,6 +46,33 @@ from scipy.interpolate import splprep, splev
 import math
 import numpy as np
 import bisect
+
+
+class PathUtilities:
+
+    @staticmethod
+    def smooth_line(pts):
+        sp = CubicSpline2D(pts[:, 0], pts[:, 1])
+
+        s = np.arange(0, sp.s[-1], 1.0)
+        n_x = []
+        n_y = []
+        for i_s in s:
+            ix, iy = sp.calc_position(i_s)
+            n_x.append(ix)
+            n_y.append(iy)
+
+        return n_x, n_y
+
+    @staticmethod
+    def sample_points(
+        count: int, x_range: Tuple[float, float], y_range: Tuple[float, float]
+    ):
+
+        x_min, x_max = x_range
+        y_min, y_max = y_range
+
+        return uniform(x_min, x_max, count), uniform(y_min, y_max, count)
 
 
 class CubicSpline1D:
@@ -251,6 +280,7 @@ if __name__ == "__main__":
     # main_1d()
     # main_2d()
     pass
+
 
 def main():
 
