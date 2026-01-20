@@ -12,9 +12,3 @@ docker build --progress ${PROGRESS} \
              --tag ghcr.io/aarhus-robotics/moma:devel-${VERSION} \
              --tag ghcr.io/aarhus-robotics/moma:devel-stable \
              ../build/devel
-
-#docker build --progress ${PROGRESS} \
-#             --tag ghcr.io/aarhus-robotics/moma:runtime \
-#             --tag ghcr.io/aarhus-robotics/moma:runtime-${VERSION} \
-#             --tag ghcr.io/aarhus-robotics/moma:runtime-stable \
-#             ../build/runtime

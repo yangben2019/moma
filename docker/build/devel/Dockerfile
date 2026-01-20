@@ -1,11 +1,14 @@
 FROM ubuntu:22.04
 
-ARG USER=robot
+ARG DEBIAN_FRONTEND=noninteractive
 ARG LOCALE=en_US
+ARG USER=robot
 
 RUN apt-get update && \
     apt-get install --no-install-recommends --yes \
         build-essential \
+        cm-super \
+        dvipng \
         git \
         libgles2-mesa-dev \
         libglfw3-dev \
@@ -15,7 +18,12 @@ RUN apt-get update && \
         locales \
         pipx \
         python3 \
-        python3-venv && \
+        python3-tk \
+        python3-venv \
+        qtwayland5 \
+        texlive \
+        texlive-fonts-recommended \
+        texlive-latex-extra && \
     echo "LC_ALL=${LOCALE}.UTF-8" >> /etc/environment && \
     echo "${LOCALE}.UTF-8 UTF-8" >> /etc/locale.gen && \
     echo "LANG=${LOCALE}.UTF-8" > /etc/locale.conf && \
