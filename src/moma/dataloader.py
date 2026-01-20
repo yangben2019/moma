@@ -71,7 +71,7 @@ def get_dataloader(site_path, data_source, coordinates):
         coordinates (str): The coordinate reference system.
 
     Returns:
-        Union[DataloaderGeoHornet, DataloaderDataforsyningen, DataloaderDataforsyningenFriction, DataLoaderOksbolPaper]: The dataloader.
+        Union[DataloaderGeoHornet, DataloaderDataforsyningen, DataloaderDataforsyningenFriction, DataLoaderOksbol]: The dataloader.
     """
     if data_source == "GeoHornet":
         return DataloaderGeoHornet(site_path)
@@ -83,7 +83,7 @@ def get_dataloader(site_path, data_source, coordinates):
         return DataloaderDataforsyningenFriction(site_path, coordinates)
 
     if data_source == "OksbolPaper":
-        return DataLoaderOksbolPaper(site_path, coordinates)
+        return DataLoaderOksbol(site_path, coordinates)
 
     raise ValueError(f"Unknown data source: {data_source}")
 
@@ -738,14 +738,14 @@ class DataloaderDataforsyningenFriction(DataloaderDataforsyningen):
         return RasterMono(self.FRICTION_PATH)
 
 
-class DataLoaderOksbolPaper(DataloaderDataforsyningenFriction):
+class DataLoaderOksbol(DataloaderDataforsyningenFriction):
     """
     A class for downloading Oksbøl site data from Dataforsyningen.
     """
 
     def __init__(self, site_path, coordinates):
         """
-        Initializes the `DataLoaderOksbolPaper` class.
+        Initializes the `DataLoaderOksbol` class.
 
         Args:
             site_path: The path to the site directory.
