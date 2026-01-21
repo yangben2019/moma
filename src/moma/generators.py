@@ -496,7 +496,8 @@ f"""    DataSource: DataforsyningenFriction
 
         soils = {
             0: {"label": "hard clay", "color": [0, 0, 0]},
-            1: {"label": "hard gravel", "color": [50, 50, 50]},
+            1: {"label": "hard clay", "color": [0, 0, 0]},
+            #1: {"label": "hard gravel", "color": [50, 50, 50]},
         }
 
         shape = soil_type.shape[1:]
@@ -540,9 +541,10 @@ f"""    DataSource: DataforsyningenFriction
         save_new_raster(moisture_content, path, transform)
 
         # Create friction coefficient raster
-        friction_low = 0.3
+        friction_low = 0.4
         friction_high = 0.5
         friction = np.ones_like(elevation)
+        
         friction[
             0,
             (soil_type[0, :, :] == 0)

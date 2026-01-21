@@ -44,14 +44,6 @@ Map objects are used to process raster data in MOMA. Each map object:
 
 Each map type is described in the next section.
 
-#### Directional Maps
-
-For datasets where direction matters (for example, slope maps and mobility maps), MOMA creates **directional maps** for each of the eight primary compass directions.
-
-These directional maps are stored in a dedicated class that organizes them in a dictionary, accessible using the following direction keys:
-
-N, NE, E, SE, S, SW, W, NW
-
 ## MOMA Core Functionality
 
 MOMA operates on a sequence of map objects, where each object represents a
@@ -139,8 +131,7 @@ no-go zones are shown in orange.
 Using the maps described above, a set of directional mobility maps is generated.
 For each soil type, a mobility tensor is created based on simulations from a
 multibody vehicle model. These simulations evaluate vehicle mobility over a
-finite set of parameter combinations. The results are stored in a
-`mobility.yaml` file, as described in Section \ref{sec:mobility-yaml}.
+finite set of parameter combinations which are stored in the used vehicles `mobility.yaml` file.
 
 The finite set of simulated parameters defines a grid search, which allows
 mobility to be evaluated over a continuous parameter space. To populate the
@@ -161,6 +152,10 @@ mobility maps using a specified reduction function. The simplest reduction
 method is the arithmetic mean of all samples. Alternatively, a quantile-based
 reduction may be used—for example, a 90% quantile map represents mobility
 values that are met or exceeded with 90% probability.
+
+### Omnidirectional Mobility Map
+
+When the direction `omni` is used for mobility prediction, MOMA add an omnidirectional mobility map, where mobility is assumed to be identical in all directions. The process begins by averaging the absolute slope over the eight directions. A mobility map is then constructed in the same manner as the directional mobility map, but using the omnidirectional slope map instead of directional slope maps. Finally, mobility prediction based on the omnidirectional mobility map is carried out in the same way as in the directional case.
 
 ## Path planning and traverse mobility prediction
 

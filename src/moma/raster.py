@@ -167,9 +167,16 @@ class Raster(ABC):
 
         # Normalise colormap range. Defaults to a range of three standard deviations around the mean value.
         def norm(data):
+            vmin = np.mean(data) - 1.25 * np.std(data)
+            vmax = np.mean(data) + 1.25 * np.std(data)
+
+            if vmax - vmin < 0.01 * np.abs(np.mean(data)):
+                vmin = np.min(data) - 0.1 * np.abs(np.min(data))
+                vmax = np.max(data) + 0.1 * np.abs(np.max(data))
+
             return mpl.colors.Normalize(
-                vmin=np.mean(data) - 1.25 * np.std(data),
-                vmax=np.mean(data) + 1.25 * np.std(data),
+                vmin=vmin,
+                vmax=vmax,
             )
 
         # Draw raster data
@@ -209,11 +216,6 @@ class Raster(ABC):
                     rgb, extent=extent, cmap=discrete_colormap, norm=normalization
                 )
 
-        # Add minor grid showing the cells for small sites
-        if self.width + self.height < 200:
-            axes.xaxis.set_minor_locator(MultipleLocator(5))
-            axes.yaxis.set_minor_locator(MultipleLocator(5))
-            axes.grid(which="major", linestyle="--")
         if hide_utm:
             axes.set_xticks([])
             axes.set_yticks([])

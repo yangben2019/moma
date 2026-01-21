@@ -141,7 +141,7 @@ if it relies on a different data source, a new data loader must be implemented.
 
 To add a new data loader, create a new class in `src/moma/dataloader.py`. This class
 must then be registered in the `get_dataloader` function, which instantiates the
-appropriate data loader based on the information provided in the `site.yaml` file.
+appropriate data loader based on the information provided in the `site.yaml` file. Additionally a subfolder with the dataloader name must be made in `data/examples/dataloaders`. This sub folder should contain three files: `landuse_mapping.yaml`, `moisturecontent_mapping.yaml`, and `soiltype_mapping.yaml`. These file contain the mapping from the data input encoded as colors to values that MOMA can use
 
 A data loader should implement functionality to:
 
@@ -161,6 +161,38 @@ consistent.
 
 ## Adding a New Vehicle
 
+A vehicle is defined by its `mobility.yaml` and `landuse_nogo.yaml`. The mobility file contains information of maximum steady state vehicle speeds for a set of tests. Here the start of one such file is presented:
+
+```yaml
+- soil:
+    type: sideslope
+  test:
+    type: sideslope
+    slope_angle: 0.0
+  value: 20.0
+- soil:
+    type: sideslope
+  test:
+    type: sideslope
+    slope_angle: 20.0
+  value: 0.0
+- soil:
+    type: HT
+    friction_coefficient: 0.0
+  test:
+    type: slope
+    slope_angle: 0.0
+  value: 14.14
+- soil:
+    type: HT
+    friction_coefficient: 0.1
+  test:
+    type: slope
+    slope_angle: 0.0
+  value: 14.83
+```
+
+`landuse_nogo.yaml` contains information on which landuses the vehicle can safely transverse.
 
 
 ```{toctree}

@@ -629,6 +629,8 @@ class MobilityToolbox:
         # Creates a directional mobility map with the 8 primary compass directions
         directional_mobility_map_for_filling_metric = DirectionalMobilityMap({})
         for direction in ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]:
+            if direction not in self.directions["names"] and not omnidirectional:
+                continue
             direction_angle = direction2compass_angle(direction)
             directional_mobility_map_for_filling_metric.mobility_maps[
                 direction_angle
@@ -638,20 +640,21 @@ class MobilityToolbox:
                 self.mobility_maps["omni"]
             )
 
-        # Find the shortest path between two waypoints
-        shortpath = find_shortest_path(
-            directional_mobility_graph, self.waypoint_start, self.waypoint_end
-        )
-        shortpath.print_path(
-            elevation_raster=self.elevation_map.raster,
-            directional_mobility_map=directional_mobility_map_for_filling_metric,
-            slope_maps=self.slope_map,
-            vehicle=self.vehicle,
-            minimum_speed=self.minimum_speed,
-            target_speed=self.target_speed,
-            fill_omnidirectional_info=omnidirectional,
-            export=self.EXPORT_PATH,
-        )
+        # Find the shortest path between two waypoints if three or more directions that are not omnidirectional are available
+        if len([angle for angle in directional_mobility_map.mobility_maps if angle != "omni"]) >= 3:
+            shortpath = find_shortest_path(
+                directional_mobility_graph, self.waypoint_start, self.waypoint_end
+            )
+            shortpath.print_path(
+                elevation_raster=self.elevation_map.raster,
+                directional_mobility_map=directional_mobility_map_for_filling_metric,
+                slope_maps=self.slope_map,
+                vehicle=self.vehicle,
+                minimum_speed=self.minimum_speed,
+                target_speed=self.target_speed,
+                fill_omnidirectional_info=omnidirectional,
+                export=self.EXPORT_PATH,
+            )
 
         if omnidirectional:
             shortpath_omni = find_shortest_path(
@@ -675,9 +678,10 @@ class MobilityToolbox:
 
         # Plots a 3D projection of the path
         # shortpath.plot_path(vehicle=self.vehicle, show=show, export=self.EXPORT_PATH)
-        shortpath.smoothen_spline(
-            list(self.mobility_maps.values())[0].raster.data.shape
-        )
+        if len([angle for angle in directional_mobility_map.mobility_maps if angle != "omni"]) >= 3:
+            shortpath.smoothen_spline(
+                list(self.mobility_maps.values())[0].raster.data.shape
+            )
 
         if omnidirectional:
             shortpath_omni.smoothen_spline(
@@ -686,12 +690,13 @@ class MobilityToolbox:
 
         # Show optimal path on the aerial map
         if show and (self.show_plots or self.export_plots):
-            shortpath.plot(
-                overlay=self.elevation_raster,
-                vehicle=self.vehicle,
-                show=self.show_plots,
-                export_path=self.EXPORT_PATH,
-            )
+            if len([angle for angle in directional_mobility_map.mobility_maps if angle != "omni"]) >= 3:
+                shortpath.plot(
+                    overlay=self.elevation_raster,
+                    vehicle=self.vehicle,
+                    show=self.show_plots,
+                    export_path=self.EXPORT_PATH,
+                )
 
             if omnidirectional:
                 shortpath_omni.plot(
