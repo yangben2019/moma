@@ -58,8 +58,9 @@ from moma.mapping import LatinHyperCube
 plt.style.use(
     importlib.resources.path("moma", "data") / pathlib.Path("matplotlib/moma.mplstyle")
 )
+
 # Ensure that LaTeX is not used for rendering text in plots
-plt.rc('text', usetex=False)
+#plt.rc('text', usetex=False)
 
 
 class TestMapGenerator:
@@ -69,6 +70,23 @@ class TestMapGenerator:
         pass
 
     def fill_slopes(self, Z, sections_start_and_end):
+        """
+        Fills slopes between specified sections in the map array.
+
+        Fills the gaps between sections in the map array by interpolating
+        linearly between the start and end points of each section.
+
+        Args:
+            Z: A 2D numpy array representing the map array to be filled.
+
+            sections_start_and_end: A list containing two lists of indices.
+                The first list contains x-coordinates of section boundaries,
+                and the second list contains y-coordinates of section boundaries.
+
+        Returns:
+            Z: The modified 2D numpy array with slopes filled between sections.
+        """
+
         for i in range(1, len(sections_start_and_end[0]) - 2, 2):
 
             x1 = sections_start_and_end[0][i] - 1
@@ -86,6 +104,32 @@ class TestMapGenerator:
         return Z
 
     def fill_pad(self, Z, start_pad, transition_pad, sections_start_and_end):
+        """
+        Fills the padding regions of a 2D array with values from the non-padding
+        regions.
+
+        The function fills the left, right, bottom, and top padding areas of the
+        input array using values from the corresponding non-padding sections. It
+        also fills the transition regions between the padding and non-padding
+        areas using linear interpolation.
+
+        Args:
+            Z: A 2D numpy array representing the data to be padded.
+
+            start_pad: Integer indicating the width of the initial padding
+            region.
+
+            transition_pad: Integer indicating the width of the transition
+            padding region.
+            
+            sections_start_and_end: A tuple of two arrays, each containing the
+            start and end indices of the non-padding sections along the
+            respective axis.
+
+        Returns:
+            Z: The modified 2D numpy array with padding filled in.
+        """
+
         # Left
         values = Z[
             np.round(
@@ -191,6 +235,45 @@ class TestMapGenerator:
         transition_pad = 15,
         start_pad = 10,
         ):
+        """
+        Generates a synthetic elevation map with plateaus, slopes, and padding.
+
+        This function creates a 2D elevation map with a specified number of
+        plateaus and slopes, using random values within a given slope percentage
+        range. It also adds padding regions and fills them with interpolated
+        values.
+
+        Args:
+            seed: Integer seed for the random number generator.
+
+            max_slope_percent: Maximum slope percentage for the slope sections.
+
+            map_dim: Tuple (width, height) of the map in meters.
+
+            plateaus: Tuple (num_plateaus_x, num_plateaus_y) indicating the
+            number of plateaus in each direction.
+
+            slope_length: Tuple (slope_length_x, slope_length_y) indicating the
+            length of the slope sections in each direction.
+
+            resolution: Integer representing the number of pixels per meter.
+
+            transition_pad: Integer indicating the width of the transition
+            padding region.
+
+            start_pad: Integer indicating the width of the initial padding
+            region.
+
+        Returns:
+            Z: The generated 2D elevation map with padding.
+
+            map_size: Tuple (width, height) of the generated map in pixels.
+
+            resolution: The resolution used for the map.
+
+            sections: A list of section indices used for padding and slope
+            filling.
+        """
 
         slopes_x = plateaus[0] - 1
         slopes_y = plateaus[1] - 1
@@ -337,11 +420,47 @@ class TestMapGenerator:
         return Z, map_size, resolution, sections
 
     def generate_test_map_uncertainty(self, map_size, resolution, uncertainty=0.02):
+        """
+        Generates a 2D uncertainty map with uniform uncertainty values.
+
+        This function creates a 2D array representing uncertainty values across
+        the map, where all values are set to a constant uncertainty level.
+
+        Args:
+            map_size: Tuple (width, height) of the map in meters.
+            
+            resolution: Integer representing the number of pixels per meter.
+            
+            uncertainty: Float indicating the constant uncertainty value for the
+            entire map.
+
+        Returns:
+            Z: A 2D numpy array of shape (height * resolution, width * resolution)
+                containing the constant uncertainty value.
+        """
         Z = np.ones((map_size[1] * resolution, map_size[0] * resolution)) * uncertainty
 
         return Z
 
     def smooth(self, Z, sigma, truncate):
+        """
+        Applies a Gaussian filter to smooth the input 2D array.
+
+        This function uses a Gaussian filter to reduce noise and smooth the
+        elevation or uncertainty values in the input array.
+
+        Args:
+            Z: A 2D numpy array representing the elevation or uncertainty data.
+            
+            sigma: Standard deviation of the Gaussian kernel. Controls the
+            amount of smoothing applied.
+            
+            truncate: Truncate the filter at this multiple of sigma. A larger
+            value results in a wider filter.
+
+        Returns:
+            Z: The smoothed 2D numpy array.
+        """
         return gaussian_filter(Z, sigma=sigma, truncate=truncate)
 
     def plot_surface(
@@ -424,6 +543,31 @@ class TestMapGenerator:
         diffuse_map,
         coordinates_lower_left=(0, 0),
     ):
+        """
+        Plots a 2D and 3D surface representation of the elevation map.
+
+        This function generates a figure with two subplots: a 2D color map and a
+        3D surface plot of the elevation data. It also adds vertical and
+        horizontal lines to indicate section boundaries.
+
+        Args:
+            output_dir: Directory path where the plot will be saved.
+            
+            elevation: 2D numpy array representing the elevation data.
+            
+            sections: A list of section indices used to define boundaries in the
+            elevation map.
+            
+            map_size: Tuple (width, height) of the map in meters.
+            
+            show_plot: Boolean indicating whether to display the plot.
+            
+            subname: Optional string to append to the filename for
+            differentiation.
+
+        Returns:
+            None
+        """
         # Save elevation raster
         print(f"Save rasters in folder: {raster_dir}...")
 
@@ -567,6 +711,22 @@ f"""    DataSource: DataforsyningenFriction
     def metadata(self, elev_min, elev_max, map_size, friction_coefficient):
         """
         Generate metadata dictionary for the elevation map.
+
+        This function creates a dictionary containing key information about the
+        generated elevation map, including elevation range, map dimensions, and
+        friction coefficient.
+
+        Args:
+            elev_min: Minimum elevation value in the map.
+
+            elev_max: Maximum elevation value in the map.
+            
+            map_size: Tuple (width, height) representing the map dimensions in
+            meters. friction_coefficient: Coefficient representing the friction
+            of the surface.
+
+        Returns:
+            meta: Dictionary containing metadata for the elevation map.
         """
         meta = {
             "description": "slope test map",
@@ -578,7 +738,21 @@ f"""    DataSource: DataforsyningenFriction
 
     def generate_diffuse_map(self, elevation):
         """
-        Generate a diffuse map from the elevation data by interpret the slopes in the x and y directions as R and G channels for RGB color.
+        Generate a diffuse map from the elevation data by interpreting the
+        slopes in the x and y directions as R and G channels for RGB color.
+
+        This function computes the gradient of the elevation data to determine
+        the slope in the x and y directions. These slopes are then normalized
+        and used to create an RGB image where the red channel corresponds to the
+        x-slope and the green channel corresponds to the y-slope. The blue
+        channel is set to zero.
+
+        Args:
+            elevation: 2D numpy array representing the elevation data.
+
+        Returns:
+            diffuse_map: A 3D numpy array of shape (height, width, 3)
+            representing the diffuse map in RGB format.
         """
         slope_x, slope_y = np.gradient(elevation)
 
@@ -597,6 +771,23 @@ f"""    DataSource: DataforsyningenFriction
         return np.dstack((x_normalized, y_normalized, np.zeros_like(x_normalized)))
 
     def save_diffuse_map(self, output_dir, elevation, subname=""):
+        """
+        Saves the diffuse map as a PNG file.
+
+        This function generates a diffuse map from the elevation data and saves
+        it as a PNG file in the specified output directory.
+
+        Args:
+            output_dir: Directory path where the diffuse map will be saved.
+
+            elevation: 2D numpy array representing the elevation data.
+
+            subname: Optional string to append to the filename for
+            differentiation.
+
+        Returns:
+            None
+        """
         # Save the diffuse map as a .png file
         diffuse_map = self.generate_diffuse_map(elevation)
         diffuse_map_img = Image.fromarray(diffuse_map)
@@ -611,7 +802,33 @@ f"""    DataSource: DataforsyningenFriction
         subname="",
         output_resolution=6,
     ):
-        # Save the elevation data as .bmp file for use in DYNO
+        """
+        Saves the elevation data as a .bmp file and metadata as a .json file.
+
+        This function downsamples the elevation data to a specified resolution
+        and normalizes it to the 0-255 range. It then saves the resulting image
+        as a .bmp file and the metadata as a .json file.
+
+        Args:
+            output_dir: Directory path where the files will be saved.
+
+            elevation: 2D numpy array representing the elevation data.
+            
+            map_size: Tuple (width, height) representing the map dimensions in
+            meters.
+            
+            friction_coefficient: Coefficient representing the friction of the
+            surface.
+            
+            subname: Optional string to append to the filename for
+            differentiation.
+            
+            output_resolution: Integer indicating the resolution for
+            downsampling.
+
+        Returns:
+            None
+        """  
 
         # Downsample the elevation data to (0.25*output_resolution)x(0.25*output_resolution)m grid
         elevation_out = elevation[::output_resolution, ::output_resolution]
@@ -645,6 +862,35 @@ f"""    DataSource: DataforsyningenFriction
         subname="",
         output_resolution=6,
     ):
+        """
+        Saves the elevation data as an .obj file and metadata as a .json file.
+
+        This function downsamples the elevation data to a specified resolution
+        and generates a 3D mesh in the .obj format. It also saves the metadata
+        as a .json file.
+
+        Args:
+            output_dir: Directory path where the files will be saved.
+            
+            elevation: 2D numpy array representing the elevation data.
+            
+            map_size: Tuple (width, height) representing the map dimensions in
+            meters.
+            
+            resolution: Integer representing the number of pixels per meter.
+            
+            friction_coefficient: Coefficient representing the friction of the
+            surface.
+            
+            subname: Optional string to append to the filename for
+            differentiation.
+            
+            output_resolution: Integer indicating the resolution for
+            downsampling.
+
+        Returns:
+            None
+        """
         # Downsample the elevation data to (0.25*output_resolution)x(0.25*output_resolution)m grid
         elevation_out = elevation[::output_resolution, ::output_resolution]
 
@@ -694,6 +940,25 @@ f"""    DataSource: DataforsyningenFriction
             )
 
     def slope_hist(self, output_dir, elevation, resolution, show_plot=False):
+        """
+        Plots a histogram of the slope distribution in the elevation map.
+
+        This function calculates the slope magnitude at each point in the
+        elevation map and generates a histogram of the slope distribution. The
+        histogram is saved as a PNG file in the specified output directory.
+
+        Args:
+            output_dir: Directory path where the histogram will be saved.
+
+            elevation: 2D numpy array representing the elevation data.
+
+            resolution: Integer representing the number of pixels per meter.
+
+            show_plot: Boolean indicating whether to display the plot.
+
+        Returns:
+            None
+        """
         # Calculate the slope of the elevation map
         gradient_x, gradient_y = np.gradient(elevation)
         slope = np.sqrt(gradient_x**2 + gradient_y**2).flatten() * resolution * 100
@@ -735,6 +1000,46 @@ f"""    DataSource: DataforsyningenFriction
             resolution=4,
         )
     ):
+        """
+        Main function to generate test maps and save them in the specified
+        format.
+
+        This function generates a synthetic elevation map with plateaus and
+        slopes, applies smoothing, generates uncertainty maps, and saves the
+        results in either .bmp or .obj format. It also optionally saves diffuse
+        maps and generates multiple test maps with random variations.
+
+        Args:
+            create_rasters: Boolean indicating whether to create raster files.
+            
+            base_output_dir: Directory path where the output files will be
+            saved.
+            
+            plot_additional_files: Boolean indicating whether to generate
+            additional plots.
+            
+            N_test_maps: Number of test maps to generate.
+            
+            elevation_std: Standard deviation for the elevation uncertainty.
+            
+            friction_coefficient: Friction coefficient for the map.
+            
+            friction_coefficient_std: Standard deviation for the friction
+            coefficient uncertainty.
+            
+            map_type: Type of map to save, either 'bmp' or 'obj'.
+            
+            output_resolution: Resolution for downsampling the elevation data.
+            
+            coordinates_lower_left: Tuple (x, y) representing the lower-left
+            coordinates.
+            
+            test_map_params: Namespace containing parameters for generating the
+            test map.
+
+        Returns:
+            None
+        """
 
         # Fill in default parameters if not provided
         if getattr(test_map_params, "seed", None) is None:
@@ -756,7 +1061,7 @@ f"""    DataSource: DataforsyningenFriction
 
         # If map is not returned to caller function as an array, create the output directory
         if base_output_dir is None:
-            base_output_dir = pathlib.Path(".") / "examples" / "sites" / "testmap"
+            base_output_dir = pathlib.Path(".") / "data" / "sites" / "testmap"
         else:
             base_output_dir = pathlib.Path(base_output_dir)
 
