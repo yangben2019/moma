@@ -77,3 +77,5 @@ myst_enable_extensions = [
     "fieldlist", "html_admonition", "html_image", "replacements", "smartquotes",
     "strikethrough", "substitution", "tasklist"
 ]
+
+myst_heading_anchors = 3
