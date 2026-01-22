@@ -15,7 +15,7 @@ The recommended installation method is [using the Docker
 image](./using-docker/index.md#using-docker). There are Docker image suitable
 for developers or end users. If you are unable to use the Docker image, you can
 [run MOMA using a virtual
-environment](./building-from-source/index.md#using-venv).
+environment](./using-venv/index.md#using-virtual-environment).
 
 ## Quick start
 
