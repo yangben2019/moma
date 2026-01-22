@@ -1325,7 +1325,7 @@ class MobilityMap(Map):
             title=title,
             export_path=export_path
             / f"mobility_{self.mobility_analysis.mobility_tensors[0].vehicle}"
-            / f"mobility_map_{self.direction.lower()}.pdf",
+            / f"mobility_maps/mobility_map_{self.direction.lower()}.pdf",
             show=show,
             export=export,
             save_maps=save_maps,

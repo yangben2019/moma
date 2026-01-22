@@ -121,6 +121,8 @@ class MobilityToolbox:
         self.EXPORT_PATH = base_path / "export/"
         self.EXPORT_PATH.mkdir(exist_ok=True)
         (self.EXPORT_PATH / f"mobility_{vehicle_name}").mkdir(exist_ok=True)
+        (self.EXPORT_PATH / f"mobility_{vehicle_name}/mobility_maps").mkdir(exist_ok=True)
+        (self.EXPORT_PATH / f"mobility_{vehicle_name}/nogo_maps").mkdir(exist_ok=True)
         (self.EXPORT_PATH / f"mobility_{vehicle_name}/paths").mkdir(exist_ok=True)
         (self.EXPORT_PATH / "site").mkdir(exist_ok=True)
         (self.EXPORT_PATH / "slope_maps").mkdir(exist_ok=True)

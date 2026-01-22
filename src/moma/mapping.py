@@ -1130,7 +1130,7 @@ class NoGoMap(Map):
         if export:
             log.info(f"Exporting raster plot to {export_path}.")
             plt.savefig(
-                export_path / f"mobility_{self.vehicle}" / "nogo_map.pdf",
+                export_path / f"mobility_{self.vehicle}" / "nogo_maps/nogo_map.pdf",
                 format="pdf",
                 bbox_inches="tight",
             )
