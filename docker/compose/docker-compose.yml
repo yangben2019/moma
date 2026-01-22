@@ -1,0 +1,13 @@
+services:
+  moma:
+    container_name: moma
+    environment:
+      - DISPLAY=${DISPLAY}
+      - JAX_PLATFORMS=cpu
+    image: "ghcr.io/aarhus-robotics/moma:devel"
+    network_mode: bridge
+    stdin_open: true
+    tty: true
+    volumes:
+      - ../../:/home/robot/workspace
+      - /tmp/.X11-unix:/tmp/.X11-unix  
