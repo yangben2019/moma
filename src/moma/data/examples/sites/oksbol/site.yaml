@@ -1,7 +1,0 @@
-DataSource: OksbolPaper
-Coordinates: [450565, 6163390, 452401, 6164541] # [W, S, E, N]
-NoGoZones:
-#   - [x1, x2, y1, y2, (Description)]: Box
-#   - [x, y, r, (Description)]: Circle
-    - [450750, 451000, 6164200, 6164400, "Avoid"]
-    - [451125, 6163600, 125, "Dangerous area"]
