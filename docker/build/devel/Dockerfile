@@ -36,7 +36,7 @@ ENV LC_ALL=${LOCALE}.UTF-8
 
 RUN useradd --create-home --shell /bin/bash ${USER} && \
     echo "export LANG=${LOCALE}.UTF-8" >> /home/${USER}/.profile && \
-    echo "export PATH='/home/${USER}/.local/bin:${PATH}'" >> /home/${USER}/.profile
+    echo "export PATH='/home/${USER}/.local/bin:${PATH}'" >> /home/${USER}/.bashrc
 
 # Set the default container user
 USER ${USER}
