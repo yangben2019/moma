@@ -54,8 +54,8 @@ You may then use the command `moma` to start generating your mobility maps. For
 example, to generate a testmap:
 
 ```shell
-moma --clear mobility --show_plots --vehicle mungo --site Vejlby --n_samples 10 --sample_reduction quantile 0.9 --path_coordinate_system utm --path_start 573500 6230500 --path_end 575900 6230250
+moma generate_test_map --create_rasters
 ```
 
-Refer to the [user guide](../../user-guide/index.md#usage-guide) for more
+Refer to the [user guide](../../user-guide/index.md#user-guide) for more
 details on the command line interface options and arguments.
