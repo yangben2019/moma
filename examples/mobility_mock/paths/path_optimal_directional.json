@@ -1,0 +1,1795 @@
+{
+    "waypoints": [
+        {
+            "node": 452,
+            "map": {
+                "x": 12.5,
+                "y": 202.5
+            },
+            "elevation": 10.366182327270508,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.01875162124633789,
+                    "side": 0.11079856008291245
+                },
+                "speed": 15.468764305114746,
+                "transverse_times": 0.3232320243153973,
+                "total_time": 0.3232320243153973,
+                "total_length": 5.0
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 11.369847297668457,
+                "transverse_times": 0.4397596440037782,
+                "total_time": 0.4397596440037782,
+                "total_length": 5.0
+            },
+            "indices": {
+                "x": 2,
+                "y": 9
+            },
+            "UTM": {
+                "x": 12.5,
+                "y": 202.5
+            }
+        },
+        {
+            "node": 453,
+            "map": {
+                "x": 17.5,
+                "y": 202.5
+            },
+            "elevation": 10.289175033569336,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.023497676476836205,
+                    "side": 0.08330316096544266
+                },
+                "speed": 15.818931579589844,
+                "transverse_times": 0.31607697238233085,
+                "total_time": 0.6393089966977281,
+                "total_length": 10.0
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 12.594443321228027,
+                "transverse_times": 0.3970004765174863,
+                "total_time": 0.8367601205212645,
+                "total_length": 10.0
+            },
+            "indices": {
+                "x": 3,
+                "y": 9
+            },
+            "UTM": {
+                "x": 17.5,
+                "y": 202.5
+            }
+        },
+        {
+            "node": 454,
+            "map": {
+                "x": 22.5,
+                "y": 202.5
+            },
+            "elevation": 10.213109016418457,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.018301865085959435,
+                    "side": 0.05610065162181854
+                },
+                "speed": 16.138683319091797,
+                "transverse_times": 0.30981461753358047,
+                "total_time": 0.9491236142313086,
+                "total_length": 15.0
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 13.906712532043457,
+                "transverse_times": 0.3595386032809077,
+                "total_time": 1.196298723802172,
+                "total_length": 15.0
+            },
+            "indices": {
+                "x": 4,
+                "y": 9
+            },
+            "UTM": {
+                "x": 22.5,
+                "y": 202.5
+            }
+        },
+        {
+            "node": 455,
+            "map": {
+                "x": 27.5,
+                "y": 202.5
+            },
+            "elevation": 10.169949531555176,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.008312797173857689,
+                    "side": 0.03878021240234375
+                },
+                "speed": 16.330278396606445,
+                "transverse_times": 0.3061797158974974,
+                "total_time": 1.2553033301288061,
+                "total_length": 20.0
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 14.831254959106445,
+                "transverse_times": 0.33712588811845495,
+                "total_time": 1.533424611920627,
+                "total_length": 20.0
+            },
+            "indices": {
+                "x": 5,
+                "y": 9
+            },
+            "UTM": {
+                "x": 27.5,
+                "y": 202.5
+            }
+        },
+        {
+            "node": 456,
+            "map": {
+                "x": 32.5,
+                "y": 202.5
+            },
+            "elevation": 10.158955574035645,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.0018418313702568412,
+                    "side": 0.03217344358563423
+                },
+                "speed": 16.401121139526367,
+                "transverse_times": 0.3048572080813489,
+                "total_time": 1.560160538210155,
+                "total_length": 25.0
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 15.186925888061523,
+                "transverse_times": 0.3292305524405378,
+                "total_time": 1.8626551643611649,
+                "total_length": 25.0
+            },
+            "indices": {
+                "x": 6,
+                "y": 9
+            },
+            "UTM": {
+                "x": 32.5,
+                "y": 202.5
+            }
+        },
+        {
+            "node": 457,
+            "map": {
+                "x": 37.5,
+                "y": 202.5
+            },
+            "elevation": 10.157941818237305,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.0003609657287597656,
+                    "side": 0.030875494703650475
+                },
+                "speed": 16.414899826049805,
+                "transverse_times": 0.3046013105766991,
+                "total_time": 1.8647618487868542,
+                "total_length": 30.0
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 15.25145435333252,
+                "transverse_times": 0.3278375874303079,
+                "total_time": 2.1904927517914725,
+                "total_length": 30.0
+            },
+            "indices": {
+                "x": 7,
+                "y": 9
+            },
+            "UTM": {
+                "x": 37.5,
+                "y": 202.5
+            }
+        },
+        {
+            "node": 458,
+            "map": {
+                "x": 42.5,
+                "y": 202.5
+            },
+            "elevation": 10.155887603759766,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.004307270050048828,
+                    "side": 0.030771732330322266
+                },
+                "speed": 16.415998458862305,
+                "transverse_times": 0.3045809252802842,
+                "total_time": 2.1693427740671383,
+                "total_length": 35.0
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 15.242165565490723,
+                "transverse_times": 0.32803737621905465,
+                "total_time": 2.5185301280105272,
+                "total_length": 35.0
+            },
+            "indices": {
+                "x": 8,
+                "y": 9
+            },
+            "UTM": {
+                "x": 42.5,
+                "y": 202.5
+            }
+        },
+        {
+            "node": 459,
+            "map": {
+                "x": 47.5,
+                "y": 202.5
+            },
+            "elevation": 10.114883422851562,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.00018018671835307032,
+                    "side": 0.04333342984318733
+                },
+                "speed": 16.28074836730957,
+                "transverse_times": 0.4343208096050185,
+                "total_time": 2.603663583672157,
+                "total_length": 42.071067811865476
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 14.655640602111816,
+                "transverse_times": 0.48248097806427953,
+                "total_time": 3.001011106074807,
+                "total_length": 42.071067811865476
+            },
+            "indices": {
+                "x": 9,
+                "y": 9
+            },
+            "UTM": {
+                "x": 47.5,
+                "y": 202.5
+            }
+        },
+        {
+            "node": 510,
+            "map": {
+                "x": 52.5,
+                "y": 197.5
+            },
+            "elevation": 10.117085456848145,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.0005496006924659014,
+                    "side": 0.1332065612077713
+                },
+                "speed": 15.159663200378418,
+                "transverse_times": 0.46643963776774183,
+                "total_time": 3.070103221439899,
+                "total_length": 49.14213562373095
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 10.386792182922363,
+                "transverse_times": 0.6807749387237672,
+                "total_time": 3.681786044798574,
+                "total_length": 49.14213562373095
+            },
+            "indices": {
+                "x": 10,
+                "y": 10
+            },
+            "UTM": {
+                "x": 52.5,
+                "y": 197.5
+            }
+        },
+        {
+            "node": 561,
+            "map": {
+                "x": 57.5,
+                "y": 192.5
+            },
+            "elevation": 10.122635841369629,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.0009202253422699869,
+                    "side": 0.22679778933525085
+                },
+                "speed": 13.520219802856445,
+                "transverse_times": 0.5229994715301564,
+                "total_time": 3.593102692970055,
+                "total_length": 56.21320343559643
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 6.037182331085205,
+                "transverse_times": 1.1712529826135674,
+                "total_time": 4.853039027412141,
+                "total_length": 56.21320343559643
+            },
+            "indices": {
+                "x": 11,
+                "y": 11
+            },
+            "UTM": {
+                "x": 57.5,
+                "y": 192.5
+            }
+        },
+        {
+            "node": 612,
+            "map": {
+                "x": 62.5,
+                "y": 187.5
+            },
+            "elevation": 10.130078315734863,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.0010664912406355143,
+                    "side": 0.26915091276168823
+                },
+                "speed": 12.441792488098145,
+                "transverse_times": 0.5683319199086209,
+                "total_time": 4.161434612878676,
+                "total_length": 63.2842712474619
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 4.12621545791626,
+                "transverse_times": 1.7136933066108881,
+                "total_time": 6.566732334023029,
+                "total_length": 63.2842712474619
+            },
+            "indices": {
+                "x": 12,
+                "y": 12
+            },
+            "UTM": {
+                "x": 62.5,
+                "y": 187.5
+            }
+        },
+        {
+            "node": 663,
+            "map": {
+                "x": 67.5,
+                "y": 182.5
+            },
+            "elevation": 10.137712478637695,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.0010660040425136685,
+                    "side": 0.2762673795223236
+                },
+                "speed": 12.221208572387695,
+                "transverse_times": 0.5785898972251956,
+                "total_time": 4.740024510103871,
+                "total_length": 70.35533905932738
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 3.808940887451172,
+                "transverse_times": 1.8564393674791893,
+                "total_time": 8.423171701502218,
+                "total_length": 70.35533905932738
+            },
+            "indices": {
+                "x": 13,
+                "y": 13
+            },
+            "UTM": {
+                "x": 67.5,
+                "y": 182.5
+            }
+        },
+        {
+            "node": 714,
+            "map": {
+                "x": 72.5,
+                "y": 177.5
+            },
+            "elevation": 10.14515209197998,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.0010191419860348105,
+                    "side": 0.27152568101882935
+                },
+                "speed": 12.36983585357666,
+                "transverse_times": 0.5716379663858612,
+                "total_time": 5.311662476489732,
+                "total_length": 77.42640687119285
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 4.020220756530762,
+                "transverse_times": 1.7588755046296098,
+                "total_time": 10.182047206131827,
+                "total_length": 77.42640687119285
+            },
+            "indices": {
+                "x": 14,
+                "y": 14
+            },
+            "UTM": {
+                "x": 72.5,
+                "y": 177.5
+            }
+        },
+        {
+            "node": 765,
+            "map": {
+                "x": 77.5,
+                "y": 172.5
+            },
+            "elevation": 10.152130126953125,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.0008656114223413169,
+                    "side": 0.23676493763923645
+                },
+                "speed": 13.294801712036133,
+                "transverse_times": 0.5318671135549056,
+                "total_time": 5.843529590044637,
+                "total_length": 84.49747468305833
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 5.5841193199157715,
+                "transverse_times": 1.2662816474294343,
+                "total_time": 11.44832885356126,
+                "total_length": 84.49747468305833
+            },
+            "indices": {
+                "x": 15,
+                "y": 15
+            },
+            "UTM": {
+                "x": 77.5,
+                "y": 172.5
+            }
+        },
+        {
+            "node": 816,
+            "map": {
+                "x": 82.5,
+                "y": 167.5
+            },
+            "elevation": 10.157411575317383,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.0005336200119927526,
+                    "side": 0.1489679366350174
+                },
+                "speed": 14.927291870117188,
+                "transverse_times": 0.4737006466672621,
+                "total_time": 6.317230236711899,
+                "total_length": 91.5685424949238
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 9.646589279174805,
+                "transverse_times": 0.7330122188503038,
+                "total_time": 12.181341072411564,
+                "total_length": 91.5685424949238
+            },
+            "indices": {
+                "x": 16,
+                "y": 16
+            },
+            "UTM": {
+                "x": 82.5,
+                "y": 167.5
+            }
+        },
+        {
+            "node": 867,
+            "map": {
+                "x": 87.5,
+                "y": 162.5
+            },
+            "elevation": 10.159700393676758,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.00019043862994294614,
+                    "side": 0.05375456064939499
+                },
+                "speed": 16.165151596069336,
+                "transverse_times": 0.4374266315934119,
+                "total_time": 6.754656868305311,
+                "total_length": 98.63961030678928
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 14.157655715942383,
+                "transverse_times": 0.49945188340065527,
+                "total_time": 12.680792955812219,
+                "total_length": 98.63961030678928
+            },
+            "indices": {
+                "x": 17,
+                "y": 17
+            },
+            "UTM": {
+                "x": 87.5,
+                "y": 162.5
+            }
+        },
+        {
+            "node": 918,
+            "map": {
+                "x": 92.5,
+                "y": 157.5
+            },
+            "elevation": 10.160111427307129,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 2.3535221771453507e-05,
+                    "side": 0.008747999556362629
+                },
+                "speed": 16.643098831176758,
+                "transverse_times": 0.42486485741582974,
+                "total_time": 7.17952172572114,
+                "total_length": 105.71067811865476
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 16.729999542236328,
+                "transverse_times": 0.4226579799965896,
+                "total_time": 13.103450935808809,
+                "total_length": 105.71067811865476
+            },
+            "indices": {
+                "x": 18,
+                "y": 18
+            },
+            "UTM": {
+                "x": 92.5,
+                "y": 157.5
+            }
+        },
+        {
+            "node": 969,
+            "map": {
+                "x": 97.5,
+                "y": 152.5
+            },
+            "elevation": 10.1600341796875,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": -0.00032038355129770935,
+                    "side": 0.0011286588851362467
+                },
+                "speed": 16.718889236450195,
+                "transverse_times": 0.42293885149076005,
+                "total_time": 7.6024605772119,
+                "total_length": 112.78174593052023
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 16.729999542236328,
+                "transverse_times": 0.4226579799965896,
+                "total_time": 13.526108915805398,
+                "total_length": 112.78174593052023
+            },
+            "indices": {
+                "x": 19,
+                "y": 19
+            },
+            "UTM": {
+                "x": 97.5,
+                "y": 152.5
+            }
+        },
+        {
+            "node": 1020,
+            "map": {
+                "x": 102.5,
+                "y": 147.5
+            },
+            "elevation": 10.15557861328125,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.008901976980268955,
+                    "side": 0.0028842922765761614
+                },
+                "speed": 16.701547622680664,
+                "transverse_times": 0.2993734540630241,
+                "total_time": 7.901834031274924,
+                "total_length": 117.78174593052023
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 16.729999542236328,
+                "transverse_times": 0.29886432377819666,
+                "total_time": 13.824973239583596,
+                "total_length": 117.78174593052023
+            },
+            "indices": {
+                "x": 20,
+                "y": 20
+            },
+            "UTM": {
+                "x": 102.5,
+                "y": 147.5
+            }
+        },
+        {
+            "node": 1021,
+            "map": {
+                "x": 107.5,
+                "y": 147.5
+            },
+            "elevation": 10.073206901550293,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.04379759356379509,
+                    "side": 0.002881623338907957
+                },
+                "speed": 16.70157241821289,
+                "transverse_times": 0.299373009606422,
+                "total_time": 8.201207040881346,
+                "total_length": 122.78174593052023
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 14.628939628601074,
+                "transverse_times": 0.3417882722151979,
+                "total_time": 14.166761511798793,
+                "total_length": 122.78174593052023
+            },
+            "indices": {
+                "x": 21,
+                "y": 20
+            },
+            "UTM": {
+                "x": 107.5,
+                "y": 147.5
+            }
+        },
+        {
+            "node": 1022,
+            "map": {
+                "x": 112.5,
+                "y": 147.5
+            },
+            "elevation": 9.717622756958008,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.10335446149110794,
+                    "side": 0.002874183002859354
+                },
+                "speed": 16.70164680480957,
+                "transverse_times": 0.2993716762445336,
+                "total_time": 8.50057871712588,
+                "total_length": 127.78174593052023
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 11.795018196105957,
+                "transverse_times": 0.42390778181679406,
+                "total_time": 14.590669293615587,
+                "total_length": 127.78174593052023
+            },
+            "indices": {
+                "x": 22,
+                "y": 20
+            },
+            "UTM": {
+                "x": 112.5,
+                "y": 147.5
+            }
+        },
+        {
+            "node": 1023,
+            "map": {
+                "x": 117.5,
+                "y": 147.5
+            },
+            "elevation": 9.039705276489258,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.1481456756591797,
+                    "side": 0.0028614127077162266
+                },
+                "speed": 16.701772689819336,
+                "transverse_times": 0.2993694198130106,
+                "total_time": 8.799948136938891,
+                "total_length": 132.78174593052023
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 9.683874130249023,
+                "transverse_times": 0.5163222830810816,
+                "total_time": 15.106991576696668,
+                "total_length": 132.78174593052023
+            },
+            "indices": {
+                "x": 23,
+                "y": 20
+            },
+            "UTM": {
+                "x": 117.5,
+                "y": 147.5
+            }
+        },
+        {
+            "node": 1024,
+            "map": {
+                "x": 122.5,
+                "y": 147.5
+            },
+            "elevation": 8.236227989196777,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.16222700476646423,
+                    "side": 0.0028455685824155807
+                },
+                "speed": 16.701929092407227,
+                "transverse_times": 0.29936661641516743,
+                "total_time": 9.099314753354058,
+                "total_length": 137.78174593052023
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 9.025390625,
+                "transverse_times": 0.5539926422852196,
+                "total_time": 15.660984218981888,
+                "total_length": 137.78174593052023
+            },
+            "indices": {
+                "x": 24,
+                "y": 20
+            },
+            "UTM": {
+                "x": 122.5,
+                "y": 147.5
+            }
+        },
+        {
+            "node": 1025,
+            "map": {
+                "x": 127.5,
+                "y": 147.5
+            },
+            "elevation": 7.417505741119385,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.1632542908191681,
+                    "side": 0.0028291307389736176
+                },
+                "speed": 16.702091217041016,
+                "transverse_times": 0.29936371050940846,
+                "total_time": 9.398678463863467,
+                "total_length": 142.78174593052023
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 8.9774751663208,
+                "transverse_times": 0.5569494660099548,
+                "total_time": 16.21793368499184,
+                "total_length": 142.78174593052023
+            },
+            "indices": {
+                "x": 25,
+                "y": 20
+            },
+            "UTM": {
+                "x": 127.5,
+                "y": 147.5
+            }
+        },
+        {
+            "node": 1026,
+            "map": {
+                "x": 132.5,
+                "y": 147.5
+            },
+            "elevation": 6.60375452041626,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.15586158633232117,
+                    "side": 0.0028128691483289003
+                },
+                "speed": 16.702253341674805,
+                "transverse_times": 0.29936080466006326,
+                "total_time": 9.69803926852353,
+                "total_length": 147.78174593052023
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 9.322742462158203,
+                "transverse_times": 0.5363228706891154,
+                "total_time": 16.754256555680957,
+                "total_length": 147.78174593052023
+            },
+            "indices": {
+                "x": 26,
+                "y": 20
+            },
+            "UTM": {
+                "x": 132.5,
+                "y": 147.5
+            }
+        },
+        {
+            "node": 1027,
+            "map": {
+                "x": 137.5,
+                "y": 147.5
+            },
+            "elevation": 5.858954906463623,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.12264285981655121,
+                    "side": 0.0027987950015813112
+                },
+                "speed": 16.702392578125,
+                "transverse_times": 0.29935830909330097,
+                "total_time": 9.99739757761683,
+                "total_length": 152.78174593052023
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 10.883179664611816,
+                "transverse_times": 0.459424557352315,
+                "total_time": 17.21368111303327,
+                "total_length": 152.78174593052023
+            },
+            "indices": {
+                "x": 27,
+                "y": 20
+            },
+            "UTM": {
+                "x": 137.5,
+                "y": 147.5
+            }
+        },
+        {
+            "node": 1028,
+            "map": {
+                "x": 142.5,
+                "y": 147.5
+            },
+            "elevation": 5.377377986907959,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "slope": {
+                    "forward": -0.0635034516453743,
+                    "side": 0.0027893567457795143
+                },
+                "speed": 16.702486038208008,
+                "transverse_times": 0.2993566340101814,
+                "total_time": 10.296754211627011,
+                "total_length": 157.78174593052023
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "E",
+                "pathfinder_used_angle": 90.0,
+                "speed": 13.6893892288208,
+                "transverse_times": 0.3652463902095286,
+                "total_time": 17.5789275032428,
+                "total_length": 157.78174593052023
+            },
+            "indices": {
+                "x": 28,
+                "y": 20
+            },
+            "UTM": {
+                "x": 142.5,
+                "y": 147.5
+            }
+        },
+        {
+            "node": 1029,
+            "map": {
+                "x": 147.5,
+                "y": 147.5
+            },
+            "elevation": 5.223947525024414,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": -0.010169731453061104,
+                    "side": 0.014108674600720406
+                },
+                "speed": 16.58894157409668,
+                "transverse_times": 0.42625189680014397,
+                "total_time": 10.723006108427155,
+                "total_length": 164.8528137423857
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 16.729999542236328,
+                "transverse_times": 0.4226579799965896,
+                "total_time": 18.00158548323939,
+                "total_length": 164.8528137423857
+            },
+            "indices": {
+                "x": 29,
+                "y": 20
+            },
+            "UTM": {
+                "x": 147.5,
+                "y": 147.5
+            }
+        },
+        {
+            "node": 1080,
+            "map": {
+                "x": 152.5,
+                "y": 142.5
+            },
+            "elevation": 5.231445789337158,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.008275549858808517,
+                    "side": 0.011077068746089935
+                },
+                "speed": 16.61965560913086,
+                "transverse_times": 0.4254641599180083,
+                "total_time": 11.148470268345163,
+                "total_length": 171.92388155425118
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 16.729999542236328,
+                "transverse_times": 0.4226579799965896,
+                "total_time": 18.424243463235978,
+                "total_length": 171.92388155425118
+            },
+            "indices": {
+                "x": 30,
+                "y": 21
+            },
+            "UTM": {
+                "x": 152.5,
+                "y": 142.5
+            }
+        },
+        {
+            "node": 1131,
+            "map": {
+                "x": 157.5,
+                "y": 137.5
+            },
+            "elevation": 5.341003894805908,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.02153814770281315,
+                    "side": 0.024226173758506775
+                },
+                "speed": 15.468402862548828,
+                "transverse_times": 0.4571297938577435,
+                "total_time": 11.605600062202907,
+                "total_length": 178.99494936611666
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 15.177839279174805,
+                "transverse_times": 0.46588105736285795,
+                "total_time": 18.890124520598835,
+                "total_length": 178.99494936611666
+            },
+            "indices": {
+                "x": 31,
+                "y": 22
+            },
+            "UTM": {
+                "x": 157.5,
+                "y": 137.5
+            }
+        },
+        {
+            "node": 1182,
+            "map": {
+                "x": 162.5,
+                "y": 132.5
+            },
+            "elevation": 5.536839485168457,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.024939537048339844,
+                    "side": 0.041732996702194214
+                },
+                "speed": 15.134711265563965,
+                "transverse_times": 0.46720863634539817,
+                "total_time": 12.072808698548306,
+                "total_length": 186.06601717798213
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 14.403108596801758,
+                "transverse_times": 0.49094039417543667,
+                "total_time": 19.38106491477427,
+                "total_length": 186.06601717798213
+            },
+            "indices": {
+                "x": 32,
+                "y": 23
+            },
+            "UTM": {
+                "x": 162.5,
+                "y": 132.5
+            }
+        },
+        {
+            "node": 1233,
+            "map": {
+                "x": 167.5,
+                "y": 127.5
+            },
+            "elevation": 5.699140548706055,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.015831703320145607,
+                    "side": 0.06138266995549202
+                },
+                "speed": 16.078472137451172,
+                "transverse_times": 0.4397848098635578,
+                "total_time": 12.512593508411863,
+                "total_length": 193.1370849898476
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 13.697653770446777,
+                "transverse_times": 0.5162247440595689,
+                "total_time": 19.89728965883384,
+                "total_length": 193.1370849898476
+            },
+            "indices": {
+                "x": 33,
+                "y": 24
+            },
+            "UTM": {
+                "x": 167.5,
+                "y": 127.5
+            }
+        },
+        {
+            "node": 1284,
+            "map": {
+                "x": 172.5,
+                "y": 122.5
+            },
+            "elevation": 5.770743370056152,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.009806626476347446,
+                    "side": 0.07652481645345688
+                },
+                "speed": 15.900918006896973,
+                "transverse_times": 0.44469557096001766,
+                "total_time": 12.957289079371881,
+                "total_length": 200.20815280171308
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 13.041848182678223,
+                "transverse_times": 0.5421829569567485,
+                "total_time": 20.43947261579059,
+                "total_length": 200.20815280171308
+            },
+            "indices": {
+                "x": 34,
+                "y": 25
+            },
+            "UTM": {
+                "x": 172.5,
+                "y": 122.5
+            }
+        },
+        {
+            "node": 1335,
+            "map": {
+                "x": 177.5,
+                "y": 117.5
+            },
+            "elevation": 5.843710899353027,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.013601130805909634,
+                    "side": 0.08016914129257202
+                },
+                "speed": 15.857038497924805,
+                "transverse_times": 0.4459261300772436,
+                "total_time": 13.403215209449124,
+                "total_length": 207.27922061357856
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 12.843634605407715,
+                "transverse_times": 0.5505503721577579,
+                "total_time": 20.990022987948347,
+                "total_length": 207.27922061357856
+            },
+            "indices": {
+                "x": 35,
+                "y": 26
+            },
+            "UTM": {
+                "x": 177.5,
+                "y": 117.5
+            }
+        },
+        {
+            "node": 1386,
+            "map": {
+                "x": 182.5,
+                "y": 112.5
+            },
+            "elevation": 5.962289810180664,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.01328633725643158,
+                    "side": 0.0703187808394432
+                },
+                "speed": 15.974601745605469,
+                "transverse_times": 0.44264438791475286,
+                "total_time": 13.845859597363877,
+                "total_length": 214.35028842544403
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 13.308018684387207,
+                "transverse_times": 0.5313388851911637,
+                "total_time": 21.52136187313951,
+                "total_length": 214.35028842544403
+            },
+            "indices": {
+                "x": 36,
+                "y": 27
+            },
+            "UTM": {
+                "x": 182.5,
+                "y": 112.5
+            }
+        },
+        {
+            "node": 1437,
+            "map": {
+                "x": 187.5,
+                "y": 107.5
+            },
+            "elevation": 6.024080753326416,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": -0.00011828518472611904,
+                    "side": 0.0485152043402195
+                },
+                "speed": 16.22366714477539,
+                "transverse_times": 0.43584892051626045,
+                "total_time": 14.281708517880137,
+                "total_length": 221.4213562373095
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 14.407970428466797,
+                "transverse_times": 0.4907747310401672,
+                "total_time": 22.01213660417968,
+                "total_length": 221.4213562373095
+            },
+            "indices": {
+                "x": 37,
+                "y": 28
+            },
+            "UTM": {
+                "x": 187.5,
+                "y": 107.5
+            }
+        },
+        {
+            "node": 1488,
+            "map": {
+                "x": 192.5,
+                "y": 102.5
+            },
+            "elevation": 5.951043605804443,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": -0.012619133107364178,
+                    "side": 0.026984401047229767
+                },
+                "speed": 16.455936431884766,
+                "transverse_times": 0.4296970786885567,
+                "total_time": 14.711405596568694,
+                "total_length": 228.49242404917499
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 15.303537368774414,
+                "transverse_times": 0.4620544676352669,
+                "total_time": 22.474191071814946,
+                "total_length": 228.49242404917499
+            },
+            "indices": {
+                "x": 38,
+                "y": 29
+            },
+            "UTM": {
+                "x": 192.5,
+                "y": 102.5
+            }
+        },
+        {
+            "node": 1539,
+            "map": {
+                "x": 197.5,
+                "y": 97.5
+            },
+            "elevation": 5.841761112213135,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": -0.01135506946593523,
+                    "side": 0.013154570944607258
+                },
+                "speed": 16.5986328125,
+                "transverse_times": 0.4260030263781989,
+                "total_time": 15.137408622946893,
+                "total_length": 235.56349186104046
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 16.729999542236328,
+                "transverse_times": 0.4226579799965896,
+                "total_time": 22.896849051811536,
+                "total_length": 235.56349186104046
+            },
+            "indices": {
+                "x": 39,
+                "y": 30
+            },
+            "UTM": {
+                "x": 197.5,
+                "y": 97.5
+            }
+        },
+        {
+            "node": 1590,
+            "map": {
+                "x": 202.5,
+                "y": 92.5
+            },
+            "elevation": 5.7900390625,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": -0.003358766669407487,
+                    "side": 0.005536106880754232
+                },
+                "speed": 16.675214767456055,
+                "transverse_times": 0.42404658113703125,
+                "total_time": 15.561455204083924,
+                "total_length": 242.63455967290594
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 16.729999542236328,
+                "transverse_times": 0.4226579799965896,
+                "total_time": 23.319507031808126,
+                "total_length": 242.63455967290594
+            },
+            "indices": {
+                "x": 40,
+                "y": 31
+            },
+            "UTM": {
+                "x": 202.5,
+                "y": 92.5
+            }
+        },
+        {
+            "node": 1641,
+            "map": {
+                "x": 207.5,
+                "y": 87.5
+            },
+            "elevation": 5.794161319732666,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.006480095442384481,
+                    "side": 0.00800574291497469
+                },
+                "speed": 16.650543212890625,
+                "transverse_times": 0.4246749022813352,
+                "total_time": 15.986130106365259,
+                "total_length": 249.7056274847714
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 16.729999542236328,
+                "transverse_times": 0.4226579799965896,
+                "total_time": 23.742165011804715,
+                "total_length": 249.7056274847714
+            },
+            "indices": {
+                "x": 41,
+                "y": 32
+            },
+            "UTM": {
+                "x": 207.5,
+                "y": 87.5
+            }
+        },
+        {
+            "node": 1692,
+            "map": {
+                "x": 212.5,
+                "y": 82.5
+            },
+            "elevation": 5.881777286529541,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.02223164215683937,
+                    "side": 0.022127604112029076
+                },
+                "speed": 15.45611572265625,
+                "transverse_times": 0.45749319808083444,
+                "total_time": 16.443623304446092,
+                "total_length": 256.7766952966369
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 15.228044509887695,
+                "transverse_times": 0.4643450974466336,
+                "total_time": 24.206510109251347,
+                "total_length": 256.7766952966369
+            },
+            "indices": {
+                "x": 42,
+                "y": 33
+            },
+            "UTM": {
+                "x": 212.5,
+                "y": 82.5
+            }
+        },
+        {
+            "node": 1743,
+            "map": {
+                "x": 217.5,
+                "y": 77.5
+            },
+            "elevation": 6.108956336975098,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.03921391814947128,
+                    "side": 0.03613917902112007
+                },
+                "speed": 14.523045539855957,
+                "transverse_times": 0.48688601798157055,
+                "total_time": 16.930509322427664,
+                "total_length": 263.84776310850236
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 14.17809009552002,
+                "transverse_times": 0.4987320410736976,
+                "total_time": 24.705242150325045,
+                "total_length": 263.84776310850236
+            },
+            "indices": {
+                "x": 43,
+                "y": 34
+            },
+            "UTM": {
+                "x": 217.5,
+                "y": 77.5
+            }
+        },
+        {
+            "node": 1794,
+            "map": {
+                "x": 222.5,
+                "y": 72.5
+            },
+            "elevation": 6.431880950927734,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.04665021970868111,
+                    "side": 0.03716360777616501
+                },
+                "speed": 14.165852546691895,
+                "transverse_times": 0.4991628840240017,
+                "total_time": 17.429672206451666,
+                "total_length": 270.91883092036784
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 13.87648868560791,
+                "transverse_times": 0.5095718356473911,
+                "total_time": 25.214813985972437,
+                "total_length": 270.91883092036784
+            },
+            "indices": {
+                "x": 44,
+                "y": 35
+            },
+            "UTM": {
+                "x": 222.5,
+                "y": 72.5
+            }
+        },
+        {
+            "node": 1845,
+            "map": {
+                "x": 227.5,
+                "y": 67.5
+            },
+            "elevation": 6.746284008026123,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.03582370653748512,
+                    "side": 0.03379931300878525
+                },
+                "speed": 14.704093933105469,
+                "transverse_times": 0.4808910935984536,
+                "total_time": 17.91056330005012,
+                "total_length": 277.9898987322333
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 14.372782707214355,
+                "transverse_times": 0.4919762551142016,
+                "total_time": 25.70679024108664,
+                "total_length": 277.9898987322333
+            },
+            "indices": {
+                "x": 45,
+                "y": 36
+            },
+            "UTM": {
+                "x": 227.5,
+                "y": 67.5
+            }
+        },
+        {
+            "node": 1896,
+            "map": {
+                "x": 232.5,
+                "y": 62.5
+            },
+            "elevation": 6.919124603271484,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.015286864712834358,
+                    "side": 0.03645908460021019
+                },
+                "speed": 16.355302810668945,
+                "transverse_times": 0.43234099018043576,
+                "total_time": 18.342904290230557,
+                "total_length": 285.0609665440988
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 14.837326049804688,
+                "transverse_times": 0.4765729207628052,
+                "total_time": 26.183363161849446,
+                "total_length": 285.0609665440988
+            },
+            "indices": {
+                "x": 46,
+                "y": 37
+            },
+            "UTM": {
+                "x": 232.5,
+                "y": 62.5
+            }
+        },
+        {
+            "node": 1947,
+            "map": {
+                "x": 237.5,
+                "y": 57.5
+            },
+            "elevation": 6.977081298828125,
+            "path": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "slope": {
+                    "forward": 0.02009265124797821,
+                    "side": 0.04680492356419563
+                },
+                "speed": 15.308334350585938,
+                "transverse_times": 0.4619096793894383,
+                "total_time": 18.804813969619996,
+                "total_length": 292.13203435596427
+            },
+            "path_omni_based_info": {
+                "move_direction": -0.7853981633974483,
+                "move_compass_direction": "SE",
+                "pathfinder_used_angle": 135.0,
+                "speed": 14.292338371276855,
+                "transverse_times": 0.494745340347953,
+                "total_time": 26.6781085021974,
+                "total_length": 292.13203435596427
+            },
+            "indices": {
+                "x": 47,
+                "y": 38
+            },
+            "UTM": {
+                "x": 237.5,
+                "y": 57.5
+            }
+        },
+        {
+            "node": 1998,
+            "map": {
+                "x": 242.5,
+                "y": 52.5
+            },
+            "elevation": 7.243454933166504,
+            "path": {
+                "move_direction": 0.0,
+                "move_compass_direction": "N/A",
+                "pathfinder_used_angle": "N/A",
+                "slope": {
+                    "forward": 0.0,
+                    "side": 0.0
+                },
+                "speed": 0.0,
+                "transverse_times": 0.0,
+                "total_time": 18.804813969619996,
+                "total_length": 292.13203435596427
+            },
+            "path_omni_based_info": {
+                "move_direction": 0.0,
+                "move_compass_direction": "N/A",
+                "pathfinder_used_angle": "N/A",
+                "speed": 0.0,
+                "transverse_times": 0.0,
+                "total_time": 26.6781085021974,
+                "total_length": 292.13203435596427
+            },
+            "indices": {
+                "x": 48,
+                "y": 39
+            },
+            "UTM": {
+                "x": 242.5,
+                "y": 52.5
+            }
+        }
+    ],
+    "metadata": {
+        "minimum_speed": 0.5,
+        "target_speed": 20.0,
+        "minimum_speed_violated": false
+    }
+}
