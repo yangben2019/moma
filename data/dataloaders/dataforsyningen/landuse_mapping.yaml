@@ -1,0 +1,52 @@
+label_to_color:
+  Building:       [255,   0,   0]
+  Built-up area:  [127,   0,   0]
+  Road:           [  0,   0,   0]
+  Railway:        [127, 127, 127]
+  Recreational:   [100, 200, 127]
+  Mining:         [127,  50,   0]
+  Airport:        [191,   0,   0]
+  Farming:        [227, 230,  70]
+  Forest:         [  0, 127,  20]
+  Nature:         [127, 255, 127]
+  Lake:           [  0, 200, 255]
+  Stream:         [  0, 120, 255]
+  Sea:            [  0,  40, 255]
+  Non classified: [255, 105, 180]
+
+# Descriptions from https://dce2.au.dk/pub/TR252.pdf
+basemap_to_landuse_label:
+  110000: Building                # Building                                   Buildings, which do not overlap with build-up categories
+  121000: Built-up area           # Low built up                               Areas with buildings up to two storeys
+  121110: Building                # Low built up; Building                     Buildings located within low built-up areas
+  122000: Built-up area           # High built up                              Areas with buildings with more than two storeys
+  122110: Building                # High built up; Building                    Buildings located within high built-up areas
+  123000: Built-up area           # City centre                                Areas with contiguous built-up areas in city centres
+  123110: Building                # City centre; Building                      Buildings located within city centre
+  124000: Built-up area           # Other built up                             Other built-up areas, primarily technical areas from the
+  124110: Building                # Other built up; Building                   Buildings located within other built-up areas
+  125000: Built-up area           # Industry/business                          Area with commercial or industrial use, such as industry
+  125110: Building                # Industry/business; Building                Buildings located within industry/business areas
+  126000: Airport                 # Airport/runway                             Airports and airfields
+  126110: Building                # Airport/runway; Building                   Buildings located within Airport/runway areas
+  130000: Recreational            # Recreation area/sports ground              Recreational areas and sport grounds. Includes allotment
+  130110: Building                # Recreation area/sports ground; Building    Buildings located within recreational areas/sport ground
+  141000: Road                    # Road, paved                                Paved roads
+  142000: Road                    # Road, not paved                            Not paved roads
+  150000: Railway                 # Railway                                    Railways and other areas related to railways
+  150110: Building                # Railway; Building                          Buildings located within areas related to railways
+  160000: Mining                  # Resource extraction                        Gravel pits
+  211000: Farming                 # Agriculture, intensive, temporary crops    Annual crops, including grassland in rotation
+  212000: Farming                 # Agriculture, intensive, permanent crops    Perennial crops, including Christmas trees, energy forest, orchards and nurseries/plantations
+  220000: Farming                 # Agriculture, extensive                     Extensive land use, such as permanent grassland
+  230000: Farming                 # Agriculture, not classified                Field parcels or field blocks from the agricultural census data, which do not contain land use information
+  311000: Forest                  # Forest Forested land
+  312000: Forest                  # Forest, wet                                Forested land on wet ground
+  321000: Nature                  # Nature, dry                                Habitat types on dry ground, which are not categorised as forest
+  321220: Nature                  # Nature, dry; Agriculture, extensive        Dry nature, which in the agricultural census data is categorised as extensive agriculture
+  322000: Nature                  # Nature, wet                                Habitat types on wet ground, which are not categorised as forest
+  322220: Nature                  # Nature, wet; Agriculture, extensive        Wet nature, which in the agricultural census data is categorised as extensive agriculture
+  411000: Lake                    # Lake                                       Surface covered with freshwater, which is not part of a watercourse
+  412000: Stream                  # Stream                                     Surface covered with freshwater, which is part of a watercourse
+  420000: Sea                     # Sea                                        Surface covered with salt- or brackish water
+  800000: Non classified          # Unmapped                                   Area, where none of the applied input data contain land use/land cover information
