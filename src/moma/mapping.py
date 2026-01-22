@@ -221,7 +221,7 @@ class AerialMap(Map):
 
         self.raster.plot(
             rgb=rgb,
-            export_path=export_path / "Aerial view.pdf",
+            export_path=export_path / "site/aerial_view.pdf",
             show=show,
             export=export,
             save_maps=save_maps,
@@ -259,8 +259,8 @@ class ElevationMap(Map):
             hide_utm (bool): Whether to hide the UTM coordinates.
         """
         return_vals = self.raster.plot(
-            colorbar="Elevation (m)",
-            export_path=export_path / "Elevation map.pdf",
+            colorbar="Elevation [m]",
+            export_path=export_path / "site/elevation_map.pdf",
             show=show,
             export=export,
             save_maps=save_maps,
@@ -485,8 +485,8 @@ class SlopeMap(DirectionalMap):
         # Plot steepest decline map
         self.slope_raster.plot(
             data=self.slope_raster.data * 100,
-            colorbar="Slope [%]",
-            export_path=export_path / "slope_maps" / f"Steepest slope.pdf",
+            colorbar="Slope [\%]",
+            export_path=export_path / "slope_maps" / f"slope_steepest.pdf",
             show=show,
             export=export,
             save_maps=save_maps,
@@ -496,9 +496,9 @@ class SlopeMap(DirectionalMap):
         # Plot aspect decline map
         self.aspect_raster.plot(
             data=np.rad2deg(self.aspect_raster.data),
-            colorbar="Direction of steepest decline (deg)",
+            colorbar=r"Direction of steepest decline [\textdegree]",
             clim=(0, 360),
-            export_path=export_path / "slope_maps" / f"Aspect.pdf",
+            export_path=export_path / "slope_maps" / "aspect.pdf",
             show=show,
             export=export,
             save_maps=save_maps,
@@ -529,9 +529,9 @@ class SlopeMap(DirectionalMap):
 
             self.directional_rasters[angle].plot(
                 data=self.directional_rasters[angle].data * 100,
-                colorbar="Slope [%]",
+                colorbar="Slope [\%]",
                 clim=(-20, 20),
-                export_path=export_path / "slope_maps" / f"Slope map ({direction}).pdf",
+                export_path=export_path / "slope_maps" / f"slope_map_{direction.lower()}.pdf",
                 show=show,
                 export=export,
                 save_maps=save_maps,
@@ -659,7 +659,7 @@ class LandUseMap(ParameterMap):
         self.raster.plot(
             rgb=self.rgb,
             discrete_colormap=(discrete_colormap, self.col_dict),
-            export_path=export_path / "Land use.pdf",
+            export_path=export_path / "site/landuse_map.pdf",
             show=show,
             export=export,
             save_maps=save_maps,
@@ -760,7 +760,7 @@ class SoilTypeMap(ParameterMap):
         self.raster.plot(
             rgb=rgb,
             discrete_colormap=(discrete_colormap, col_dict),
-            export_path=export_path / "Soil map.pdf",
+            export_path=export_path / "site/soil_map.pdf",
             show=show,
             export=export,
             save_maps=save_maps,
@@ -836,10 +836,10 @@ class MoistureContentMap(ParameterMap):
         """
         # Plots colormap
         self.raster.plot(
-            colorbar="Moisture content (%)",
+            colorbar="Moisture content [\%]",
             data=self.moisturearray,
             reverse_colormap=False,
-            export_path=export_path / "Moisture map.pdf",
+            export_path=export_path / "site/moisture_map.pdf",
             show=show,
             export=export,
             save_maps=save_maps,
@@ -878,7 +878,7 @@ class FrictionMap(ParameterMap):
         """
         self.raster.plot(
             colorbar="Friction",
-            export_path=export_path / "Friction map.pdf",
+            export_path=export_path / "site/friction_map.pdf",
             show=show,
             export=export,
             save_maps=save_maps,
@@ -1130,7 +1130,7 @@ class NoGoMap(Map):
         if export:
             log.info(f"Exporting raster plot to {export_path}.")
             plt.savefig(
-                export_path / f"{self.vehicle}" / "No-go map.pdf",
+                export_path / f"mobility_{self.vehicle}" / "nogo_map.pdf",
                 format="pdf",
                 bbox_inches="tight",
             )

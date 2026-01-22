@@ -110,11 +110,12 @@ class Path:
         ax.scatter(x[0], y[0], color="b", marker="s", s=7.5)
         ax.scatter(x[-1], y[-1], color="g", marker="X", s=7.5)
 
+
         if export_path:
             plt.savefig(
                 export_path
-                / f"{vehicle}"
-                / f"Optimal path{' (omni)' if omnidirectional_based else ''}.pdf",
+                / f"mobility_{vehicle}" / "paths"
+                / f"path_optimal{'_omnidirectional' if omnidirectional_based else '_directional'}.pdf",
                 format="pdf",
                 bbox_inches="tight",
             )
@@ -162,8 +163,8 @@ class Path:
         if export:
             with open(
                 export
-                / f"{vehicle}"
-                / f"Optimal path{' (omni)' if omnidirectional_based else ''}.json",
+                / f"mobility_{vehicle}" / "paths"
+                / f"path_optimal{'_omnidirectional' if omnidirectional_based else '_directional'}.json",
                 "w",
             ) as f:
                 json.dump(path_json, f, indent=4)
@@ -172,8 +173,8 @@ class Path:
         # load json file
         with open(
             export
-            / f"{vehicle}"
-            / f"Optimal path{' (omni)' if omnidirectional_based else ''}.json",
+            / f"mobility_{vehicle}" / "paths"
+            / f"path_optimal{'_omnidirectional' if omnidirectional_based else '_directional'}.json",
             "r",
         ) as f:
             data = json.load(f)["waypoints"]
@@ -216,8 +217,8 @@ class Path:
         if export:
             plt.savefig(
                 export
-                / f"{vehicle}"
-                / f"Optimal path 3D{' (omni)' if omnidirectional_based else ''}.pdf",
+                / f"mobility_{vehicle}" / "paths"
+                / f"path_optimal_3d{'_omnidirectional' if omnidirectional_based else '_directional'}.pdf",
                 format="pdf",
                 bbox_inches="tight",
             )

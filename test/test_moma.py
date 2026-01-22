@@ -44,7 +44,8 @@ from moma.generators import TestMapGenerator
 from moma.toolboxes import MobilityToolbox
 
 import matplotlib.pyplot as plt
-plt.rc('text', usetex=False)
+
+#plt.rc('text', usetex=False)
 
 def test_map_generator():
     map_dim=(10, 10)
@@ -142,5 +143,5 @@ def test_main_mobility_generation(mapping_links):
     moma.generate_directional_mobility_maps(["mean"])
 
     # check that mobility map is created
-    mobility_map_path = pytest_sites_dir / "testmap" / "export" / "mock" / "Mobility map (0.0).pdf"
+    mobility_map_path = pytest_sites_dir / "testmap" / "export" / "mobility_mock" / "Mobility map (0.0).pdf"
     assert mobility_map_path.exists(), "Mobility map was not created correctly."

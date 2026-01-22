@@ -65,8 +65,9 @@ log = logging.getLogger("MOMA")
 plt.style.use(
     importlib.resources.path("moma", "data") / pathlib.Path("matplotlib/moma.mplstyle")
 )
+
 # Ensure that LaTeX is not used for rendering text in plots
-plt.rc("text", usetex=False)
+#plt.rc("text", usetex=False)
 
 
 def generate_vehicle_mobility_file(vehicle, minimum_speed=0.01, plot_mobility=False):
@@ -192,7 +193,7 @@ def generate_vehicle_mobility_file(vehicle, minimum_speed=0.01, plot_mobility=Fa
 
         ax.set_xlabel("Slope Angle (degrees)")
         ax.set_ylabel("Friction Coefficient")
-        ax.set_zlabel("Speed (m/s)")
+        ax.set_zlabel("Speed [m/s]")
 
         color_val = np.sqrt(data_grid[:, :, 0].T)
         norm = Normalize(vmin=color_val.min(), vmax=color_val.max())
@@ -763,8 +764,8 @@ class DirectionalMobilityMap(DirectionalMap):
         for direction in directions:
 
             axis.title(f"Directional mobility map\n{direction} direction")
-            axis.set_xlabel("X coordinate (m)")
-            axis.set_ylabel("Y coordinate (m)")
+            axis.set_xlabel("X coordinate [m]")
+            axis.set_ylabel("Y coordinate [m]")
 
             axes.append(axis)
 
@@ -785,8 +786,8 @@ class DirectionalMobilityMap(DirectionalMap):
         for _ in directions:
             _, axis = plt.subplots(1, 1)
             axis.title(f"Directional mobility map\n{direction} direction")
-            axis.set_xlabel("X coordinate (m)")
-            axis.set_ylabel("Y coordinate (m)")
+            axis.set_xlabel("X coordinate [m]")
+            axis.set_ylabel("Y coordinate [m]")
 
             axes.append(axis)
 
@@ -1320,11 +1321,11 @@ class MobilityMap(Map):
         )
 
         self.raster.plot(
-            colorbar="Speed (m/s)",
+            colorbar="Speed [m/s]",
             title=title,
             export_path=export_path
-            / f"{self.mobility_analysis.mobility_tensors[0].vehicle}"
-            / f"Mobility map ({self.direction}).pdf",
+            / f"mobility_{self.mobility_analysis.mobility_tensors[0].vehicle}"
+            / f"mobility_map_{self.direction.lower()}.pdf",
             show=show,
             export=export,
             save_maps=save_maps,

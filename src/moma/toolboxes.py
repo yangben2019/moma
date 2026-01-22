@@ -120,7 +120,9 @@ class MobilityToolbox:
         # Creating and export directory if it does not exist
         self.EXPORT_PATH = base_path / "export/"
         self.EXPORT_PATH.mkdir(exist_ok=True)
-        (self.EXPORT_PATH / vehicle_name).mkdir(exist_ok=True)
+        (self.EXPORT_PATH / f"mobility_{vehicle_name}").mkdir(exist_ok=True)
+        (self.EXPORT_PATH / f"mobility_{vehicle_name}/paths").mkdir(exist_ok=True)
+        (self.EXPORT_PATH / "site").mkdir(exist_ok=True)
         (self.EXPORT_PATH / "slope_maps").mkdir(exist_ok=True)
         self.export_plots = export_plots
         self.save_maps = save_maps
