@@ -1,16 +1,16 @@
-#############################################################################
-#                            _     _     _     _                            #
-#                           / \   / \   / \   / \                           #
-#                          ( M ) ( O ) ( M ) ( A )                          #
-#                           \_/   \_/   \_/   \_/                           #
-#                                                                           #
-#               MOMA: Ground vehicles mobility mapping toolkit              #
-#############################################################################
+ #############################################################################
+ #                            _     _     _     _                            #
+ #                           / \   / \   / \   / \                           #
+ #                          ( M ) ( O ) ( M ) ( A )                          #
+ #                           \_/   \_/   \_/   \_/                           #
+ #                                                                           #
+ #   MOMA: Mobility maps and optimal routes generator for ground vehicles    #
+ #############################################################################
 
 [project]
 name = "moma"
 version = "1.0.0"
-description = "Ground vehicles mobility mapping toolkit."
+description = "Mobility maps and optimal routes generator for ground vehicles"
 authors = [
     { name = "Dario Sirangelo", email = "dsi@aarhusrobotics.com" },
     { name = "Nikolaj Jes Petersen", email = "njp@aarhusrobotics.com" },
