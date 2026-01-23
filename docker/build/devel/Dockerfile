@@ -49,3 +49,15 @@ RUN pipx install poetry
 # Set the working directory to the home folder of the container user
 WORKDIR /home/${USER}
 
+###############################################################################
+# Add container labels                                                        #
+###############################################################################
+
+LABEL org.opencontainers.image.authors="Dario Sirangelo (dsi@aarhusrobotics.com)"
+LABEL org.opencontainers.image.url=https://github.com/aarhus-robotics/moma
+LABEL org.opencontainers.image.documentation=https://docs.aarhusrobotics.com/moma
+LABEL org.opencontainers.image.source=https://github.com/aarhus-robotics/moma/tree/main/docker/build/devel
+LABEL org.opencontainers.image.version=main
+LABEL org.opencontainers.image.licenses=MIT
+LABEL org.opencontainers.image.title="MOMA (devel)"
+LABEL org.opencontainers.image.description="Mobility maps and optimal routes generator for ground vehicles "
