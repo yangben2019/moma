@@ -31,10 +31,6 @@ Supported uncertainty representations are:
 
 ---
 
-   <span style="color:red">Data flowchart image?</span>
-
----
-
 ### Map Objects
 
 Map objects are used to process raster data in MOMA. Each map object:
@@ -51,7 +47,10 @@ specific stage in the processing pipeline. The map objects are listed below in
 the order in which they are used. 
 
 If a map includes uncertainty information, \(N\) samples are drawn from the
-map’s distribution using **Latin Hypercube Sampling (LHS)**.
+map’s distribution using Latin Hypercube Sampling.
+
+This diagram shows how data is handled inside MOMA and DYNO from input to output
+![MOMA flowchart](moma_flowchart.png)
 
 ### Aerial Map
 
@@ -81,8 +80,6 @@ averaging each local value with the mean of a 3×3 kernel centered at that point
 
 The directional slope maps are stored as `RasterMono` objects.
 
-   <span style="color:red">Sideslope maps</span>
-   <span style="color:red">Unidirectional mobility maps</span>
 ---
 
 ###  Moisture Map

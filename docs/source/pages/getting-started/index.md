@@ -36,12 +36,12 @@ source $(poetry env info --path)/bin/activate
 Once inside the container, generate a simple map using default options with the
 following command:
 ```shell
-moma --clear generate_test_map --create_rasters
+moma generate_test_map --create_rasters
 ```
 Mobility maps can then be created by:
 
 ```shell
-moma --clear mobility
+moma mobility
 ```
 
 ## Step guide

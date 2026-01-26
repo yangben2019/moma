@@ -12,6 +12,7 @@ Key, Description, Type [Range], Default value
 \\-\\-clear, Clear the console before running the script, bool flag, False
 mobility, Subcommand for predicting mobility, subcommand, —
 generate_test_map, Subcommand for generating synthetic test maps, subcommand, —
+generate_vehicle_mobility_file, Subcommand for generating vehicle mobility file with data from DYNO, subcommand, —
 ```
 
 ### Mobility arguments
@@ -108,6 +109,23 @@ Key; Description; Type [Range]; Default value
 \\-\\-transition_pad; Transition padding between the flat padding and generated map; int ≥0; 15
 ```
 
+### Vehicle mobility file generation arguments
+
+A vehicle mobility file for use in MOMA can be generated from vehicle simulations done in <span style="color:red">DYNO</span>. Currently only slope climbing for straight line acceleration on hard surfaces with varying coefficient of friction is supported. The output from DYNO should be placed inside the a subfolder to the vehicle named straight_line_acceleration. 
+
+
+```{csv-table} Executable options
+:widths: 20, 50, 15, 15
+:header-rows: 1
+:delim: ;
+
+Key; Description; Type [Range]; Default value
+\-\-vehicle; Name of the vehicle to generate the mobility file for; str; —
+\-\-minimum_speed; Minimum allowed speed in the generated mobility file; float ≥0; 0.01
+\-\-plot; Plot the data from the generated mobility file; bool flag; False
+```
+
+
 ## Adding a New Site
 
 New sites can be added to MOMA by creating a dedicated directory under
@@ -161,7 +179,7 @@ consistent.
 
 ## Adding a New Vehicle
 
-A vehicle is defined by its `mobility.yaml` and `landuse_nogo.yaml`. The mobility file contains information of maximum steady state vehicle speeds for a set of tests. Here the start of one such file is presented:
+A vehicle is defined by its `mobility.yaml` and `landuse_nogo.yaml`. The mobility file contains information of maximum steady state vehicle speeds for a set of tests. For a simple slope climbing test the subcommand `--generate_vehicle_mobility_file` can be used to fill in the mobility file. Here is an example of the start of one such file presented:
 
 ```yaml
 - soil:
