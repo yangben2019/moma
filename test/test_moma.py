@@ -38,6 +38,7 @@ import pytest
 
 from types import SimpleNamespace
 import pathlib
+import shutil
 
 from moma.generators import TestMapGenerator
 
@@ -85,34 +86,34 @@ def mapping_links():
         "soiltype_mapping.yaml",
     ]
 
-    links = []
+    copies = []
 
     for yaml in yamls:
-        real = pathlib.Path(
-            "src/moma/data/examples/dataloaders/dataforsyningen"
-        ) / yaml
-        link = pathlib.Path(
-            "test/output/dataloaders/dataforsyningen"
-        ) / yaml
+        src = (
+            pathlib.Path("src/moma/data/dataloaders/dataforsyningen")
+            / yaml
+        )
+        dst = (
+            pathlib.Path("test/output/dataloaders/dataforsyningen")
+            / yaml
+        )
 
-        link.parent.mkdir(parents=True, exist_ok=True)
+        dst.parent.mkdir(parents=True, exist_ok=True)
 
-        if link.exists() or link.is_symlink():
-            link.unlink()
+        if not dst.exists() or src.stat().st_mtime > dst.stat().st_mtime:
+            shutil.copy2(src, dst)
 
-        link.symlink_to(real.resolve())
-        links.append(link)
+        copies.append(dst)
 
-    return links
+    return copies
 
 
 def test_main_mobility_generation(mapping_links):
     for link in mapping_links:
         assert link.exists(), f"Mapping link from temp test output to {link} does not exist."
-        assert link.is_symlink(), f"Mapping link from temp test output to {link} is not a symlink."
 
     pytest_sites_dir = pathlib.Path(".") / "test/output/sites"
-    pytest_vehicles_dir = pathlib.Path(".") / "src/moma/data/examples/vehicles"
+    pytest_vehicles_dir = pathlib.Path(".") / "src/moma/data/vehicles"
     moma = MobilityToolbox(
         sites_path=pytest_sites_dir,
         vehicles_path=pytest_vehicles_dir,
@@ -139,9 +140,8 @@ def test_main_mobility_generation(mapping_links):
         print(f"Testing {name}...")
         func()
 
-    print("Testing directional_mobility_maps...")
     moma.generate_directional_mobility_maps(["mean"])
 
     # check that mobility map is created
-    mobility_map_path = pytest_sites_dir / "testmap" / "export" / "mobility_mock" / "Mobility map (0.0).pdf"
+    mobility_map_path = pytest_sites_dir / "testmap" / "export" / "mobility_mock" / "mobility_map_n.pdf"
     assert mobility_map_path.exists(), "Mobility map was not created correctly."

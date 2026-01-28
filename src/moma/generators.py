@@ -1068,14 +1068,16 @@ f"""    DataSource: DataforsyningenFriction
         raster_dir = base_output_dir / "rasters"
         output_dir = base_output_dir
 
+        output_dir.mkdir(parents=True, exist_ok=True)
+        print(
+            f"Output directory: \n\tBitmaps: {output_dir}"
+        )
+
         if create_rasters:
             raster_dir.mkdir(parents=True, exist_ok=True)
-
-        output_dir.mkdir(parents=True, exist_ok=True)
-
-        print(
-            f"Output directory: \n\tBitmaps: {output_dir}\n\tRasters: {raster_dir}"
-        )
+            print(
+                f"\tRasters: {raster_dir}"
+            )
 
         print("Generating test map...")
         elevation, map_size, resolution, sections = self.generate_test_map(
