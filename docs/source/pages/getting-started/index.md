@@ -70,7 +70,7 @@ For a better understanding in the functions of MOMA follow this guide:
    ```shell
    moma --clear mobility
    ```
-   If the environment is build outside a docker container the generated plots can be show directly by using the argument `--show_plots`
+   The generated plots can be show directly by using the argument `--show_plots`. Be aware that not all docker installations supports the popup windows created by mathplotlib.
 
 1. Used more parameters
 
@@ -85,5 +85,5 @@ For a better understanding in the functions of MOMA follow this guide:
    --path_end 240 50 --target_speed 20
    ```
 
-1. To work a different dataset see the documentation on how to add new [site](../user-guide/index.md#adding-a-new-site), [data laoder](../user-guide/index.md#adding-a-new-data-loader) 
+1. To work on a different dataset, see the documentation on how to add a new [site](../user-guide/index.md#adding-a-new-site), [data laoder](../user-guide/index.md#adding-a-new-data-loader), 
    and [vehicle](../user-guide/index.md#adding-a-new-vehicle)

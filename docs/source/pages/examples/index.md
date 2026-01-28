@@ -42,7 +42,7 @@ moma mobility --show_plots --vehicle mock --site testmap
 
 ---
 
-Destitution used for sampling values and 90% quantile is used for reducing tio single mobility value
+Distribution used for sampling values and 90% quantile is used for reducing tio single mobility value
 
 ```shell
 moma mobility --n_samples 50 --sample_reduction quantile 0.9
@@ -81,7 +81,7 @@ moma mobility --path_coordinate_system utm --path_start 10 210 --path_end 140 40
 Adding mobility calculations for paths in specified folder
 
 ```shell
-moma mobility --path_folder src/moma/data/examples/sites/testmap/paths
+moma mobility --path_folder src/moma/data/sites/testmap/paths
 ```
 
 ---
@@ -97,7 +97,9 @@ moma mobility --vehicle mock --site testmap --n_samples 50 --sample_reduction me
 
 # Mobility file generation
 
+Generates `mobility.yaml` for vehicle named `vehicle_name` with minimum speed 0.1. The data are plotted.
+
 ```shell
-moma generate_vehicle_mobility_file --vehicle Olav --minimum_speed 0.1 --plot
+moma generate_vehicle_mobility_file --vehicle vehicle_name --minimum_speed 0.1 --plot
 ```
 

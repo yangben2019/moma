@@ -72,13 +72,19 @@ the elevation data.
 
 For each sample drawn from the elevation map, a set of directional slope maps is
 generated—one for each of the eight primary compass directions. Slopes are
-computed using a central-difference kernel for each direction.
+computed using aspect and the steepest slope direction.
 
 To avoid errors at the map boundaries, the elevation map is padded with values
 computed using forward differences toward the edges. To reduce local errors caused by noise, the resulting slope maps are smoothed by
 averaging each local value with the mean of a 3×3 kernel centered at that point.
 
 The directional slope maps are stored as `RasterMono` objects.
+
+---
+
+### Soil Map
+
+The soil type map specifies the soil type present at each location. Soil type is used as an input parameter for generating the mobility maps. The map is loaded as a `RasterRGBA`, where each soil type is represented by a distinct color. These colors are converted into soil type labels using a value map. For visualization, the colors are taken directly from the raster.
 
 ---
 
@@ -111,7 +117,7 @@ constructed from two sources of information:
 
 - user-defined no-go zones specified in the `site.yaml` file, and
 - land-use data combined with the vehicle-specific `landuse_nogo.yaml` file,
-  which defines which land-use types are considered no-go.
+  which defines which land-use types are considered no-go for the vehicle in question.
 
 User-defined no-go zones can be specified either as rectangular regions
 (defined by the coordinates of their edges) or as circular regions (defined by
@@ -213,5 +219,3 @@ Using predefined paths is useful in two main scenarios:
 
 1. **Controlled evaluation** – It allows full control over which path is used, enabling systematic testing of mobility predictions in specific scenarios.
 2. **Comparative analysis** – It enables comparison of predicted mobility across different inputs, parameters, or algorithmic changes without the path itself being altered by the path planner.
-
-This approach ensures consistent path geometry while evaluating the effects of changes in the mobility prediction pipeline.

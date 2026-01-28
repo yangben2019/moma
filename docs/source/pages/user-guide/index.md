@@ -2,7 +2,7 @@
 
 ## Executable options
 
-The main MOMA executable is available on PATH on all Docker images as `moma`. The main subcommand for MOMA is `mobility` which generates mobility maps with the given arguments. Another subcommand exist for generating a synthetic test map.
+The main MOMA executable is available on PATH on all Docker images as `moma`. The main subcommand for MOMA is `mobility` which generates mobility maps. Furthermore subcommands exist for generating a synthetic test map and generating a vehicle mobility file from multibody dynamics simulation.
 
 ```{csv-table} Executable options
 :widths: 20, 50, 15, 15
@@ -32,7 +32,7 @@ Key; Description; Type [Range]; Default value
 \\-\\-site; Name of the site (site folder name); str; testmap
 \\-\\-n_samples; Number of samples used for uncertainty handling (1 → mean value); int ≥1; 1
 \\-\\-sample_reduction; Sample reduction method ('mean' or 'quantile q'); list; mean
-\\-\\-path; Path to MOMA data root; str; src/moma/data/examples
+\\-\\-path; Path to MOMA data root; str; src/moma/data/
 \\-\\-path_coordinate_system; Coordinate system for path planner (map or utm). Setting the coordinate system activates path planning; str; None
 \\-\\-path_start; Start waypoint for path planner (x y); int×2; 0 0
 \\-\\-path_end; End waypoint for path planner (x y); int×2; 0 0
@@ -93,7 +93,7 @@ Key; Description; Type [Range]; Default value
 \\-\\-elevation_std; Elevation noise standard deviation; float ≥0; 0.0
 \\-\\-friction_coefficient; Base friction coefficient; float 0–1; 0.5
 \\-\\-friction_coefficient_std; Friction coefficient standard deviation; float ≥0; 0.0
-\\-\\-output; Output directory; str; src/moma/data/examples/sites/testmap
+\\-\\-output; Output directory; str; src/moma/data/sites/testmap
 \\-\\-map_type; Generated map file type (bmp or obj); str; bmp
 \\-\\-output_resolution; Output resolution multiplier. Resolution = 0.25 m*multiplier; int ≥1; 6
 \\-\\-create_rasters; Create MOMA-compatible rasters; bool flag; False
@@ -111,7 +111,7 @@ Key; Description; Type [Range]; Default value
 
 ### Vehicle mobility file generation arguments
 
-A vehicle mobility file for use in MOMA can be generated from vehicle simulations done in <span style="color:red">DYNO</span>. Currently only slope climbing for straight line acceleration on hard surfaces with varying coefficient of friction is supported. The output from DYNO should be placed inside the a subfolder to the vehicle named straight_line_acceleration. 
+A vehicle mobility file for use in MOMA can be generated from vehicle simulations done with [DYNO](https://github.com/aarhus-robotics/dyno). Currently only slope climbing for straight line acceleration on hard surfaces with varying coefficient of friction is supported. The output from DYNO should be placed inside the a subfolder to the vehicle named straight_line_acceleration. 
 
 
 ```{csv-table} Executable options
@@ -129,7 +129,7 @@ Key; Description; Type [Range]; Default value
 ## Adding a New Site
 
 New sites can be added to MOMA by creating a dedicated directory under
-`Examples/sites`.
+`sites`.
 
 Each site directory must contain a `site.yaml` file that defines the site
 configuration.
@@ -159,7 +159,7 @@ if it relies on a different data source, a new data loader must be implemented.
 
 To add a new data loader, create a new class in `src/moma/dataloader.py`. This class
 must then be registered in the `get_dataloader` function, which instantiates the
-appropriate data loader based on the information provided in the `site.yaml` file. Additionally a subfolder with the dataloader name must be made in `data/examples/dataloaders`. This sub folder should contain three files: `landuse_mapping.yaml`, `moisturecontent_mapping.yaml`, and `soiltype_mapping.yaml`. These file contain the mapping from the data input encoded as colors to values that MOMA can use
+appropriate data loader based on the information provided in the `site.yaml` file. Additionally a subfolder with the dataloader name must be made in `data/dataloaders`. This sub folder should contain three files: `landuse_mapping.yaml`, `moisturecontent_mapping.yaml`, and `soiltype_mapping.yaml`. These file contain the mapping from the data input encoded as colors to values that MOMA can use
 
 A data loader should implement functionality to:
 
