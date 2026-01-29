@@ -90,8 +90,7 @@ moma mobility --path_folder src/moma/data/sites/testmap/paths
 Combined call with use of the different arguments
 
 ```shell
-moma mobility --vehicle mock --site testmap --n_samples 50 --sample_reduction mean --directions N NE E SE S SW W NW omni --path_coordinate_system utm --path_start 10 200 
-   --path_end 240 50 --target_speed 20
+moma mobility --vehicle mock --site testmap --n_samples 50 --sample_reduction mean --directions N NE E SE S SW W NW omni --path_coordinate_system utm --path_start 10 200 --path_end 240 50 --target_speed 20
 ```
 
 
