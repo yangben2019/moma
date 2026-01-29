@@ -59,10 +59,6 @@ plt.style.use(
     importlib.resources.path("moma", "data") / pathlib.Path("matplotlib/moma.mplstyle")
 )
 
-# Ensure that LaTeX is not used for rendering text in plots
-#plt.rc('text', usetex=False)
-
-
 class TestMapGenerator:
     __test__ = False # Mark as non test class for pytest
 

@@ -55,7 +55,6 @@ from rasterio.enums import Resampling
 
 log = logging.getLogger("MOMA")
 
-
 class Raster(ABC):
 
     COLORMAPS = ["RdYlBu"]
