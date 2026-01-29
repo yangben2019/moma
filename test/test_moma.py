@@ -90,7 +90,7 @@ def mapping_links():
 
     for yaml in yamls:
         src = (
-            pathlib.Path("src/moma/data/dataloaders/dataforsyningen")
+            pathlib.Path("data/dataloaders/dataforsyningen")
             / yaml
         )
         dst = (
@@ -113,7 +113,7 @@ def test_main_mobility_generation(mapping_links):
         assert link.exists(), f"Mapping link from temp test output to {link} does not exist."
 
     pytest_sites_dir = pathlib.Path(".") / "test/output/sites"
-    pytest_vehicles_dir = pathlib.Path(".") / "src/moma/data/vehicles"
+    pytest_vehicles_dir = pathlib.Path(".") / "data/vehicles"
     moma = MobilityToolbox(
         sites_path=pytest_sites_dir,
         vehicles_path=pytest_vehicles_dir,
@@ -143,5 +143,5 @@ def test_main_mobility_generation(mapping_links):
     moma.generate_directional_mobility_maps(["mean"])
 
     # check that mobility map is created
-    mobility_map_path = pytest_sites_dir / "testmap" / "export" / "mobility_mock" / "mobility_map_n.pdf"
+    mobility_map_path = pytest_sites_dir / "testmap" / "export" / "mobility_mock" / "mobility_maps" / "mobility_map_0_0.pdf"
     assert mobility_map_path.exists(), "Mobility map was not created correctly."

@@ -1061,7 +1061,7 @@ f"""    DataSource: DataforsyningenFriction
 
         # If map is not returned to caller function as an array, create the output directory
         if base_output_dir is None:
-            base_output_dir = pathlib.Path(".") / "data" / "sites" / "testmap"
+            base_output_dir = pathlib.Path("data") / "sites" / "testmap"
         else:
             base_output_dir = pathlib.Path(base_output_dir)
 

@@ -86,7 +86,7 @@ def generate_vehicle_mobility_file(vehicle, minimum_speed=0.01, plot_mobility=Fa
     print(f"Generating vehicle mobility file for {vehicle}")
     print("\nLoading data\n")
 
-    vehicle_dir = pathlib.Path() / "examples" / "vehicles" / f"{vehicle}"
+    vehicle_dir = pathlib.Path("data") / "vehicles" / f"{vehicle}"
 
     data = np.zeros((4, 0))
 

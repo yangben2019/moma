@@ -527,11 +527,13 @@ class SlopeMap(DirectionalMap):
         """
         for direction, angle in zip(directions["names"], directions["angles"]):
 
+            direction_name = direction.lower() if type(direction) == str else str(direction).replace('.', '_')
+
             self.directional_rasters[angle].plot(
                 data=self.directional_rasters[angle].data * 100,
                 colorbar="Slope [\%]",
                 clim=(-20, 20),
-                export_path=export_path / "slope_maps" / f"slope_map_{direction.lower()}.pdf",
+                export_path=export_path / "slope_maps" / f"slope_map_{direction_name}.pdf",
                 show=show,
                 export=export,
                 save_maps=save_maps,

@@ -6,8 +6,4 @@
 
 test/output/
 
-src/moma/data/examples/sites/**/rasters
-src/moma/data/examples/**/*.png
-src/moma/data/examples/**/*.bmp
-src/moma/data/examples/**/*.json
-src/moma/data/examples/**/*.pdf
+data/sites
