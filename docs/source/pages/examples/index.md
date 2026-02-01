@@ -53,7 +53,7 @@ moma mobility --n_samples 50 --sample_reduction quantile 0.9
 Specifying target and minimum speed
 
 ```shell
-moma mobility --directions --target_speed 15 --minimum_speed 1
+moma mobility --target_speed 15 --minimum_speed 1
 ```
 
 ---
