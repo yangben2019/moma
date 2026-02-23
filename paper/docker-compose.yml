@@ -1,0 +1,8 @@
+services:
+  inara:
+    entrypoint: /usr/local/bin/inara -p paper.md
+    environment: [ "JOURNAL=joss" ]
+    user: "1000:1001"
+    image: openjournals/inara
+    network_mode: none
+    volumes: [ ./:/data:rw ]
