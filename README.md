@@ -68,9 +68,6 @@ The repository contains the following:
 
 * 🗺️ A collection of examples on map and path generation under [examples/](examples/).
 
-* 📜 A collection of convenience scripts for running the command line interface
-  under [scripts/](scripts/)
-
 * 📓 A paper for the Journal of Open Source Software (JOSS) under [paper/](paper).
 
 # License
