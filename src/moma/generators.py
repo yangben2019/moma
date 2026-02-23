@@ -59,10 +59,6 @@ plt.style.use(
     importlib.resources.path("moma", "data") / pathlib.Path("matplotlib/moma.mplstyle")
 )
 
-# Ensure that LaTeX is not used for rendering text in plots
-#plt.rc('text', usetex=False)
-
-
 class TestMapGenerator:
     __test__ = False # Mark as non test class for pytest
 
@@ -1061,7 +1057,7 @@ f"""    DataSource: DataforsyningenFriction
 
         # If map is not returned to caller function as an array, create the output directory
         if base_output_dir is None:
-            base_output_dir = pathlib.Path(".") / "data" / "sites" / "testmap"
+            base_output_dir = pathlib.Path("data") / "sites" / "testmap"
         else:
             base_output_dir = pathlib.Path(base_output_dir)
 

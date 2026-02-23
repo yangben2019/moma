@@ -32,8 +32,8 @@ subparsers = parser.add_subparsers(required=True, help="subcommand help")
 # ==========================
 def calculate_mobility(args):
     # Location of sites and vehicle mobilities inside MOMA
-    sites_path = args.path / "sites"
-    vehicles_path = args.path / "vehicles"
+    sites_path = pathlib.Path(args.path) / "sites"
+    vehicles_path = pathlib.Path(args.path) / "vehicles"
 
     omnidirectional = True if "omni" in args.directions else False
 
@@ -105,7 +105,7 @@ mobility_parser.add_argument(
 )
 # Start and end waypoints for the path planner
 mobility_parser.add_argument(
-    "--path", help="Path used for loading data", type=str, default=pathlib.Path.cwd() / "data"
+    "--path", help="Path used for loading data", type=str, default="data"
 )
 
 mobility_parser.add_argument(

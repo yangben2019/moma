@@ -55,7 +55,6 @@ from rasterio.enums import Resampling
 
 log = logging.getLogger("MOMA")
 
-
 class Raster(ABC):
 
     COLORMAPS = ["RdYlBu"]
@@ -137,7 +136,7 @@ class Raster(ABC):
             data (numpy.ndarray): Data to plot.
             rgb (numpy.ndarray): RGB data to plot.
             colorbar (str): Label for the colorbar.
-            clim (tuple): Minimum and maximum values for the colormap.
+            clim (tuple): Minimum and maximum values for the colormap / colorbar.
             discrete_colormap (tuple): List of colors and labels for a discrete colormap.
             reverse_colormap (bool): Whether to reverse the colormap.
             title (str): Title of the plot.

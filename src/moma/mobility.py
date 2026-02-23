@@ -66,10 +66,6 @@ plt.style.use(
     importlib.resources.path("moma", "data") / pathlib.Path("matplotlib/moma.mplstyle")
 )
 
-# Ensure that LaTeX is not used for rendering text in plots
-#plt.rc("text", usetex=False)
-
-
 def generate_vehicle_mobility_file(vehicle, minimum_speed=0.01, plot_mobility=False):
     """
     Generates a mobility file for a given vehicle.
@@ -86,7 +82,7 @@ def generate_vehicle_mobility_file(vehicle, minimum_speed=0.01, plot_mobility=Fa
     print(f"Generating vehicle mobility file for {vehicle}")
     print("\nLoading data\n")
 
-    vehicle_dir = pathlib.Path() / "examples" / "vehicles" / f"{vehicle}"
+    vehicle_dir = pathlib.Path("data") / "vehicles" / f"{vehicle}"
 
     data = np.zeros((4, 0))
 
@@ -1320,12 +1316,15 @@ class MobilityMap(Map):
             else f"Mobility map with {n_samples} samples and sample reduction function: {self.mobility_analysis.sample_reduction.function.name}"
         )
 
+        direction_name = self.direction.lower() if type(self.direction) == str else str(self.direction).replace('.', '_')
+
         self.raster.plot(
             colorbar="Speed [m/s]",
+            clim=(0, self.mobility_analysis.target_speed),
             title=title,
             export_path=export_path
             / f"mobility_{self.mobility_analysis.mobility_tensors[0].vehicle}"
-            / f"mobility_maps/mobility_map_{self.direction.lower()}.pdf",
+            / f"mobility_maps/mobility_map_{direction_name}.pdf",
             show=show,
             export=export,
             save_maps=save_maps,

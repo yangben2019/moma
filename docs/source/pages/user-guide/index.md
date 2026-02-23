@@ -32,7 +32,7 @@ Key; Description; Type [Range]; Default value
 \\-\\-site; Name of the site (site folder name); str; testmap
 \\-\\-n_samples; Number of samples used for uncertainty handling (1 → mean value); int ≥1; 1
 \\-\\-sample_reduction; Sample reduction method ('mean' or 'quantile q'); list; mean
-\\-\\-path; Path to MOMA data root; str; src/moma/data/
+\\-\\-path; Path to MOMA data root; str; data/
 \\-\\-path_coordinate_system; Coordinate system for path planner (map or utm). Setting the coordinate system activates path planning; str; None
 \\-\\-path_start; Start waypoint for path planner (x y); int×2; 0 0
 \\-\\-path_end; End waypoint for path planner (x y); int×2; 0 0
@@ -93,7 +93,7 @@ Key; Description; Type [Range]; Default value
 \\-\\-elevation_std; Elevation noise standard deviation; float ≥0; 0.0
 \\-\\-friction_coefficient; Base friction coefficient; float 0–1; 0.5
 \\-\\-friction_coefficient_std; Friction coefficient standard deviation; float ≥0; 0.0
-\\-\\-output; Output directory; str; src/moma/data/sites/testmap
+\\-\\-output; Output directory; str; data/sites/testmap
 \\-\\-map_type; Generated map file type (bmp or obj); str; bmp
 \\-\\-output_resolution; Output resolution multiplier. Resolution = 0.25 m*multiplier; int ≥1; 6
 \\-\\-create_rasters; Create MOMA-compatible rasters; bool flag; False
@@ -111,7 +111,7 @@ Key; Description; Type [Range]; Default value
 
 ### Vehicle mobility file generation arguments
 
-A vehicle mobility file for use in MOMA can be generated from vehicle simulations done with [DYNO](https://github.com/aarhus-robotics/dyno). Currently only slope climbing for straight line acceleration on hard surfaces with varying coefficient of friction is supported. The output from DYNO should be placed inside the a subfolder to the vehicle named straight_line_acceleration. 
+A vehicle mobility file for use in MOMA can be generated from vehicle simulations done with [DYNO](https://github.com/aarhus-robotics/dyno). Currently only slope climbing for straight line acceleration on hard surfaces with varying coefficient of friction is supported. The output from DYNO should be placed inside the a subfolder to the vehicle named `straight_line_acceleration`. 
 
 
 ```{csv-table} Executable options
@@ -216,6 +216,4 @@ A vehicle is defined by its `mobility.yaml` and `landuse_nogo.yaml`. The mobilit
 ```{toctree}
 :hidden:
 components/index.md
-configuration/index.md
-visualization/index.md
 ```

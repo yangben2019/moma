@@ -55,7 +55,7 @@ For a better understanding in the functions of MOMA follow this guide:
    pytest
    ```
    The test should create a test directory called `test/output` where a run of the moma map generation is done to test that all the functions runs correct. Output maps are placed in
-   `test/output/sites/export`. These does not not necessarily contain valid data due to the limited test map site used to run the test quickly.
+   `test/output/sites/testmap/export`. These does not not necessarily contain valid data due to the limited test map site used to run the test quickly.
 
 1. Generate the test map
 
@@ -77,12 +77,10 @@ For a better understanding in the functions of MOMA follow this guide:
    The test map and mobility map generation can be modified with the different arguments. A full list of arguments can be found at [User guide](../user-guide/index.md), and example calls
    are availible at [Examples](../examples/index.md)
 
-   The outputs generated with the following parameters and the default testmap can be seen
-   <span style="color:red">Where?</span>
+   The outputs generated with the following parameters and the default testmap can be seen in the `example` folder.
 
    ```shell
-   moma --clear mobility --vehicle mock --site testmap --n_samples 50 --sample_reduction mean --directions N NE E SE S SW W NW omni --path_coordinate_system utm --path_start 10 200 
-   --path_end 240 50 --target_speed 20
+   moma mobility --vehicle mock --site testmap --n_samples 50 --sample_reduction mean --directions N NE E SE S SW W NW omni --path_coordinate_system utm --path_start 10 200 --path_end 240 50 --target_speed 20
    ```
 
 1. To work on a different dataset, see the documentation on how to add a new [site](../user-guide/index.md#adding-a-new-site), [data laoder](../user-guide/index.md#adding-a-new-data-loader), 
