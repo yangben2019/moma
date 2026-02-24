@@ -52,21 +52,22 @@ directional slopes in cardinal and inter-cardinal directions (Figure
 \ref{fig:omnidirectional-vs-directional-slope-map-comparison}), along with
 terrain friction characteristics. These inputs, when coupled with simulated or
 tested vehicle performance data, determine the recommended traversal speeds
-across the imported site. Additionally, MOMA supports path planning to identify
-optimal routes that prioritize speed while accounting for safety and directional
-challenges between any two locations on the map (Figure
+across the imported site. Additionally, MOMA provides path planning capabilities
+to identify optimal routes that prioritize speed while accounting for safety and
+directional challenges between any two locations on the map (Figure
 \ref{fig:moma-omnidirectional-vs-directional-optimal-path-comparison}).
 
 ![A three-dimensional visualization of the elevation raster for a vehicle mobility test site \label{fig:moma-elevation-map-3d}](figures/moma-elevation-map-3d.png){height="180pt"}
 
-MOMA can export mobility maps in GeoTIFF, PDF or HDF5 format. MOMA can be used
-to generate example maps for capabilities verification using an external vehicle
+MOMA can export mobility maps in GeoTIFF or PDF format. MOMA can be used to
+generate example maps for capabilities verification using an external vehicle
 simulation software. The maps can be exported in GeoTIFF, BMP or as meshes in
-OBJ format. MOMA can visualize visualize elevation, slope, generic property maps
-(e.g. moisture content, friction coefficient) and categorical maps (soil type,
-land use). MOMA can parse site land use information to augment the generated
-maps with untraversable areas based on land use data. Users can also specify
-portions of the map to be marked as go/no-go zone during path planning.
+OBJ format. MOMA can visualize elevation, slope, generic property maps (e.g.
+moisture content, friction coefficient) and categorical maps (soil type, land
+use), and can parse site land use information to augment the generated maps with
+untraversable areas based on their category. Users can also manually specify
+portions of the map to be marked as go/no-go zone during mobility map generation
+or path planning.
 
 # Statement of need
 
@@ -84,12 +85,13 @@ workflows for mobility analysis grounded in scientific validation.
 ![The Next-Generation NATO Reference Mobility Model (NG-NRMM) framework \label{fig:nato-ng-nrmm-framework}](figures/moma-nato-ng-nrmm-framework.png){height="180pt"}
 
 Especially influential in this context is the NATO Next-Generation NATO
-Reference Mobility Model (Figure \ref{fig:nato-ng-nrmm-framework}), a shared
-computer modelling framework for the prediction of the mobility of ground
-vehicles across different environments. The primary goal of the framework is to
-provide quantitative estimates of where vehicles can traverse, at what maximum
-speed, and how safely, using validated [@gorsich2023cooperative] simulation
-tools above physical testing alone.
+Reference Mobility Model [@nato2021guidance] (Figure
+\ref{fig:nato-ng-nrmm-framework}), a shared computer modelling framework for the
+prediction of the mobility of ground vehicles across different environments. The
+primary goal of the framework is to provide quantitative estimates indicating
+where vehicles should traverse, at what maximum speed, and how safely, using
+validated [@gorsich2023cooperative] simulation tools above physical testing
+alone.
 
 Contrary to older models, such as the previous [@ahlvin1992nato] NATO Reference
 Mobility Model (NRMM), NG-NRMM incorporates the combined used of high-fidelity,
@@ -107,8 +109,8 @@ toolset to perform mobility analyses, but rather prescribes the architecture,
 requirements and, to a degree, a common standard for software to be developed
 around. While this encourages the extension of legacy simulation frameworks to
 adopt the new standard and ultimately promotes the development of independent
-software solutions, solutions in the open domain are, at the time of writing,
-non-existing to the best of our knowledge.
+software solutions, to the best of our knowledge, no open-domain solutions exist
+at the time of writing.
 
 While many popular GIS software solutions are available in the public domain,
 both as comprehensive software suites (such as the popular [@graser2025qgis]
@@ -191,7 +193,7 @@ We acknowledge that MOMA currently implements only a subset of the inputs
 defined by the NG-NRMM framework and does not fully adhere to STANREC 4813
 [@sciencestanrec] file format specifications. However, its design prioritizes
 simplicity for mobility verification and validation, requiring minimal raster
-data and vehicle performance inputs—resources readily accessible through public
+data and vehicle performance inputs, resources readily accessible through public
 sources.
 
 # AI usage disclosure
