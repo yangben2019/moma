@@ -29,7 +29,7 @@ At this time, MOMA can be used to:
 
 * 🚗 Load and process multibody dynamics simulation results to characterize
   vehicle mobility (directly if using
-  [DYNO](https://github.com/aarhus-robotics/dyno))
+  [DYNO](https://github.com/au-agv/dyno))
 
 * 🗺️ Generate directional and omni-directional mobility map for a given site
 
@@ -41,14 +41,14 @@ At this time, MOMA can be used to:
 
 To get started using MOMA, you can:
 
-* 🐋 Build and run the bundled Docker image by following the [Docker installation guide](https://docs.aarhusrobotics.com/moma/getting-started/docker)
+* 🐋 Build and run the bundled Docker image by following the [Docker installation guide](https://au-agv.github.io/moma/getting-started/docker)
 
-* 🖥️ Build from source by following the [build guide](https://docs.aarhusrobotics.com/moma/getting-started/source)
+* 🖥️ Build from source by following the [build guide](https://au-agv.github.io/moma/getting-started/source)
 
 ## Accessing the documentation
 
 You can learn more about how to deploy and use MOMA at
-[docs.aarhusrobotics.com/moma](https://docs.aarhusrobotics.com/moma).
+[au-agv.github.io/moma](https://au-agv.github.io/moma).
 
 # Contributing
 

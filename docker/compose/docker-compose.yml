@@ -4,7 +4,7 @@ services:
     environment:
       - DISPLAY=${DISPLAY}
       - JAX_PLATFORMS=cpu
-    image: "ghcr.io/aarhus-robotics/moma:devel"
+    image: "ghcr.io/au-agv/moma:devel"
     network_mode: bridge
     stdin_open: true
     tty: true

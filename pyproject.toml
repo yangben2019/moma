@@ -12,8 +12,8 @@ name = "moma"
 version = "1.0.0"
 description = "Mobility maps and optimal routes generator for ground vehicles"
 authors = [
-    { name = "Dario Sirangelo", email = "dsi@aarhusrobotics.com" },
-    { name = "Nikolaj Jes Petersen", email = "njp@aarhusrobotics.com" },
+    { name = "Dario Sirangelo", email = "dev@dariosirangelo.me" },
+    { name = "Nikolaj Jes Petersen", email = "nikolajjespetersen@gmail.com" },
 ]
 readme = "README.md"
 packages = [

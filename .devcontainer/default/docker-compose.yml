@@ -4,7 +4,7 @@ services:
     environment:
       - JAX_PLATFORMS=cpu
       - DISPLAY=${DISPLAY}
-    image: ghcr.io/aarhus-robotics/moma:devel
+    image: ghcr.io/au-agv/moma:devel
     privileged: true
     stdin_open: true
     tty: true

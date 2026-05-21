@@ -18,7 +18,7 @@ def get_git_revision_short_hash() -> str:
 
 # Sphinx configuration
 project = "MOMA"
-copyright = "2024, Aarhus Robotics"
+copyright = "2024, Aarhus University Autonomous Ground Vehicles"
 author = "Dario Sirangelo"
 release = "1.0.0"
 extensions = [

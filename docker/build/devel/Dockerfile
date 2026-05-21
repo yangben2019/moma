@@ -53,10 +53,10 @@ WORKDIR /home/${USER}
 # Add container labels                                                        #
 ###############################################################################
 
-LABEL org.opencontainers.image.authors="Dario Sirangelo (dsi@aarhusrobotics.com)"
-LABEL org.opencontainers.image.url=https://github.com/aarhus-robotics/moma
-LABEL org.opencontainers.image.documentation=https://docs.aarhusrobotics.com/moma
-LABEL org.opencontainers.image.source=https://github.com/aarhus-robotics/moma/tree/main/docker/build/devel
+LABEL org.opencontainers.image.authors="Dario Sirangelo (dev@dariosirangelo.me)"
+LABEL org.opencontainers.image.url=https://github.com/au-agv/moma
+LABEL org.opencontainers.image.documentation=https://au-agv.github.io/moma
+LABEL org.opencontainers.image.source=https://github.com/au-agv/moma/tree/main/docker/build/devel
 LABEL org.opencontainers.image.version=main
 LABEL org.opencontainers.image.licenses=MIT
 LABEL org.opencontainers.image.title="MOMA (devel)"

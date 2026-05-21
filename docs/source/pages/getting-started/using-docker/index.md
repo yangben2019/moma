@@ -24,7 +24,7 @@ GPU-accelerated map generation.
 To pull a specific Docker image, use the following command:
 
 ```shell
-docker pull gchr.io/aarhus-robotics/moma:{tag}}
+docker pull gchr.io/au-agv/moma:{tag}}
 ```
 
 Below is a list of the available tag and a brief description of each.
@@ -47,7 +47,7 @@ your application.
 You can spawn a new interactive shell with `moma` in a container by running:
 
 ```shell
-docker run -it ghcr.io/aarhus-robotics/moma:runtime
+docker run -it ghcr.io/au-agv/moma:runtime
 ```
 
 You may then use the command `moma` to start generating your mobility maps. For

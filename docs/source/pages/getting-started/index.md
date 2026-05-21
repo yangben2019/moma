@@ -24,7 +24,7 @@ quickly run MOMA on your machine, you can run the following Docker command to ge
 the latest runtime:
 
 ```shell
-docker run -it ghcr.io/aarhus-robotics/moma:runtime
+docker run -it ghcr.io/au-agv/moma:runtime
 ```
 If the environment does not activate automatically, you can activate it manually by navigating to the `pyproject.toml` file and run:
 

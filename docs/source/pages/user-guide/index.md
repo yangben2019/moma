@@ -111,7 +111,7 @@ Key; Description; Type [Range]; Default value
 
 ### Vehicle mobility file generation arguments
 
-A vehicle mobility file for use in MOMA can be generated from vehicle simulations done with [DYNO](https://github.com/aarhus-robotics/dyno). Currently only slope climbing for straight line acceleration on hard surfaces with varying coefficient of friction is supported. The output from DYNO should be placed inside the a subfolder to the vehicle named `straight_line_acceleration`. 
+A vehicle mobility file for use in MOMA can be generated from vehicle simulations done with [DYNO](https://github.com/au-agv/dyno). Currently only slope climbing for straight line acceleration on hard surfaces with varying coefficient of friction is supported. The output from DYNO should be placed inside the a subfolder to the vehicle named `straight_line_acceleration`. 
 
 
 ```{csv-table} Executable options

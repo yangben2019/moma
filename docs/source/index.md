@@ -29,7 +29,7 @@ At this time, MOMA can be used to:
 
 * 🚗 Load and process multibody dynamics simulation results to characterize
   vehicle mobility (directly if using
-  [DYNO](https://github.com/aarhus-robotics/dyno))
+  [DYNO](https://github.com/au-agv/dyno))
 
 * 🗺️ Generate directional and omni-directional mobility map for a given site
 

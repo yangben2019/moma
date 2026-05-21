@@ -21,7 +21,7 @@ affilations:
      ror: 01aj84f44
      index: 1
 bibliography: paper.bib
-software_repository_url: 'https://github.com/aarhus-robotics/moma'
+software_repository_url: 'https://github.com/au-agv/moma'
 date: 2026-02-28
 #submitted_at: 2026-02-28
 #published_at: 2026-02-28
