@@ -271,7 +271,7 @@ class Raster(ABC):
 
             color_bar.ax.xaxis.set_ticks_position("top")
             color_bar.ax.xaxis.set_label_position("top")
-            tick_spacing = ticks[1] - ticks[0]
+            tick_spacing = ticks[1] - ticks[0] if len(ticks) > 1 else 1.0
             for label in color_bar.ax.get_xticklabels():
                 label.set_rotation(45)
                 label.set_ha("left")
