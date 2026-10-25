@@ -630,7 +630,11 @@ class LandUseMap(ParameterMap):
         @jit
         def is_nogo(index_y, index_x):
             rgb_value = self.rgb[index_y, index_x, :].astype(jnp.uint8)
-            combined_rgb = rgb_value[0] * 256 * 256 + rgb_value[1] * 256 + rgb_value[2]
+            combined_rgb = (
+                rgb_value[0].astype(jnp.int32) * 256 * 256
+                + rgb_value[1].astype(jnp.int32) * 256
+                + rgb_value[2].astype(jnp.int32)
+            )
             return self.rgb_nogo[combined_rgb]
 
         self.vmap_is_nogo = vmap(is_nogo)  # Maps over the rows and columns
@@ -728,10 +732,10 @@ class SoilTypeMap(ParameterMap):
         self.soilarray = np.zeros(self.raster.data[0].shape, dtype=object)
 
         rgb = (
-            self.raster.data[0] * 256 * 256
-            + self.raster.data[1] * 256
-            + self.raster.data[2]
-        ).astype(np.uint8)
+            self.raster.data[0].astype(np.int64) * 256 * 256
+            + self.raster.data[1].astype(np.int64) * 256
+            + self.raster.data[2].astype(np.int64)
+        )
 
         for rgb_key, soil in self.rgb_map.items():
             index = np.where(rgb == rgb_key)
