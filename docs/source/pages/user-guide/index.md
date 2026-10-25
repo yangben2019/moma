@@ -147,6 +147,11 @@ The `site.yaml` file includes the following information:
   A list of areas that the vehicle must avoid. No-go zones may be specified as
   either rectangular regions or circular regions.
 
+- **Resampling**  
+  `ResamplingFactor` (default `0.2`) and `ResamplingAlgorithm` (default
+  `bilinear`) control how input rasters are resampled. The default assumes
+  1 m source data. Set `ResamplingFactor: 1.0` to keep the source resolution.
+
 Based on this configuration, MOMA automatically creates the required directory
 structure and loads the relevant data from the specified data source.
 

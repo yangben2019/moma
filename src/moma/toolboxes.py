@@ -173,8 +173,8 @@ class MobilityToolbox:
         self.dataloader = get_dataloader(base_path, self.datasource, self.coordinates)
         self.log.info(f"Data source: {self.dataloader.source}")
 
-        self.RESAMPLING_FACTOR = 0.2
-        self.RESAMPLING_ALGORITHM = "bilinear"
+        self.RESAMPLING_FACTOR = float(site_yaml.get("ResamplingFactor", 0.2))
+        self.RESAMPLING_ALGORITHM = site_yaml.get("ResamplingAlgorithm", "bilinear")
 
         self.SOIL_TYPES = ["HT", "SC", "GW", "CL"]
 
