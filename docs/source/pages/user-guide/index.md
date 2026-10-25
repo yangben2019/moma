@@ -143,6 +143,18 @@ The `site.yaml` file includes the following information:
   The west, south, east, and north boundaries of the site, defined as a bounding
   box in **Universal Transverse Mercator (UTM)** coordinates.
 
+- **Mobility interpolation**  
+  `ClipMobilityToRange: true` uses the absolute slope and returns zero speed
+  for slopes outside the tabulated vehicle range. The default (`false`) keeps
+  the historical linear extrapolation. The CLI equivalent is
+  `--clip_mobility_to_range`.
+
+- **No-go policy**  
+  `HardNoGo: true` removes graph edges touching zero-speed cells, so a route
+  cannot cross no-go land use or slopes beyond the vehicle limit. The default
+  (`false`) keeps the historical soft penalty. The CLI equivalent is
+  `--hard_no_go`.
+
 - **No-go zones**  
   A list of areas that the vehicle must avoid. No-go zones may be specified as
   either rectangular regions or circular regions.

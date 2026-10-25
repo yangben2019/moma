@@ -78,6 +78,8 @@ class MobilityToolbox:
         show_plots=False,
         hide_utm=False,
         path_planning=False,
+        clip_mobility_to_range=False,
+        hard_no_go=False,
     ):
         """
         Initialises the mobility toolbox.
@@ -95,6 +97,9 @@ class MobilityToolbox:
             save_maps (bool): Whether to save mobility maps.
             show_plots (bool): Whether to display plots.
             hide_utm (bool): Whether to hide UTM coordinates in plots.
+            path_planning (bool): Whether to prepare directions for path planning.
+            clip_mobility_to_range (bool): Clip mobility to the tabulated range.
+            hard_no_go (bool): Treat zero-speed cells as impassable.
         """
 
         # Initialise logger
@@ -169,6 +174,10 @@ class MobilityToolbox:
         self.datasource = site_yaml["DataSource"]
         self.coordinates = site_yaml["Coordinates"]
         self.nogo_zones = site_yaml["NoGoZones"]
+        self.clip_mobility_to_range = bool(
+            site_yaml.get("ClipMobilityToRange", False) or clip_mobility_to_range
+        )
+        self.hard_no_go = bool(site_yaml.get("HardNoGo", False) or hard_no_go)
 
         self.dataloader = get_dataloader(base_path, self.datasource, self.coordinates)
         self.log.info(f"Data source: {self.dataloader.source}")
@@ -481,6 +490,7 @@ class MobilityToolbox:
             sample_reduction,
             self.minimum_speed,
             self.target_speed,
+            clip_mobility_to_range=self.clip_mobility_to_range,
         )
         mobility_analysis.generate_mobility_tensors("slope")
         mobility_analysis.generate_sideslope_factor()
@@ -521,6 +531,7 @@ class MobilityToolbox:
                 mobility_analysis,
                 minimum_speed=self.minimum_speed,
                 target_speed=self.target_speed,
+                clip_mobility_to_range=self.clip_mobility_to_range,
             )
 
             # Show the mobility map
@@ -610,7 +621,9 @@ class MobilityToolbox:
         )
 
         # Generate directional mobility graph
-        directional_mobility_graph = make_speed_graph(directional_mobility_map)
+        directional_mobility_graph = make_speed_graph(
+            directional_mobility_map, hard_no_go=self.hard_no_go
+        )
 
         # Generate directional mobility graph based on omnidirectional mobility maps
         # Works by using the directional framework, but with omnidirectional values in all directions
@@ -627,7 +640,7 @@ class MobilityToolbox:
                 ].direction = "omni for pseudo direction"
 
             directional_mobility_graph_omni = make_speed_graph(
-                directional_mobility_map_omni
+                directional_mobility_map_omni, hard_no_go=self.hard_no_go
             )
 
         # Creates a directional mobility map with the 8 primary compass directions

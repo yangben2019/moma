@@ -255,13 +255,15 @@ class MobilityPlanner:
         self.site = site
 
 
-def make_speed_graph(directional_mobility_map):
+def make_speed_graph(directional_mobility_map, hard_no_go=False):
     """Returns the weighted digraph for a given mobility map
 
     Returns the weighted digraph for a directional mobility map by defining a node for each mobility map cell and a set of at least 3 and at most 8 weighted edges connecting each cell to its neighbours through an appropriate speed weight as specified by the mobility map layer in the given direction.
 
     Args:
         mobility_map (dict): Directional mobility map with cardinal and intercardinal direction as keys
+        hard_no_go (bool): If True, zero-speed cells are impassable. If False,
+            they receive a large finite penalty (backwards compatible).
 
     Returns:
        networkx.digraph: Directional mobility map weighted digraph
@@ -273,13 +275,14 @@ def make_speed_graph(directional_mobility_map):
     DG = nx.DiGraph()
 
     # Add weighted edges
-    we = define_weighted_edges(directional_mobility_map)
+    we = define_weighted_edges(directional_mobility_map, hard_no_go=hard_no_go)
     DG.add_edges_from(we)
 
     return DG
 
 
-def define_weighted_edges(directional_mobility_map):
+def define_weighted_edges(directional_mobility_map, hard_no_go=False):
+    """Builds weighted edges, optionally treating zero-speed cells as impassable."""
 
     def compass_angle2next_cell(angle):
         """Convert an compass angle to the next cell direction
@@ -353,6 +356,8 @@ def define_weighted_edges(directional_mobility_map):
             neighbor_index = np.ravel_multi_index((end_i, end_j), shape)
 
             cell_vals = map.raster.data[cells]
+            valid_cells = cell_vals > 0
+            valid_neighbors = map.raster.data[(end_i, end_j)] > 0
             # If the neighbor is speed 0 (nogo or steep slope), set a high weight equal til going 0.001 m/s ~equal to max weight on the Vejlby map
             cell_vals = np.where(
                 cell_vals == 0, 0.001, cell_vals
@@ -374,6 +379,8 @@ def define_weighted_edges(directional_mobility_map):
 
             for i in range(index_shape[0]):
                 for j in range(index_shape[1]):
+                    if hard_no_go and not (valid_cells[i, j] and valid_neighbors[i, j]):
+                        continue
                     key = (index[i, j], neighbor_index[i, j])
 
                     # Find centre of the kernel for the next cell direction

@@ -50,7 +50,9 @@ def calculate_mobility(args):
         save_maps=args.save_maps,
         show_plots=args.show_plots,
         hide_utm=args.hide_utm,
-        path_planning=(not args.path_coordinate_system == "None" or not args.path_folder == "None")
+        path_planning=(not args.path_coordinate_system == "None" or not args.path_folder == "None"),
+        clip_mobility_to_range=args.clip_mobility_to_range,
+        hard_no_go=args.hard_no_go,
     )
 
     # By adding show=False as argument to the following generate and path_planner functions the plots/maps are not generated stored regardless of the other inputs
@@ -171,6 +173,18 @@ mobility_parser.add_argument(
     type=float,
     help="target speed for the mobility calculation, default 10.0",
     default=10.0,
+)
+mobility_parser.add_argument(
+    "--clip_mobility_to_range",
+    action="store_true",
+    help="clip mobility to the tabulated range instead of extrapolating",
+    default=False,
+)
+mobility_parser.add_argument(
+    "--hard_no_go",
+    action="store_true",
+    help="treat zero-speed cells as impassable instead of a soft penalty",
+    default=False,
 )
 
 

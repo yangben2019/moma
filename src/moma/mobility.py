@@ -329,6 +329,7 @@ class MobilityAnalysis:
         sample_reduction,
         minimum_speed,
         target_speed,
+        clip_mobility_to_range=False,
     ):
         """
         Initializes the mobility analysis object.
@@ -341,6 +342,8 @@ class MobilityAnalysis:
             sample_reduction (ReductionFunction): Sample reduction function.
             minimum_speed (float): Minimum speed for valid runs.
             target_speed (float): Target speed for mobility interpolation.
+            clip_mobility_to_range (bool): Clip mobility to the tabulated range
+                instead of extrapolating outside it.
         """
 
         log.info(
@@ -367,6 +370,7 @@ class MobilityAnalysis:
 
         self.minimum_speed = minimum_speed
         self.target_speed = target_speed
+        self.clip_mobility_to_range = clip_mobility_to_range
 
         # Sample reduction function to reduce sample space
         self.sample_reduction = ReductionFunction(sample_reduction)
@@ -459,6 +463,7 @@ class MobilityAnalysis:
                         test_parameter_names,
                         values,
                         self.vehicle,
+                        clip_mobility_to_range=self.clip_mobility_to_range,
                     )
                 )
             else:
@@ -606,6 +611,7 @@ class MobilityTensor:
         test_parameter_name,
         values,
         vehicle,
+        clip_mobility_to_range=False,
     ):
         """
         Initialises a mobility tensor.
@@ -617,11 +623,14 @@ class MobilityTensor:
             test_parameter_name (list[str]): Test parameters.
             values (ndarray): Values at grid points.
             vehicle (str): Vehicle type.
+            clip_mobility_to_range (bool): If True, return zero speed for
+                slopes outside the tabulated range instead of extrapolating.
         """
 
         self.soil_type = soil_type
         self.parameters = parameters
         self.vehicle = vehicle
+        self.clip_mobility_to_range = clip_mobility_to_range
 
         all_parameter_names = [
             "moisture_content",
@@ -637,14 +646,18 @@ class MobilityTensor:
         )
 
         log.info(
-            f"Initialising new RegularGridInterpolator for soil {soil_type}, using extrapolation for points outside the grid"
+            f"Initialising new RegularGridInterpolator for soil {soil_type}, "
+            f"{'clipping to the tabulated range' if clip_mobility_to_range else 'using extrapolation for points outside the grid'}"
         )
 
         # TODO: Standardize the structure of the parameters and values in the database.
 
         # Initialise linear radial-basis function interpolator
         self.interpolator = RegularGridInterpolator(
-            self.parameters, values, method="linear", fill_value=None
+            self.parameters,
+            values,
+            method="linear",
+            fill_value=0.0 if clip_mobility_to_range else None,
         )
 
     def __call__(self, call):
@@ -1142,6 +1155,7 @@ class MobilityMap(Map):
         mobility_analysis,
         minimum_speed,
         target_speed,
+        clip_mobility_to_range=False,
     ):
         """
         Initialises a new mobility map.
@@ -1157,6 +1171,8 @@ class MobilityMap(Map):
             mobility_analysis (MobilityAnalysis): Mobility analysis object.
             minimum_speed (float): Minimum speed for mobility calculations.
             target_speed (float): Target speed for mobility calculations.
+            clip_mobility_to_range (bool): Use slope magnitude and zero speed
+                outside the tabulated range.
         """
 
         log.info("Initialising new mobility map.")
@@ -1183,6 +1199,7 @@ class MobilityMap(Map):
         self.friction_map = friction_map
         self.nogo_map = nogo_map
         self.mobility_analysis = mobility_analysis
+        self.clip_mobility_to_range = clip_mobility_to_range
 
         # Converts soil type map to a map of integers corresponding to the index of the mobility tensor in the mobility analysis object
         for i, soil_type in enumerate(self.mobility_analysis.soil_types):
@@ -1230,6 +1247,8 @@ class MobilityMap(Map):
         directional_slope = jnp.rad2deg(
             jnp.arctan(jnp.array(self.slope_raster.data))
         )  # Convert slope from ratio (raise/run) to degrees
+        if self.clip_mobility_to_range:
+            directional_slope = jnp.abs(directional_slope)
         sideslope = jnp.abs(
             jnp.rad2deg(jnp.arctan(jnp.array(self.sideslope_data)))
         )  # Same to sideslope, uses only absolute value of the sideslope (= does not care about slope to the left or right)
